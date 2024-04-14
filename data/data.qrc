@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="fritzcallindicator.png">../icons/hicolor/64x64/apps/com.github.elth0r0.fritzcallindicator.png</file>
+        <file>icons/dark/index.theme</file>
+        <file>icons/dark/png/application-exit.png</file>
+        <file>icons/dark/png/configure.png</file>
+        <file>icons/dark/png/help-about.png</file>
+        <file>icons/light/index.theme</file>
+        <file>icons/light/png/application-exit.png</file>
+        <file>icons/light/png/configure.png</file>
+        <file>icons/light/png/help-about.png</file>
+        <file>icons/tray/call-start_16_dark.png</file>
+        <file>icons/tray/call-start_22_dark.png</file>
+        <file>icons/tray/call-start_16_light.png</file>
+        <file>icons/tray/call-start_22_light.png</file>
+    </qresource>
+</RCC>

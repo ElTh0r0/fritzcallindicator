@@ -1,0 +1,14 @@
+[Desktop Entry]
+Type=Application
+Name=FritzCallIndicator
+Name[de]=FritzCallIndicator
+GenericName=Call indicator
+GenericName[de]=Anrufanzeige
+Comment=Simple FritzBox! call indicator
+Comment[de]=Einfache FritzBox! Anrufanzeige
+Icon=com.github.elth0r0.fritzcallindicator
+TryExec=fritzcallindicator
+Exec=fritzcallindicator %f
+Terminal=false
+Categories=Network;Telephony;
+Keywords=fritz;box;fritzbox;call;indicator;

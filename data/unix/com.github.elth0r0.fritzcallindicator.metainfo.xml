@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2024 Thorsten Roth -->
+<component type="desktop-application">
+  <id>com.github.elth0r0.fritzcallindicator</id>
+  <metadata_license>FSFAP</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+  <name>FritzCallIndicator</name>
+  <name xml:lang="de">FritzCallIndicator</name>
+  <summary>Simple FritzBox! call indicator</summary>
+  <summary xml:lang="de">Simple FritzBox! call indicator</summary>
+  
+  <description>
+    <p>Simple call indication through system tray notifocation.</p>
+    <p xml:lang="de">Einfache Anrufanzeige über den Infobereich der Taskleiste.</p>
+  </description>
+  
+  <launchable type="desktop-id">com.github.elth0r0.fritzcallindicator.desktop</launchable>
+  
+  <url type="bugtracker">https://github.com/ElTh0r0/fritzcallindicator/issues</url>
+  <url type="vcs-browser">https://github.com/ElTh0r0/fritzcallindicator</url>
+  
+  <developer_name>Thorsten Roth</developer_name>
+  
+  <provides>
+    <binary>fritzcallindicator</binary>
+  </provides>
+  
+  <content_rating type="oars-1.0" />
+  
+  <languages>
+      <lang percentage="100">de</lang>
+      <lang percentage="100">en</lang>
+  </languages>
+  
+  <releases>
+    <release version="0.1.0" date="2024-03-17">
+      <description>
+        <p>Initial release:</p>
+        <ul>
+          <li>Call indication of incoming and outgoing calls</li>
+        </ul>
+      </description>
+    </release>
+  </releases>
+</component>

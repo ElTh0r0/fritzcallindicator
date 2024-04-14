@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   version="1.1"
+   viewBox="0 0 32 32"
+   id="svg2"
+   sodipodi:docname="com.github.elth0r0.fritzcallindicator.svg"
+   inkscape:version="1.3.2 (091e20ef0f, 2023-11-25, custom)"
+   inkscape:export-filename="../../256x256/apps/com.github.elth0r0.fritzcallindicator.png"
+   inkscape:export-xdpi="768"
+   inkscape:export-ydpi="768"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="namedview2"
+     pagecolor="#ffffff"
+     bordercolor="#999999"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="11.313709"
+     inkscape:cx="5.4358834"
+     inkscape:cy="6.8942911"
+     inkscape:window-width="1680"
+     inkscape:window-height="1118"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg2" />
+  <style
+     id="current-color-scheme"
+     type="text/css">
+        .ColorScheme-Text {
+            color:#232629;
+        }
+    </style>
+  <g
+     id="g5"
+     transform="matrix(0.86851268,0,0,0.86851268,2.0966723,2.1013935)">
+    <ellipse
+       style="fill:#dbe2e3;stroke-width:3.7513"
+       id="path4"
+       cx="16.008204"
+       cy="16.002768"
+       rx="15.993336"
+       ry="15.998837" />
+    <g
+       id="g4"
+       transform="translate(-0.99442099,1.208775)">
+      <path
+         d="m 15.861,24.946 c 2.724,2.724 6.539,3.608 10.01,2.722 l 1.661,-1.661 c 0,0 1.061,-1.061 0,-2.121 l -4.561,-4.561 c -1.061,-1.061 -2.121,0 -2.121,0 l -0.53,0.53 c -0.881,0.881 -2.301,0.881 -3.182,0 l -4.989,-4.989 c -0.881,-0.881 -0.881,-2.301 0,-3.182 l 0.53,-0.53 c 0,0 1.061,-1.061 0,-2.121 L 8.118,4.472 c -1.061,-1.061 -2.121,0 -2.121,0 L 4.336,6.133 C 3.45,9.6 4.334,13.415 7.058,16.143 Z"
+         id="path1"
+         style="color:#232629;fill:#232629" />
+      <path
+         d="m 20.484378,17.140125 8.5,-8.4999995 v 4.2929685 h 1 V 6.9330945 h -6 v 1 h 4.292969 l -8.5,8.4999995 z"
+         id="path2"
+         style="color:#232629;fill:#232629" />
+      <path
+         d="m 24.642168,1.5829139 -8.5,8.5000011 V 5.7899453 h -1 v 6.0000007 h 6 v -1 h -4.292969 l 8.5,-8.5000007 z"
+         id="path2-3"
+         style="color:#232629;fill:#232629" />
+    </g>
+  </g>
+</svg>
