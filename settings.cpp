@@ -15,6 +15,7 @@ const QString Settings::DEFAULT_HOST_NAME = QStringLiteral("fritz.box");
 const uint Settings::DEFAULT_CALL_MONITOR_PORT = 1012;
 const uint Settings::DEFAULT_RETRY_INTERVAL_SEC = 20;
 const uint Settings::DEFAULT_POPUP_TIMEOUT_SEC = 10;
+const QString Settings::DEFAULT_COUNTRY_CODE = QStringLiteral("0049");
 
 Settings::Settings(QObject *pParent) : m_pUi(new Ui::SettingsDialog()) {
   Q_UNUSED(pParent)
@@ -78,6 +79,11 @@ void Settings::readSettings() {
           ->value(QStringLiteral("PopupTimeout"), DEFAULT_POPUP_TIMEOUT_SEC)
           .toUInt();
   m_pUi->spinBoxTimeout->setValue(m_nPopupTimeout);
+
+  m_sCountryCode =
+      m_pSettings->value(QStringLiteral("CountryCode"), DEFAULT_COUNTRY_CODE)
+          .toString();
+  m_pUi->lineEditCountryCode->setText(m_sCountryCode);
 }
 
 // ----------------------------------------------------------------------------
@@ -96,6 +102,19 @@ void Settings::accept() {
 
   m_nPopupTimeout = m_pUi->spinBoxTimeout->value();
   m_pSettings->setValue(QStringLiteral("PopupTimeout"), m_nPopupTimeout);
+
+  m_sCountryCode = m_pUi->lineEditCountryCode->text();
+  if (m_sCountryCode.startsWith('+')) {
+    m_sCountryCode = "00" + m_sCountryCode.remove('+');
+  }
+  if (!m_sCountryCode.startsWith(QStringLiteral("00"))) {
+    if (m_sCountryCode.startsWith('0')) {
+      m_sCountryCode = "0" + m_sCountryCode;
+    } else {
+      m_sCountryCode = "00" + m_sCountryCode;
+    }
+  }
+  m_pSettings->setValue(QStringLiteral("CountryCode"), m_sCountryCode);
 
   emit changedSettings(m_sHostName, m_nPortNumber, m_nRetryInterval);
 

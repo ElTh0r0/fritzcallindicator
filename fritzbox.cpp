@@ -128,6 +128,7 @@ void FritzBox::parseAndSignal(const QString &sLine) {
   if (command == QStringLiteral("RING")) {
     QString caller = parts[3];
     QString callee = parts[4];
+    qDebug() << "Received string:" << sLine;
     emit incomingCall(connectionId, caller, callee);
   } else if (command == QStringLiteral("CONNECT") ||
              command == QStringLiteral("DISCONNECT") ||

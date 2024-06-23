@@ -20,8 +20,8 @@ unix: !macx {
        TARGET  = FritzCallIndicator
 }
 
-win32:VERSION  = 0.1.0.0
-else:VERSION   = 0.1.0
+win32:VERSION  = 0.2.0.0
+else:VERSION   = 0.2.0
 
 QMAKE_TARGET_PRODUCT     = "FritzCallIndicator"
 QMAKE_TARGET_DESCRIPTION = "Simple FritzBox! call indicator"
@@ -49,10 +49,12 @@ CONFIG(debug, debug|release) {
 SOURCES       += main.cpp \
                  fritzcallindicator.cpp \
                  fritzbox.cpp \
+                 numberresolver.cpp \
                  settings.cpp
 
 HEADERS       += fritzcallindicator.h \
                  fritzbox.h \
+                 numberresolver.h \
                  settings.h
 
 FORMS         += settings.ui
@@ -68,4 +70,39 @@ win32:RC_ICONS = icons/fritzcallindicator.ico
 macx {
   ICON               = icons/icon.icns
   QMAKE_INFO_PLIST   = data/mac/Info.plist
+
+  CODES_DATA.path    = Contents/Resources
+  CODES_DATA.files  += data/area_codes
+  CODES_DATA.files  += data/country_codes.csv
+  QMAKE_BUNDLE_DATA += CODES_DATA
+}
+
+unix: !macx {
+    isEmpty(PREFIX) {
+        PREFIX = /usr/local
+    }
+    isEmpty(BINDIR) {
+        BINDIR = bin
+    }
+
+    target.path    = $$PREFIX/$$BINDIR/
+
+    data.path      = $$PREFIX/share/fritzcallindicator
+    data.files    += data/area_codes
+    data.files    += data/country_codes.csv
+
+    desktop.path   = $$PREFIX/share/applications
+    desktop.files += data/unix/com.github.elth0r0.fritzcallindicator.desktop
+
+    icons.path     = $$PREFIX/share/icons
+    icons.files   += icons/hicolor
+
+    meta.path      = $$PREFIX/share/metainfo
+    meta.files    += data/unix/com.github.elth0r0.fritzcallindicator.metainfo.xml
+
+    INSTALLS      += target \
+                     data \
+                     desktop \
+                     icons \
+                     meta
 }

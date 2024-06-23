@@ -33,7 +33,8 @@
 #include <QMenu>
 #include <QMessageBox>
 
-FritzCallIndicator::FritzCallIndicator() {
+FritzCallIndicator::FritzCallIndicator(const QDir &sharePath)
+    : m_sSharePath(sharePath.absolutePath()) {
   qDebug() << Q_FUNC_INFO;
   m_pSettings = new Settings();
   this->loadTranslation(m_pSettings->getLanguage());
@@ -42,6 +43,7 @@ FritzCallIndicator::FritzCallIndicator() {
   this->createTrayIcon();
   m_pTrayIcon->show();
 
+  m_pNumberResolver = new NumberResolver(m_sSharePath, this);
   m_pFritzBox = new FritzBox(this);
   connect(m_pFritzBox, &FritzBox::errorOccured, this,
           &FritzCallIndicator::onErrorOccured);
@@ -51,9 +53,14 @@ FritzCallIndicator::FritzCallIndicator() {
           &FritzCallIndicator::onIncomingCall);
   connect(m_pSettings, &Settings::changedSettings, m_pFritzBox,
           &FritzBox::connectTo);
+
   m_pFritzBox->connectTo(m_pSettings->getHostName(),
                          m_pSettings->getPortNumber(),
                          m_pSettings->getRetryInterval());
+
+  // 03.11.16 13:17:08;RING;0;03023125222;06990009111;SIP0;
+  // m_pFritzBox->parseAndSignal(
+  //    "03.11.16 13:17:08;RING;0;03023125222;01713920000;SIP0;");
 }
 
 FritzCallIndicator::~FritzCallIndicator() {
@@ -161,8 +168,13 @@ void FritzCallIndicator::onStateChanged(QTcpSocket::SocketState state) {
 void FritzCallIndicator::onIncomingCall(unsigned /* connectionId */,
                                         const QString &sCaller,
                                         const QString &sCallee) {
-  this->showMessage(tr("Incoming call"),
-                    tr("Caller: '%1', Callee: '%2'.").arg(sCaller, sCallee));
+  QString sResolvedCaller =
+      m_pNumberResolver->resolveNumber(sCaller, m_pSettings->getCountryCode());
+  QString sResolvedCallee =
+      m_pNumberResolver->resolveNumber(sCallee, m_pSettings->getCountryCode());
+  this->showMessage(
+      tr("Incoming call"),
+      tr("Caller: '%1', Callee: '%2'.").arg(sResolvedCaller, sResolvedCallee));
 }
 
 // ----------------------------------------------------------------------------

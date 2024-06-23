@@ -31,8 +31,10 @@
 #include <QTranslator>
 
 #ifndef QT_NO_SYSTEMTRAYICON
+#include <QDir>
 
 #include "fritzbox.h"
+#include "numberresolver.h"
 #include "settings.h"
 
 QT_BEGIN_NAMESPACE
@@ -44,7 +46,7 @@ class FritzCallIndicator : public QObject {
   Q_OBJECT
 
  public:
-  FritzCallIndicator();
+  FritzCallIndicator(const QDir &sharePath);
   ~FritzCallIndicator();
 
  private:
@@ -73,7 +75,10 @@ class FritzCallIndicator : public QObject {
   QTranslator m_translatorQt;  // Qt translations
 
   FritzBox *m_pFritzBox = nullptr;
+  NumberResolver *m_pNumberResolver = nullptr;
   Settings *m_pSettings = nullptr;
+
+  const QString m_sSharePath;
 };
 
 #endif  // QT_NO_SYSTEMTRAYICON

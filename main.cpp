@@ -33,6 +33,7 @@
 #include <QApplication>
 
 #ifndef QT_NO_SYSTEMTRAYICON
+#include <QDir>
 #include <QMessageBox>
 
 #include "fritzcallindicator.h"
@@ -64,7 +65,20 @@ int main(int argc, char *argv[]) {
 #endif
   QApplication::setQuitOnLastWindowClosed(false);
 
-  FritzCallIndicator w;
+  // Default share data path (Windows and debugging)
+  QString sSharePath = app.applicationDirPath() + QStringLiteral("/data");
+  // Standard installation path (Linux)
+  QDir tmpDir(app.applicationDirPath() + "/../share/" +
+              app.applicationName().toLower());
+  if (!QDir(sSharePath).exists() && tmpDir.exists()) {
+    sSharePath = app.applicationDirPath() + "/../share/" +
+                 app.applicationName().toLower();
+  }
+#if defined(Q_OS_MACOS)
+  sSharePath = app.applicationDirPath() + "/../Resources/";
+#endif
+
+  FritzCallIndicator w(sSharePath);
   return app.exec();
 }
 #else

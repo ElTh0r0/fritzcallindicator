@@ -23,6 +23,7 @@ class Settings : public QDialog {
   uint getPortNumber() const noexcept { return m_nPortNumber; }
   uint getRetryInterval() const noexcept { return m_nRetryInterval; }
   uint getPopupTimeout() const noexcept { return m_nPopupTimeout; }
+  QString getCountryCode() const noexcept { return m_sCountryCode; }
   auto getLanguage() -> QString;
   auto getIconTheme() -> QString;
   void translateUi();
@@ -47,10 +48,12 @@ class Settings : public QDialog {
   uint m_nPortNumber;
   uint m_nRetryInterval;
   uint m_nPopupTimeout;
+  QString m_sCountryCode;
   static const QString DEFAULT_HOST_NAME;
   static const uint DEFAULT_CALL_MONITOR_PORT;
   static const uint DEFAULT_RETRY_INTERVAL_SEC;
   static const uint DEFAULT_POPUP_TIMEOUT_SEC;
+  static const QString DEFAULT_COUNTRY_CODE;
 };
 
 #endif  // SETTINGS_H
