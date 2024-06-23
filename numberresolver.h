@@ -40,7 +40,7 @@ class NumberResolver : public QObject {
                      const QString &sLocalCountryCode) const -> QString;
 
  private:
-  void initCountryCodes(QDir sharePath);
+  void initCountryCodes(const QDir &sharePath);
   void initAreaCodes(QDir sharePath);
 
   QHash<QString, QString> m_CountryCodes;

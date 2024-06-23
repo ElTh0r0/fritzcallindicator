@@ -40,7 +40,7 @@ NumberResolver::NumberResolver(const QDir &sharePath, QObject *pParent)
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-void NumberResolver::initCountryCodes(QDir sharePath) {
+void NumberResolver::initCountryCodes(const QDir &sharePath) {
   qDebug() << Q_FUNC_INFO;
 
   QFile fCountryCsv(sharePath.absolutePath() + "/country_codes.csv");
@@ -158,7 +158,8 @@ auto NumberResolver::resolveNumber(const QString &sNumber,
   for (auto &sCode : m_AreaCodes.value(sCountryCode).keys()) {
     if (sPhoneNumber.startsWith(sCode)) {
       sCityCode = sCode;
-      sCityName = m_AreaCodes.value(sCountryCode).value(sCityCode);
+      sCityName =
+          m_AreaCodes.value(sCountryCode).value(sCityCode, tr("Unknown city"));
       sPhoneNumber.remove(0, sCityCode.length());
       break;
     }

@@ -2,6 +2,7 @@
 #define SETTINGS_H
 
 #include <QDialog>
+#include <QHash>
 #include <QObject>
 
 class QSettings;
@@ -24,6 +25,9 @@ class Settings : public QDialog {
   uint getRetryInterval() const noexcept { return m_nRetryInterval; }
   uint getPopupTimeout() const noexcept { return m_nPopupTimeout; }
   QString getCountryCode() const noexcept { return m_sCountryCode; }
+  QString resolveOwnNumber(const QString &sNumber) const noexcept {
+    return m_OwnNumbers.value(sNumber, "");
+  }
   auto getLanguage() -> QString;
   auto getIconTheme() -> QString;
   void translateUi();
@@ -49,11 +53,14 @@ class Settings : public QDialog {
   uint m_nRetryInterval;
   uint m_nPopupTimeout;
   QString m_sCountryCode;
+  uint m_nMaxOwnNumbers;
+  QHash<QString, QString> m_OwnNumbers;
   static const QString DEFAULT_HOST_NAME;
   static const uint DEFAULT_CALL_MONITOR_PORT;
   static const uint DEFAULT_RETRY_INTERVAL_SEC;
   static const uint DEFAULT_POPUP_TIMEOUT_SEC;
   static const QString DEFAULT_COUNTRY_CODE;
+  static const uint DEFAULT_MAX_OWN_NUMBERS;
 };
 
 #endif  // SETTINGS_H

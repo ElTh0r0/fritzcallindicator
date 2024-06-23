@@ -60,7 +60,7 @@ FritzCallIndicator::FritzCallIndicator(const QDir &sharePath)
 
   // 03.11.16 13:17:08;RING;0;03023125222;06990009111;SIP0;
   // m_pFritzBox->parseAndSignal(
-  //    "03.11.16 13:17:08;RING;0;03023125222;01713920000;SIP0;");
+  //    "03.11.16 13:17:08;RING;0;03023125222;06990009111;SIP0;");
 }
 
 FritzCallIndicator::~FritzCallIndicator() {
@@ -131,7 +131,7 @@ void FritzCallIndicator::showMessage(const QString &sTitle,
 
 void FritzCallIndicator::onErrorOccured(QTcpSocket::SocketError,
                                         const QString &errorMessage) {
-  this->showMessage(QString::fromLatin1(APP_NAME),
+  this->showMessage(QStringLiteral(APP_NAME),
                     tr("Connecting to '%1:%2' failed, because: '%3'")
                         .arg(m_pSettings->getHostName())
                         .arg(m_pSettings->getPortNumber())
@@ -154,7 +154,7 @@ void FritzCallIndicator::onStateChanged(QTcpSocket::SocketState state) {
   if (state == QTcpSocket::SocketState::ConnectedState) {
     qDebug() << "Connected to" << m_pSettings->getHostName()
              << "- Port:" << m_pSettings->getPortNumber();
-    this->showMessage(QString::fromLatin1(APP_NAME),
+    this->showMessage(QStringLiteral(APP_NAME),
                       tr("Connected to '%1:%2'")
                           .arg(m_pSettings->getHostName())
                           .arg(m_pSettings->getPortNumber()),
@@ -170,11 +170,12 @@ void FritzCallIndicator::onIncomingCall(unsigned /* connectionId */,
                                         const QString &sCallee) {
   QString sResolvedCaller =
       m_pNumberResolver->resolveNumber(sCaller, m_pSettings->getCountryCode());
-  QString sResolvedCallee =
-      m_pNumberResolver->resolveNumber(sCallee, m_pSettings->getCountryCode());
-  this->showMessage(
-      tr("Incoming call"),
-      tr("Caller: '%1', Callee: '%2'.").arg(sResolvedCaller, sResolvedCallee));
+  QString sResolvedCallee = m_pSettings->resolveOwnNumber(sCallee);
+  QString sTitle(tr("Incoming call"));
+  if (!sResolvedCallee.isEmpty()) {
+    sTitle = tr("Incoming call to '%1'").arg(sResolvedCallee);
+  }
+  this->showMessage(sTitle, tr("Caller: '%1'").arg(sResolvedCaller));
 }
 
 // ----------------------------------------------------------------------------

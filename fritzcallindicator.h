@@ -54,7 +54,7 @@ class FritzCallIndicator : public QObject {
   void createTrayIcon();
   void loadTranslation(const QString &sLang);
   static auto switchTranslator(QTranslator *translator, const QString &sFile,
-                               const QString &sPath = QStringLiteral(""))
+                               const QString &sPath = QLatin1String(""))
       -> bool;
   void showInfoBox();
 

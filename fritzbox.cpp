@@ -121,7 +121,7 @@ void FritzBox::onError(QTcpSocket::SocketError socketError) {
 
 void FritzBox::parseAndSignal(const QString &sLine) {
   QStringList parts = sLine.split(';');
-  QString dateTime = parts[0];
+  // QString dateTime = parts[0];
   QString command = parts[1];
   unsigned connectionId = parts[2].toUInt();
 

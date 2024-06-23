@@ -23,7 +23,7 @@
     </message>
     <message>
         <location filename="../fritzcallindicator.cpp" line="84"/>
-        <location filename="../fritzcallindicator.cpp" line="231"/>
+        <location filename="../fritzcallindicator.cpp" line="232"/>
         <source>About</source>
         <translation>Über</translation>
     </message>
@@ -43,27 +43,32 @@
         <translation>Verbunden mit &apos;%1:%2&apos;</translation>
     </message>
     <message>
-        <location filename="../fritzcallindicator.cpp" line="176"/>
+        <location filename="../fritzcallindicator.cpp" line="174"/>
         <source>Incoming call</source>
         <translation>Eingehender Anruf</translation>
     </message>
     <message>
-        <location filename="../fritzcallindicator.cpp" line="177"/>
-        <source>Caller: &apos;%1&apos;, Callee: &apos;%2&apos;.</source>
-        <translation>Anrufer: &apos;%1&apos;, Angerufener: &apos;%2&apos;.</translation>
+        <location filename="../fritzcallindicator.cpp" line="176"/>
+        <source>Incoming call to &apos;%1&apos;</source>
+        <translation>Eingehender Anruf an &apos;%1&apos;</translation>
     </message>
     <message>
-        <location filename="../fritzcallindicator.cpp" line="244"/>
+        <location filename="../fritzcallindicator.cpp" line="178"/>
+        <source>Caller: &apos;%1&apos;</source>
+        <translation>Anrufer: &apos;%1&apos;</translation>
+    </message>
+    <message>
+        <location filename="../fritzcallindicator.cpp" line="245"/>
         <source>License</source>
         <translation>Lizenz</translation>
     </message>
     <message>
-        <location filename="../fritzcallindicator.cpp" line="247"/>
+        <location filename="../fritzcallindicator.cpp" line="248"/>
         <source>This application uses &lt;a href=&quot;https://invent.kde.org/frameworks/breeze-icons&quot;&gt;Breeze icons from KDE&lt;/a&gt;.</source>
         <translation>Diese Anwendung verwendet &lt;a href=&quot;https://invent.kde.org/frameworks/breeze-icons&quot;&gt;Breeze Symbole von KDE&lt;/a&gt;.</translation>
     </message>
     <message>
-        <location filename="../fritzcallindicator.cpp" line="250"/>
+        <location filename="../fritzcallindicator.cpp" line="251"/>
         <source>Translations</source>
         <translation>Übersetzungen</translation>
     </message>
@@ -98,6 +103,7 @@
     </message>
     <message>
         <location filename="../numberresolver.cpp" line="137"/>
+        <location filename="../numberresolver.cpp" line="162"/>
         <source>Unknown city</source>
         <translation>Unbekannter Ort</translation>
     </message>
@@ -113,7 +119,7 @@
 <context>
     <name>Settings</name>
     <message>
-        <location filename="../settings.cpp" line="161"/>
+        <location filename="../settings.cpp" line="244"/>
         <source>The program will keep running in the system tray. To terminate the program, choose &lt;b&gt;Quit&lt;/b&gt; in the context menu of the system tray entry.</source>
         <translation>Das Programm wird weiterhin in der Taskleiste ausgeführt. Um das Programm zu beenden, wählen Sie &lt;b&gt;Beenden&lt;/b&gt; im Kontextmenü des Systemtray-Eintrags.</translation>
     </message>
@@ -126,24 +132,39 @@
         <translation>Einstellungen</translation>
     </message>
     <message>
-        <location filename="../settings.ui" line="25"/>
+        <location filename="../settings.ui" line="28"/>
         <source>Host name:</source>
         <translation>Host-Name:</translation>
     </message>
     <message>
-        <location filename="../settings.ui" line="42"/>
+        <location filename="../settings.ui" line="45"/>
         <source>Port:</source>
         <translation>Port:</translation>
     </message>
     <message>
-        <location filename="../settings.ui" line="59"/>
+        <location filename="../settings.ui" line="62"/>
         <source>Popup timeout (sec):</source>
         <translation>Anzeigezeit für Popups (sek):</translation>
     </message>
     <message>
-        <location filename="../settings.ui" line="86"/>
+        <location filename="../settings.ui" line="82"/>
         <source>Country code:</source>
         <translation>Ländercode:</translation>
+    </message>
+    <message>
+        <location filename="../settings.ui" line="96"/>
+        <source>Own phone numbers:</source>
+        <translation>Eigene Rufnummern:</translation>
+    </message>
+    <message>
+        <location filename="../settings.ui" line="116"/>
+        <source>Phone number</source>
+        <translation>Telefonnummer</translation>
+    </message>
+    <message>
+        <location filename="../settings.ui" line="121"/>
+        <source>Description</source>
+        <translation>Beschreibung</translation>
     </message>
 </context>
 </TS>
