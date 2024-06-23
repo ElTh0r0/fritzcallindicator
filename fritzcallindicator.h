@@ -60,8 +60,6 @@ class FritzCallIndicator : public QObject {
   void onStateChanged(QTcpSocket::SocketState state);
   void onIncomingCall(unsigned connectionId, const QString &sCaller,
                       const QString &sCallee);
-  void onOutgoingCall(unsigned connectionId, const QString &sCaller,
-                      const QString &sCallee);
   void showMessage(
       const QString &sTitle, const QString &sMessage, uint nTimeout = 0,
       const QSystemTrayIcon::MessageIcon icon = QSystemTrayIcon::Information);

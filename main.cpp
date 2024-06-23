@@ -53,7 +53,7 @@ int main(int argc, char *argv[]) {
   app.setApplicationName(QStringLiteral(APP_NAME));
   app.setApplicationVersion(QStringLiteral(APP_VERSION));
   app.setApplicationDisplayName(QStringLiteral(APP_NAME));
-#if !defined(Q_OS_WIN) && !defined(Q_OS_MAC)
+#if !defined(Q_OS_WIN) && !defined(Q_OS_MACOS)
   app.setWindowIcon(
       QIcon::fromTheme(QStringLiteral("fritzcallindicator"),
                        QIcon(QStringLiteral(":/fritzcallindicator.png"))));

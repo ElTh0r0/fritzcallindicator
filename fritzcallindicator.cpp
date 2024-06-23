@@ -49,8 +49,6 @@ FritzCallIndicator::FritzCallIndicator() {
           &FritzCallIndicator::onStateChanged);
   connect(m_pFritzBox, &FritzBox::incomingCall, this,
           &FritzCallIndicator::onIncomingCall);
-  connect(m_pFritzBox, &FritzBox::outgoingCall, this,
-          &FritzCallIndicator::onOutgoingCall);
   connect(m_pSettings, &Settings::changedSettings, m_pFritzBox,
           &FritzBox::connectTo);
   m_pFritzBox->connectTo(m_pSettings->getHostName(),
@@ -165,18 +163,6 @@ void FritzCallIndicator::onIncomingCall(unsigned /* connectionId */,
                                         const QString &sCallee) {
   this->showMessage(tr("Incoming call"),
                     tr("Caller: '%1', Callee: '%2'.").arg(sCaller, sCallee));
-}
-
-// ----------------------------------------------------------------------------
-// ----------------------------------------------------------------------------
-
-void FritzCallIndicator::onOutgoingCall(unsigned /* connectionId */,
-                                        const QString &sCaller,
-                                        const QString &sCallee) {
-  if (m_pSettings->getShowOutgoingCalls()) {
-    this->showMessage(tr("Outgoing call"),
-                      tr("Caller: '%1', Callee: '%2'.").arg(sCaller, sCallee));
-  }
 }
 
 // ----------------------------------------------------------------------------

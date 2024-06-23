@@ -11,7 +11,7 @@
 
 #include "ui_settings.h"
 
-const QString Settings::DEFAULT_HOST_NAME(QStringLiteral("fritz.box"));
+const QString Settings::DEFAULT_HOST_NAME = QStringLiteral("fritz.box");
 const uint Settings::DEFAULT_CALL_MONITOR_PORT = 1012;
 const uint Settings::DEFAULT_RETRY_INTERVAL_SEC = 20;
 const uint Settings::DEFAULT_POPUP_TIMEOUT_SEC = 10;
@@ -58,15 +58,6 @@ void Settings::showEvent(QShowEvent *pEvent) {
 void Settings::readSettings() {
   qDebug() << Q_FUNC_INFO;
 
-  m_nPopupTimeout =
-      m_pSettings
-          ->value(QStringLiteral("PopupTimeout"), DEFAULT_POPUP_TIMEOUT_SEC)
-          .toUInt();
-  m_pUi->spinBoxTimeout->setValue(m_nPopupTimeout);
-  m_bShowOutgoingCalls =
-      m_pSettings->value(QStringLiteral("ShowOutgoingCalls"), true).toBool();
-  m_pUi->checkBoxShowOutgoing->setChecked(m_bShowOutgoingCalls);
-
   m_pSettings->beginGroup(QStringLiteral("Connection"));
   m_sHostName =
       m_pSettings->value(QStringLiteral("HostName"), DEFAULT_HOST_NAME)
@@ -81,6 +72,12 @@ void Settings::readSettings() {
           ->value(QStringLiteral("RetryInterval"), DEFAULT_RETRY_INTERVAL_SEC)
           .toUInt();
   m_pSettings->endGroup();
+
+  m_nPopupTimeout =
+      m_pSettings
+          ->value(QStringLiteral("PopupTimeout"), DEFAULT_POPUP_TIMEOUT_SEC)
+          .toUInt();
+  m_pUi->spinBoxTimeout->setValue(m_nPopupTimeout);
 }
 
 // ----------------------------------------------------------------------------
@@ -88,11 +85,6 @@ void Settings::readSettings() {
 
 void Settings::accept() {
   qDebug() << Q_FUNC_INFO;
-  m_nPopupTimeout = m_pUi->spinBoxTimeout->value();
-  m_pSettings->setValue(QStringLiteral("PopupTimeout"), m_nPopupTimeout);
-  m_bShowOutgoingCalls = m_pUi->checkBoxShowOutgoing->isChecked();
-  m_pSettings->setValue(QStringLiteral("ShowOutgoingCalls"),
-                        m_bShowOutgoingCalls);
 
   m_pSettings->beginGroup(QStringLiteral("Connection"));
   m_sHostName = m_pUi->lineEditHost->text();
@@ -101,6 +93,9 @@ void Settings::accept() {
   m_pSettings->setValue(QStringLiteral("Port"), m_nPortNumber);
   m_pSettings->setValue(QStringLiteral("RetryInterval"), m_nRetryInterval);
   m_pSettings->endGroup();
+
+  m_nPopupTimeout = m_pUi->spinBoxTimeout->value();
+  m_pSettings->setValue(QStringLiteral("PopupTimeout"), m_nPopupTimeout);
 
   emit changedSettings(m_sHostName, m_nPortNumber, m_nRetryInterval);
 

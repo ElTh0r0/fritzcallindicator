@@ -129,18 +129,10 @@ void FritzBox::parseAndSignal(const QString &sLine) {
     QString caller = parts[3];
     QString callee = parts[4];
     emit incomingCall(connectionId, caller, callee);
-  } else if (command == QStringLiteral("CONNECT")) {
-    QString extension = parts[3];
-    QString caller = parts[4];
-    emit phoneConnected(connectionId, caller);
-  } else if (command == QStringLiteral("DISCONNECT")) {
-    QString durationSeconds = parts[3];
-    emit phoneDisconnected(connectionId);
-  } else if (command == QStringLiteral("CALL")) {
-    QString extension = parts[3];
-    QString caller = parts[4];
-    QString callee = parts[5];
-    emit outgoingCall(connectionId, caller, callee);
+  } else if (command == QStringLiteral("CONNECT") ||
+             command == QStringLiteral("DISCONNECT") ||
+             command == QStringLiteral("CALL")) {
+    // Features not used by FritzCallIndicator
   } else {
     emit errorOccured(QTcpSocket::SocketError::UnknownSocketError,
                       tr("Unknown command '%1'!").arg(sLine));

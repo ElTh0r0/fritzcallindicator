@@ -53,10 +53,6 @@ class FritzBox : public QObject {
 
   void incomingCall(unsigned connectionId, const QString &sCaller,
                     const QString &sCallee);
-  void phoneConnected(unsigned nConnectionId, const QString &sCaller);
-  void phoneDisconnected(unsigned nConnectionId);
-  void outgoingCall(unsigned connectionId, const QString &sCaller,
-                    const QString &sCallee);
 
  private slots:
   void onConnected();
