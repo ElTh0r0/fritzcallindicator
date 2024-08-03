@@ -1,5 +1,5 @@
 #  This file is part of FritzCallIndicator.
-#  Copyright (C) 2012-present Thorsten Roth
+#  Copyright (C) 2024-present Thorsten Roth
 #
 #  FritzCallIndicator is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
 #  GNU General Public License for more details.
 #
 #  You should have received a copy of the GNU General Public License
-#  along with FritzCallIndicator.  If not, see <http://www.gnu.org/licenses/>.
+#  along with FritzCallIndicator.  If not, see <https://www.gnu.org/licenses/>.
 
 unix: !macx {
        TARGET  = fritzcallindicator

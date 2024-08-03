@@ -24,8 +24,8 @@
  * Class definition main application.
  */
 
-#ifndef FRITZCALLINDICATOR_H
-#define FRITZCALLINDICATOR_H
+#ifndef FRITZCALLINDICATOR_H_
+#define FRITZCALLINDICATOR_H_
 
 #include <QSystemTrayIcon>
 #include <QTranslator>
@@ -83,4 +83,4 @@ class FritzCallIndicator : public QObject {
 
 #endif  // QT_NO_SYSTEMTRAYICON
 
-#endif  // FRITZCALLINDICATOR_H
+#endif  // FRITZCALLINDICATOR_H_

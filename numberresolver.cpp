@@ -127,9 +127,8 @@ void NumberResolver::initAreaCodes(QDir sharePath) {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-auto NumberResolver::resolveNumber(const QString &sNumber,
-                                   const QString &sLocalCountryCode) const
-    -> QString {
+auto NumberResolver::resolveNumber(
+    const QString &sNumber, const QString &sLocalCountryCode) const -> QString {
   bool bLocalCall(false);
   QString sCountryCode;
   QString sCountryName(tr("Unknown country"));
@@ -138,11 +137,12 @@ auto NumberResolver::resolveNumber(const QString &sNumber,
   QString sPhoneNumber(sNumber);
 
   if (sPhoneNumber.startsWith(QStringLiteral("00"))) {
-    for (auto &sCode : m_CountryCodes.keys()) {
-      if (sPhoneNumber.startsWith("00" + sCode)) {
-        sCountryCode = "00" + sCode;
+    for (auto i = m_CountryCodes.cbegin(), end = m_CountryCodes.cend();
+         i != end; ++i) {
+      if (sPhoneNumber.startsWith("00" + i.key())) {
+        sCountryCode = "00" + i.key();
         sPhoneNumber.remove(0, sCountryCode.length());
-        sCountryName = m_CountryCodes.value(sCode, tr("Unknown country"));
+        sCountryName = m_CountryCodes.value(i.key(), tr("Unknown country"));
         break;
       }
     }

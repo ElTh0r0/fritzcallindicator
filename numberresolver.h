@@ -24,8 +24,8 @@
  * Class definition phone number resolver
  */
 
-#ifndef NUMBERRESOLVER_H
-#define NUMBERRESOLVER_H
+#ifndef NUMBERRESOLVER_H_
+#define NUMBERRESOLVER_H_
 
 #include <QDir>
 #include <QHash>
@@ -48,4 +48,4 @@ class NumberResolver : public QObject {
   const QChar CSV_SEPARATOR;
 };
 
-#endif  // NUMBERRESOLVER_H
+#endif  // NUMBERRESOLVER_H_

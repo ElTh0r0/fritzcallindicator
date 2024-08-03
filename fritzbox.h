@@ -30,8 +30,8 @@
  * Original code form: https://github.com/petermost/FritzBoxCallMonitor
  */
 
-#ifndef FRITZBOX_H
-#define FRITZBOX_H
+#ifndef FRITZBOX_H_
+#define FRITZBOX_H_
 
 #include <QObject>
 #include <QTcpSocket>
@@ -68,4 +68,4 @@ class FritzBox : public QObject {
   void reconnect();
 };
 
-#endif  // FRITZBOX_H
+#endif  // FRITZBOX_H_
