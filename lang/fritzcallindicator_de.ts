@@ -17,58 +17,58 @@
 <context>
     <name>FritzCallIndicator</name>
     <message>
-        <location filename="../fritzcallindicator.cpp" line="79"/>
+        <location filename="../fritzcallindicator.cpp" line="81"/>
         <source>Settings</source>
         <translation>Einstellungen</translation>
     </message>
     <message>
-        <location filename="../fritzcallindicator.cpp" line="84"/>
-        <location filename="../fritzcallindicator.cpp" line="232"/>
+        <location filename="../fritzcallindicator.cpp" line="86"/>
+        <location filename="../fritzcallindicator.cpp" line="233"/>
         <source>About</source>
         <translation>Über</translation>
     </message>
     <message>
-        <location filename="../fritzcallindicator.cpp" line="89"/>
+        <location filename="../fritzcallindicator.cpp" line="91"/>
         <source>Quit</source>
         <translation>Beenden</translation>
     </message>
     <message>
-        <location filename="../fritzcallindicator.cpp" line="135"/>
+        <location filename="../fritzcallindicator.cpp" line="137"/>
         <source>Connecting to &apos;%1:%2&apos; failed, because: &apos;%3&apos;</source>
         <translation>Verbindung zu &apos;%1:%2&apos; fehlgeschlagen, Fehler: &apos;%3&apos;</translation>
     </message>
     <message>
-        <location filename="../fritzcallindicator.cpp" line="158"/>
+        <location filename="../fritzcallindicator.cpp" line="160"/>
         <source>Connected to &apos;%1:%2&apos;</source>
         <translation>Verbunden mit &apos;%1:%2&apos;</translation>
     </message>
     <message>
-        <location filename="../fritzcallindicator.cpp" line="174"/>
+        <location filename="../fritzcallindicator.cpp" line="175"/>
         <source>Incoming call</source>
         <translation>Eingehender Anruf</translation>
     </message>
     <message>
-        <location filename="../fritzcallindicator.cpp" line="176"/>
+        <location filename="../fritzcallindicator.cpp" line="177"/>
         <source>Incoming call to &apos;%1&apos;</source>
         <translation>Eingehender Anruf an &apos;%1&apos;</translation>
     </message>
     <message>
-        <location filename="../fritzcallindicator.cpp" line="178"/>
+        <location filename="../fritzcallindicator.cpp" line="179"/>
         <source>Caller: &apos;%1&apos;</source>
         <translation>Anrufer: &apos;%1&apos;</translation>
     </message>
     <message>
-        <location filename="../fritzcallindicator.cpp" line="245"/>
+        <location filename="../fritzcallindicator.cpp" line="246"/>
         <source>License</source>
         <translation>Lizenz</translation>
     </message>
     <message>
-        <location filename="../fritzcallindicator.cpp" line="248"/>
+        <location filename="../fritzcallindicator.cpp" line="249"/>
         <source>This application uses &lt;a href=&quot;https://invent.kde.org/frameworks/breeze-icons&quot;&gt;Breeze icons from KDE&lt;/a&gt;.</source>
         <translation>Diese Anwendung verwendet &lt;a href=&quot;https://invent.kde.org/frameworks/breeze-icons&quot;&gt;Breeze Symbole von KDE&lt;/a&gt;.</translation>
     </message>
     <message>
-        <location filename="../fritzcallindicator.cpp" line="251"/>
+        <location filename="../fritzcallindicator.cpp" line="252"/>
         <source>Translations</source>
         <translation>Übersetzungen</translation>
     </message>
@@ -76,34 +76,34 @@
 <context>
     <name>NumberResolver</name>
     <message>
-        <location filename="../numberresolver.cpp" line="50"/>
+        <location filename="../numberresolver.cpp" line="58"/>
         <source>Missing country codes</source>
         <translation>Fehlende Ländercodes</translation>
     </message>
     <message>
-        <location filename="../numberresolver.cpp" line="51"/>
+        <location filename="../numberresolver.cpp" line="59"/>
         <source>Country codes file not found!</source>
         <translation>Datei mit den Ländercodes wurde nicht gefunden!</translation>
     </message>
     <message>
-        <location filename="../numberresolver.cpp" line="86"/>
+        <location filename="../numberresolver.cpp" line="94"/>
         <source>Missing area codes</source>
         <translation>Fehlende Vorwahlnummern</translation>
     </message>
     <message>
-        <location filename="../numberresolver.cpp" line="87"/>
+        <location filename="../numberresolver.cpp" line="95"/>
         <source>Area codes folder not found!</source>
         <translation>Verzeichnis für die Vorwahlnummern nicht gefunden!</translation>
     </message>
     <message>
-        <location filename="../numberresolver.cpp" line="135"/>
-        <location filename="../numberresolver.cpp" line="145"/>
+        <location filename="../numberresolver.cpp" line="158"/>
+        <location filename="../numberresolver.cpp" line="183"/>
         <source>Unknown country</source>
         <translation>Unbekanntes Land</translation>
     </message>
     <message>
-        <location filename="../numberresolver.cpp" line="137"/>
-        <location filename="../numberresolver.cpp" line="162"/>
+        <location filename="../numberresolver.cpp" line="160"/>
+        <location filename="../numberresolver.cpp" line="201"/>
         <source>Unknown city</source>
         <translation>Unbekannter Ort</translation>
     </message>
@@ -119,7 +119,7 @@
 <context>
     <name>Settings</name>
     <message>
-        <location filename="../settings.cpp" line="244"/>
+        <location filename="../settings.cpp" line="292"/>
         <source>The program will keep running in the system tray. To terminate the program, choose &lt;b&gt;Quit&lt;/b&gt; in the context menu of the system tray entry.</source>
         <translation>Das Programm wird weiterhin in der Taskleiste ausgeführt. Um das Programm zu beenden, wählen Sie &lt;b&gt;Beenden&lt;/b&gt; im Kontextmenü des Systemtray-Eintrags.</translation>
     </message>
@@ -165,6 +165,44 @@
         <location filename="../settings.ui" line="121"/>
         <source>Description</source>
         <translation>Beschreibung</translation>
+    </message>
+</context>
+<context>
+    <name>TbAddressbook</name>
+    <message>
+        <location filename="../tbaddressbook.cpp" line="125"/>
+        <source>Home</source>
+        <translation>Zuhause</translation>
+    </message>
+    <message>
+        <location filename="../tbaddressbook.cpp" line="128"/>
+        <source>Work</source>
+        <translation>Arbeit</translation>
+    </message>
+    <message>
+        <location filename="../tbaddressbook.cpp" line="131"/>
+        <source>Cell</source>
+        <translation>Mobil</translation>
+    </message>
+    <message>
+        <location filename="../tbaddressbook.cpp" line="134"/>
+        <source>Fax</source>
+        <translation>Fax</translation>
+    </message>
+    <message>
+        <location filename="../tbaddressbook.cpp" line="137"/>
+        <source>Pager</source>
+        <translation>Pager</translation>
+    </message>
+    <message>
+        <location filename="../tbaddressbook.cpp" line="140"/>
+        <source>Video</source>
+        <translation>Video</translation>
+    </message>
+    <message>
+        <location filename="../tbaddressbook.cpp" line="143"/>
+        <source>Voice</source>
+        <translation>Voice</translation>
     </message>
 </context>
 </TS>

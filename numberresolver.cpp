@@ -30,11 +30,19 @@
 #include <QDirIterator>
 #include <QMessageBox>
 
-NumberResolver::NumberResolver(const QDir &sharePath, QObject *pParent)
-    : QObject(pParent), CSV_SEPARATOR(';') {
+#include "tbaddressbook.h"
+
+NumberResolver::NumberResolver(const QDir &sharePath,
+                               const QString &sLocalCountryCode,
+                               const QStringList &sListTbAddressbooks,
+                               QObject *pParent)
+    : QObject(pParent),
+      m_sLocalCountryCode(sLocalCountryCode),
+      CSV_SEPARATOR(';') {
   qDebug() << Q_FUNC_INFO;
   this->initCountryCodes(sharePath);
   this->initAreaCodes(sharePath);
+  this->initTbNumbers(sListTbAddressbooks);
 }
 
 // ----------------------------------------------------------------------------
@@ -127,15 +135,45 @@ void NumberResolver::initAreaCodes(QDir sharePath) {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-auto NumberResolver::resolveNumber(
-    const QString &sNumber, const QString &sLocalCountryCode) const -> QString {
+void NumberResolver::initTbNumbers(const QStringList &sListTbAddressbooks) {
+  TbAddressbook tb;
+  QHash<QString, QString> tmpContacts;
+
+  for (const auto &addressbook : sListTbAddressbooks) {
+    qDebug() << "Reading Thunderbird addressbook:" << addressbook;
+    tmpContacts.clear();
+    tmpContacts = tb.importVCards(QFileInfo(addressbook), m_sLocalCountryCode);
+
+    // Merge into contacts list
+    m_KnownContacts.insert(tmpContacts);
+  }
+}
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+auto NumberResolver::resolveNumber(const QString &sNumber) const -> QString {
   bool bLocalCall(false);
   QString sCountryCode;
   QString sCountryName(tr("Unknown country"));
   QString sCityCode;
   QString sCityName(tr("Unknown city"));
   QString sPhoneNumber(sNumber);
+  QString sKnownCaller;
 
+  // Caller registered in my country calls from abroad
+  if (sPhoneNumber.startsWith(m_sLocalCountryCode)) {
+    sPhoneNumber = "0" + sPhoneNumber.remove(0, sCountryCode.length());
+  }
+
+  // Search in contacts
+  sKnownCaller = m_KnownContacts.value(sPhoneNumber, QString());
+  if (!sKnownCaller.isEmpty()) {
+    return sKnownCaller;
+  }
+
+  // If caller is not known
+  // Resolve country code
   if (sPhoneNumber.startsWith(QStringLiteral("00"))) {
     for (auto i = m_CountryCodes.cbegin(), end = m_CountryCodes.cend();
          i != end; ++i) {
@@ -151,10 +189,11 @@ auto NumberResolver::resolveNumber(
   }
 
   if (sCountryCode.isEmpty()) {
-    sCountryCode = sLocalCountryCode;
+    sCountryCode = m_sLocalCountryCode;
     bLocalCall = true;
   }
 
+  // Resolve city code
   for (auto &sCode : m_AreaCodes.value(sCountryCode).keys()) {
     if (sPhoneNumber.startsWith(sCode)) {
       sCityCode = sCode;

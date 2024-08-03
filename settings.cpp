@@ -88,6 +88,22 @@ void Settings::showEvent(QShowEvent *pEvent) {
 void Settings::readSettings() {
   qDebug() << Q_FUNC_INFO;
 
+  // General
+  m_nPopupTimeout =
+      m_pSettings
+          ->value(QStringLiteral("PopupTimeout"), DEFAULT_POPUP_TIMEOUT_SEC)
+          .toUInt();
+  m_pUi->spinBoxTimeout->setValue(m_nPopupTimeout);
+
+  m_sCountryCode =
+      m_pSettings->value(QStringLiteral("CountryCode"), DEFAULT_COUNTRY_CODE)
+          .toString();
+  m_pUi->lineEditCountryCode->setText(m_sCountryCode);
+
+  m_sListTbAddressbooks =
+      m_pSettings->value(QStringLiteral("TbAddressbooks"), QStringList())
+          .toStringList();
+
   m_pSettings->beginGroup(QStringLiteral("Connection"));
   m_sHostName =
       m_pSettings->value(QStringLiteral("HostName"), DEFAULT_HOST_NAME)
@@ -102,17 +118,6 @@ void Settings::readSettings() {
           ->value(QStringLiteral("RetryInterval"), DEFAULT_RETRY_INTERVAL_SEC)
           .toUInt();
   m_pSettings->endGroup();
-
-  m_nPopupTimeout =
-      m_pSettings
-          ->value(QStringLiteral("PopupTimeout"), DEFAULT_POPUP_TIMEOUT_SEC)
-          .toUInt();
-  m_pUi->spinBoxTimeout->setValue(m_nPopupTimeout);
-
-  m_sCountryCode =
-      m_pSettings->value(QStringLiteral("CountryCode"), DEFAULT_COUNTRY_CODE)
-          .toString();
-  m_pUi->lineEditCountryCode->setText(m_sCountryCode);
 
   m_pSettings->beginGroup(QStringLiteral("PhoneNumbers"));
   m_nMaxOwnNumbers =
@@ -169,14 +174,7 @@ void Settings::readSettings() {
 void Settings::accept() {
   qDebug() << Q_FUNC_INFO;
 
-  m_pSettings->beginGroup(QStringLiteral("Connection"));
-  m_sHostName = m_pUi->lineEditHost->text();
-  m_pSettings->setValue(QStringLiteral("HostName"), m_sHostName);
-  m_nPortNumber = m_pUi->spinBoxPort->value();
-  m_pSettings->setValue(QStringLiteral("Port"), m_nPortNumber);
-  m_pSettings->setValue(QStringLiteral("RetryInterval"), m_nRetryInterval);
-  m_pSettings->endGroup();
-
+  // General
   m_nPopupTimeout = m_pUi->spinBoxTimeout->value();
   m_pSettings->setValue(QStringLiteral("PopupTimeout"), m_nPopupTimeout);
 
@@ -192,6 +190,17 @@ void Settings::accept() {
     }
   }
   m_pSettings->setValue(QStringLiteral("CountryCode"), m_sCountryCode);
+
+  m_pSettings->setValue(QStringLiteral("TbAddressbooks"),
+                        m_sListTbAddressbooks);
+
+  m_pSettings->beginGroup(QStringLiteral("Connection"));
+  m_sHostName = m_pUi->lineEditHost->text();
+  m_pSettings->setValue(QStringLiteral("HostName"), m_sHostName);
+  m_nPortNumber = m_pUi->spinBoxPort->value();
+  m_pSettings->setValue(QStringLiteral("Port"), m_nPortNumber);
+  m_pSettings->setValue(QStringLiteral("RetryInterval"), m_nRetryInterval);
+  m_pSettings->endGroup();
 
   m_OwnNumbers.clear();
   m_pSettings->beginGroup(QStringLiteral("PhoneNumbers"));
@@ -233,7 +242,7 @@ void Settings::accept() {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-auto Settings::getLanguage() -> QString {
+auto Settings::getLanguage() -> const QString {
 #ifdef Q_OS_UNIX
   QByteArray lang = qgetenv("LANG");
   if (!lang.isEmpty()) {
@@ -248,7 +257,7 @@ void Settings::translateUi() { m_pUi->retranslateUi(this); }
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-auto Settings::getIconTheme() -> QString {
+auto Settings::getIconTheme() -> const QString {
   QString sIconTheme;
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)

@@ -37,7 +37,7 @@ OBJECTS_DIR    = ./.objs
 UI_DIR         = ./.ui
 RCC_DIR        = ./.rcc
 
-QT            += gui widgets network
+QT            += gui widgets network sql
 CONFIG        += c++17
 DEFINES       += QT_NO_FOREACH
 
@@ -50,12 +50,14 @@ SOURCES       += main.cpp \
                  fritzcallindicator.cpp \
                  fritzbox.cpp \
                  numberresolver.cpp \
-                 settings.cpp
+                 settings.cpp \
+                 tbaddressbook.cpp
 
 HEADERS       += fritzcallindicator.h \
                  fritzbox.h \
                  numberresolver.h \
-                 settings.h
+                 settings.h \
+                 tbaddressbook.h
 
 FORMS         += settings.ui
 

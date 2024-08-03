@@ -1,5 +1,5 @@
 /**
- * \file numberresolver.h
+ * \file tbaddressbook.h
  *
  * \section LICENSE
  *
@@ -21,36 +21,26 @@
  * along with FritzCallIndicator.  If not, see <https://www.gnu.org/licenses/>.
  *
  * \section DESCRIPTION
- * Class definition phone number resolver
+ * Class definition for Thunderbird addressbook.
  */
 
-#ifndef NUMBERRESOLVER_H_
-#define NUMBERRESOLVER_H_
+#ifndef TBADDRESSBOOK_H_
+#define TBADDRESSBOOK_H_
 
-#include <QDir>
+#include <QFileInfo>
 #include <QHash>
-#include <QMultiHash>
 #include <QObject>
 
-class NumberResolver : public QObject {
+class TbAddressbook : public QObject {
   Q_OBJECT
  public:
-  explicit NumberResolver(const QDir &sharePath,
-                          const QString &sLocalCountryCode,
-                          const QStringList &sListTbAddressbooks,
-                          QObject *pParent = nullptr);
-  auto resolveNumber(const QString &sNumber) const -> QString;
+  explicit TbAddressbook(QObject *pParent = nullptr);
+  auto importVCards(const QFileInfo &fiDbFile, const QString &sLocalCountryCode)
+      -> QHash<QString, QString>;
 
  private:
-  void initCountryCodes(const QDir &sharePath);
-  void initAreaCodes(QDir sharePath);
-  void initTbNumbers(const QStringList &sListTbAddressbooks);
-
-  QString m_sLocalCountryCode;
-  QHash<QString, QString> m_CountryCodes;
-  QHash<QString, QHash<QString, QString>> m_AreaCodes;
-  QHash<QString, QString> m_KnownContacts;
-  const QChar CSV_SEPARATOR;
+  void extractNumber(const QString &sVCard, const QString &sLocalCountryCode);
+  QHash<QString, QString> m_PhoneNumbers;
 };
 
-#endif  // NUMBERRESOLVER_H_
+#endif  // TBADDRESSBOOK_H_

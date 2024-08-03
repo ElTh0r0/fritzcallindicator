@@ -51,11 +51,14 @@ class Settings : public QDialog {
   uint getRetryInterval() const noexcept { return m_nRetryInterval; }
   uint getPopupTimeout() const noexcept { return m_nPopupTimeout; }
   QString getCountryCode() const noexcept { return m_sCountryCode; }
+  QStringList getTbAddressbooks() const noexcept {
+    return m_sListTbAddressbooks;
+  }
   QString resolveOwnNumber(const QString &sNumber) const noexcept {
     return m_OwnNumbers.value(sNumber, "");
   }
-  auto getLanguage() -> QString;
-  auto getIconTheme() -> QString;
+  auto getLanguage() -> const QString;
+  auto getIconTheme() -> const QString;
   void translateUi();
 
  public slots:
@@ -79,6 +82,7 @@ class Settings : public QDialog {
   uint m_nRetryInterval;
   uint m_nPopupTimeout;
   QString m_sCountryCode;
+  QStringList m_sListTbAddressbooks;
   uint m_nMaxOwnNumbers;
   QHash<QString, QString> m_OwnNumbers;
   static const QString DEFAULT_HOST_NAME;

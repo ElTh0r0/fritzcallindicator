@@ -43,7 +43,9 @@ FritzCallIndicator::FritzCallIndicator(const QDir &sharePath)
   this->createTrayIcon();
   m_pTrayIcon->show();
 
-  m_pNumberResolver = new NumberResolver(m_sSharePath, this);
+  m_pNumberResolver =
+      new NumberResolver(m_sSharePath, m_pSettings->getCountryCode(),
+                         m_pSettings->getTbAddressbooks(), this);
   m_pFritzBox = new FritzBox(this);
   connect(m_pFritzBox, &FritzBox::errorOccured, this,
           &FritzCallIndicator::onErrorOccured);
@@ -168,8 +170,7 @@ void FritzCallIndicator::onStateChanged(QTcpSocket::SocketState state) {
 void FritzCallIndicator::onIncomingCall(unsigned /* connectionId */,
                                         const QString &sCaller,
                                         const QString &sCallee) {
-  QString sResolvedCaller =
-      m_pNumberResolver->resolveNumber(sCaller, m_pSettings->getCountryCode());
+  QString sResolvedCaller = m_pNumberResolver->resolveNumber(sCaller);
   QString sResolvedCallee = m_pSettings->resolveOwnNumber(sCallee);
   QString sTitle(tr("Incoming call"));
   if (!sResolvedCallee.isEmpty()) {
