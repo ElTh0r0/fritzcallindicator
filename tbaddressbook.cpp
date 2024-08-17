@@ -40,6 +40,7 @@ TbAddressbook::TbAddressbook(QObject *pParent) : QObject{pParent} {}
 auto TbAddressbook::importVCards(const QFileInfo &fiDbFile,
                                  const QString &sLocalCountryCode)
     -> QHash<QString, QString> {
+  static quint8 nDB = 1;
   m_PhoneNumbers.clear();
 
   if (fiDbFile.exists()) {
@@ -60,27 +61,35 @@ auto TbAddressbook::importVCards(const QFileInfo &fiDbFile,
       return QHash<QString, QString>();
     }
 
-    QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"));
-    db.setDatabaseName(sTmpDb);
-    db.setConnectOptions(QStringLiteral("QSQLITE_OPEN_READONLY"));
-
-    if (!db.open()) {
-      qWarning() << "ERROR: Connection to database failed!";
-    } else {
-      QSqlQuery query;
-      if (query.exec(QStringLiteral("SELECT value FROM properties WHERE name = "
-                                    "'_vCard' and value LIKE '%TEL;%'"))) {
-        while (query.next()) {
-          // qDebug() << query.value(QStringLiteral("value")).toString() + "\n";
-          this->extractNumber(query.value(QStringLiteral("value")).toString(),
-                              sLocalCountryCode);
-        }
+    QString sConnection = QStringLiteral("SQLite_") + QString::number(nDB);
+    {
+      QSqlDatabase db =
+          QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), sConnection);
+      db.setDatabaseName(sTmpDb);
+      db.setConnectOptions(QStringLiteral("QSQLITE_OPEN_READONLY"));
+      if (!db.open()) {
+        qWarning() << "ERROR: Connection to database failed!";
       } else {
-        qDebug() << "ERROR while reading database:" << query.lastError();
-      }
+        db = QSqlDatabase::database(sConnection);
+        QSqlQuery query(db);
+        if (query.exec(
+                QStringLiteral("SELECT value FROM properties WHERE name = "
+                               "'_vCard' and value LIKE '%TEL;%'"))) {
+          while (query.next()) {
+            // qDebug() << query.value(QStringLiteral("value")).toString() +
+            // "\n";
+            this->extractNumber(query.value(QStringLiteral("value")).toString(),
+                                sLocalCountryCode);
+          }
+        } else {
+          qDebug() << "ERROR while reading database:" << query.lastError();
+        }
 
-      db.close();
+        db.close();
+      }
     }
+    QSqlDatabase::removeDatabase(sConnection);
+    nDB++;
 
     QFile::remove(sTmpDb);
     QFile::remove(sTmpDb + "-shm");
