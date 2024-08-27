@@ -34,7 +34,6 @@
 
 NumberResolver::NumberResolver(const QDir &sharePath,
                                const QString &sLocalCountryCode,
-                               const QStringList &sListTbAddressbooks,
                                QObject *pParent)
     : QObject(pParent),
       m_sLocalCountryCode(sLocalCountryCode),
@@ -42,7 +41,6 @@ NumberResolver::NumberResolver(const QDir &sharePath,
   qDebug() << Q_FUNC_INFO;
   this->initCountryCodes(sharePath);
   this->initAreaCodes(sharePath);
-  this->initTbNumbers(sListTbAddressbooks);
 }
 
 // ----------------------------------------------------------------------------
@@ -135,9 +133,10 @@ void NumberResolver::initAreaCodes(QDir sharePath) {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-void NumberResolver::initTbNumbers(const QStringList &sListTbAddressbooks) {
+void NumberResolver::readTbPhonebooks(const QStringList &sListTbAddressbooks) {
   TbAddressbook tb;
   QHash<QString, QString> tmpContacts;
+  m_KnownContacts.clear();
 
   for (const auto &addressbook : sListTbAddressbooks) {
     qDebug() << "Reading Thunderbird addressbook:" << addressbook;

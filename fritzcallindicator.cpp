@@ -44,8 +44,11 @@ FritzCallIndicator::FritzCallIndicator(const QDir &sharePath)
   m_pTrayIcon->show();
 
   m_pNumberResolver =
-      new NumberResolver(m_sSharePath, m_pSettings->getCountryCode(),
-                         m_pSettings->getTbAddressbooks(), this);
+      new NumberResolver(m_sSharePath, m_pSettings->getCountryCode(), this);
+  connect(m_pSettings, &Settings::changedTbPhonebooks, m_pNumberResolver,
+          &NumberResolver::readTbPhonebooks);
+  m_pNumberResolver->readTbPhonebooks(m_pSettings->getTbAddressbooks());
+
   m_pFritzBox = new FritzBox(this);
   connect(m_pFritzBox, &FritzBox::errorOccured, this,
           &FritzCallIndicator::onErrorOccured);
@@ -53,7 +56,7 @@ FritzCallIndicator::FritzCallIndicator(const QDir &sharePath)
           &FritzCallIndicator::onStateChanged);
   connect(m_pFritzBox, &FritzBox::incomingCall, this,
           &FritzCallIndicator::onIncomingCall);
-  connect(m_pSettings, &Settings::changedSettings, m_pFritzBox,
+  connect(m_pSettings, &Settings::changedConnectionSettings, m_pFritzBox,
           &FritzBox::connectTo);
 
   m_pFritzBox->connectTo(m_pSettings->getHostName(),

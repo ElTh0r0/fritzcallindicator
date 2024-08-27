@@ -37,14 +37,15 @@ class NumberResolver : public QObject {
  public:
   explicit NumberResolver(const QDir &sharePath,
                           const QString &sLocalCountryCode,
-                          const QStringList &sListTbAddressbooks,
                           QObject *pParent = nullptr);
   auto resolveNumber(const QString &sNumber) const -> QString;
+
+ public slots:
+  void readTbPhonebooks(const QStringList &sListTbAddressbooks);
 
  private:
   void initCountryCodes(const QDir &sharePath);
   void initAreaCodes(QDir sharePath);
-  void initTbNumbers(const QStringList &sListTbAddressbooks);
 
   QString m_sLocalCountryCode;
   QHash<QString, QString> m_CountryCodes;

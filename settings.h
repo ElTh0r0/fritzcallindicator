@@ -65,8 +65,9 @@ class Settings : public QDialog {
   void accept() override;
 
  signals:
-  void changedSettings(const QString &sHostName, const uint nPort,
-                       const uint RetryInterval);
+  void changedConnectionSettings(const QString &sHostName, const uint nPort,
+                                 const uint RetryInterval);
+  void changedTbPhonebooks(const QStringList &sListTbAddressbooks);
 
  protected:
   void showEvent(QShowEvent *pEvent) override;

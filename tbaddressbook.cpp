@@ -95,7 +95,7 @@ auto TbAddressbook::importVCards(const QFileInfo &fiDbFile,
     QFile::remove(sTmpDb + "-shm");
     QFile::remove(sTmpDb + "-wal");
   } else {
-    qWarning() << "ERROR: DB file not found!";
+    qWarning() << "ERROR DB file not found:" << fiDbFile.absoluteFilePath();
   }
 
   return m_PhoneNumbers;

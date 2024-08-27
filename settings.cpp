@@ -103,6 +103,7 @@ void Settings::readSettings() {
   m_sListTbAddressbooks =
       m_pSettings->value(QStringLiteral("TbAddressbooks"), QStringList())
           .toStringList();
+  m_pUi->lineEdit_TbPhonebooks->setText(m_sListTbAddressbooks.join(','));
 
   m_pSettings->beginGroup(QStringLiteral("Connection"));
   m_sHostName =
@@ -191,6 +192,11 @@ void Settings::accept() {
   }
   m_pSettings->setValue(QStringLiteral("CountryCode"), m_sCountryCode);
 
+  m_sListTbAddressbooks.clear();
+  QStringList sListTemp(m_pUi->lineEdit_TbPhonebooks->text().split(','));
+  for (auto const &sTb : sListTemp) {
+    m_sListTbAddressbooks << sTb.trimmed();
+  }
   m_pSettings->setValue(QStringLiteral("TbAddressbooks"),
                         m_sListTbAddressbooks);
 
@@ -234,7 +240,8 @@ void Settings::accept() {
   }
   m_pSettings->endGroup();
 
-  emit changedSettings(m_sHostName, m_nPortNumber, m_nRetryInterval);
+  emit changedConnectionSettings(m_sHostName, m_nPortNumber, m_nRetryInterval);
+  emit changedTbPhonebooks(m_sListTbAddressbooks);
 
   QDialog::accept();
 }
