@@ -20,8 +20,8 @@ unix: !macx {
        TARGET  = FritzCallIndicator
 }
 
-win32:VERSION  = 0.2.0.0
-else:VERSION   = 0.2.0
+win32:VERSION  = 0.3.0.0
+else:VERSION   = 0.3.0
 
 QMAKE_TARGET_PRODUCT     = "FritzCallIndicator"
 QMAKE_TARGET_DESCRIPTION = "Simple FritzBox! call indicator"
@@ -50,12 +50,14 @@ SOURCES       += main.cpp \
                  fritzcallindicator.cpp \
                  fritzbox.cpp \
                  numberresolver.cpp \
+                 onlineresolvers.cpp \
                  settings.cpp \
                  tbaddressbook.cpp
 
 HEADERS       += fritzcallindicator.h \
                  fritzbox.h \
                  numberresolver.h \
+                 onlineresolvers.h \
                  settings.h \
                  tbaddressbook.h
 
@@ -75,6 +77,7 @@ macx {
 
   CODES_DATA.path    = Contents/Resources
   CODES_DATA.files  += data/area_codes
+  CODES_DATA.files  += data/online_resolvers
   CODES_DATA.files  += data/country_codes.csv
   QMAKE_BUNDLE_DATA += CODES_DATA
 }
@@ -91,6 +94,7 @@ unix: !macx {
 
     data.path      = $$PREFIX/share/fritzcallindicator
     data.files    += data/area_codes
+    data.files    += data/online_resolvers
     data.files    += data/country_codes.csv
 
     desktop.path   = $$PREFIX/share/applications

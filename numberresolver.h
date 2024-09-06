@@ -32,13 +32,17 @@
 #include <QMultiHash>
 #include <QObject>
 
+#include "onlineresolvers.h"
+
 class NumberResolver : public QObject {
   Q_OBJECT
  public:
   explicit NumberResolver(const QDir &sharePath,
                           const QString &sLocalCountryCode,
                           QObject *pParent = nullptr);
-  auto resolveNumber(const QString &sNumber) const -> QString;
+  auto resolveNumber(const QString &sNumber,
+                     const QStringList &sListDisabledResolvers) const
+      -> QString;
 
  public slots:
   void readTbPhonebooks(const QStringList &sListTbAddressbooks);
@@ -52,6 +56,7 @@ class NumberResolver : public QObject {
   QHash<QString, QHash<QString, QString>> m_AreaCodes;
   QHash<QString, QString> m_KnownContacts;
   const QChar CSV_SEPARATOR;
+  OnlineResolvers *m_pOnlineResolvers;
 };
 
 #endif  // NUMBERRESOLVER_H_

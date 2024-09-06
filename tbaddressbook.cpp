@@ -37,6 +37,9 @@
 
 TbAddressbook::TbAddressbook(QObject *pParent) : QObject{pParent} {}
 
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
 auto TbAddressbook::importVCards(const QFileInfo &fiDbFile,
                                  const QString &sLocalCountryCode)
     -> QHash<QString, QString> {
@@ -100,6 +103,9 @@ auto TbAddressbook::importVCards(const QFileInfo &fiDbFile,
 
   return m_PhoneNumbers;
 }
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
 void TbAddressbook::extractNumber(const QString &sVCard,
                                   const QString &sLocalCountryCode) {

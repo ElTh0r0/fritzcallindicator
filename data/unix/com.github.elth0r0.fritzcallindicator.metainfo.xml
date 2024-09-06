@@ -33,6 +33,20 @@
   </languages>
   
   <releases>
+    <release version="0.3.0" date="2024-09-06">
+      <description>
+        <ul>
+          <li>Add support for online phone number resolvers</li>
+        </ul>
+      </description>
+    </release>
+    <release version="0.2.0" date="2024-08-03">
+      <description>
+        <ul>
+          <li>Add support for Thunderbird phonebooks</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.1.0" date="2024-03-17">
       <description>
         <p>Initial release:</p>

@@ -36,7 +36,7 @@
 FritzCallIndicator::FritzCallIndicator(const QDir &sharePath)
     : m_sSharePath(sharePath.absolutePath()) {
   qDebug() << Q_FUNC_INFO;
-  m_pSettings = new Settings();
+  m_pSettings = new Settings(m_sSharePath);
   this->loadTranslation(m_pSettings->getLanguage());
 
   this->createActions();
@@ -173,7 +173,8 @@ void FritzCallIndicator::onStateChanged(QTcpSocket::SocketState state) {
 void FritzCallIndicator::onIncomingCall(unsigned /* connectionId */,
                                         const QString &sCaller,
                                         const QString &sCallee) {
-  QString sResolvedCaller = m_pNumberResolver->resolveNumber(sCaller);
+  QString sResolvedCaller = m_pNumberResolver->resolveNumber(
+      sCaller, m_pSettings->getDisabledOnlineResolvers());
   QString sResolvedCallee = m_pSettings->resolveOwnNumber(sCallee);
   QString sTitle(tr("Incoming call"));
   if (!sResolvedCallee.isEmpty()) {

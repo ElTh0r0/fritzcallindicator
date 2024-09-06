@@ -87,7 +87,7 @@
         </widget>
        </item>
        <item row="3" column="0">
-        <widget class="QLabel" name="label">
+        <widget class="QLabel" name="lblCountryCode">
          <property name="text">
           <string>Country code:</string>
          </property>
@@ -101,7 +101,7 @@
         </widget>
        </item>
        <item row="4" column="0">
-        <widget class="QLabel" name="label_2">
+        <widget class="QLabel" name="lblOwnNumbers">
          <property name="text">
           <string>Own phone numbers:</string>
          </property>
@@ -109,6 +109,9 @@
        </item>
        <item row="5" column="0" colspan="2">
         <widget class="QTableWidget" name="tableOwnNumbers">
+         <property name="alternatingRowColors">
+          <bool>true</bool>
+         </property>
          <property name="wordWrap">
           <bool>false</bool>
          </property>
@@ -140,14 +143,61 @@
        <string>Phone number resolution</string>
       </attribute>
       <layout class="QFormLayout" name="formLayout">
-       <item row="0" column="1">
-        <widget class="QLineEdit" name="lineEdit_TbPhonebooks"/>
-       </item>
        <item row="0" column="0">
-        <widget class="QLabel" name="label_3">
+        <widget class="QLabel" name="lblTbPhonebooks">
          <property name="text">
           <string>Thunderbird phonebooks:</string>
          </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="lineEdit_TbPhonebooks"/>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="lblOnlineREsolvers">
+         <property name="text">
+          <string>Online number resolution</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0" colspan="2">
+        <widget class="QTableWidget" name="tableOnlineResolvers">
+         <property name="editTriggers">
+          <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+         </property>
+         <property name="alternatingRowColors">
+          <bool>true</bool>
+         </property>
+         <property name="selectionMode">
+          <enum>QAbstractItemView::SelectionMode::NoSelection</enum>
+         </property>
+         <property name="wordWrap">
+          <bool>false</bool>
+         </property>
+         <property name="cornerButtonEnabled">
+          <bool>false</bool>
+         </property>
+         <attribute name="horizontalHeaderHighlightSections">
+          <bool>false</bool>
+         </attribute>
+         <attribute name="verticalHeaderVisible">
+          <bool>false</bool>
+         </attribute>
+         <column>
+          <property name="text">
+           <string notr="true"/>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Online Service</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Country</string>
+          </property>
+         </column>
         </widget>
        </item>
       </layout>

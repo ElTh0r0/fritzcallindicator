@@ -28,6 +28,7 @@
 #define SETTINGS_H_
 
 #include <QDialog>
+#include <QDir>
 #include <QHash>
 #include <QObject>
 
@@ -43,7 +44,7 @@ class Settings : public QDialog {
   Q_OBJECT
 
  public:
-  explicit Settings(QObject *pParent = nullptr);
+  explicit Settings(const QDir sharePath, QObject *pParent = nullptr);
   virtual ~Settings();
 
   QString getHostName() const noexcept { return m_sHostName; }
@@ -53,6 +54,9 @@ class Settings : public QDialog {
   QString getCountryCode() const noexcept { return m_sCountryCode; }
   QStringList getTbAddressbooks() const noexcept {
     return m_sListTbAddressbooks;
+  }
+  QStringList getDisabledOnlineResolvers() const noexcept {
+    return m_sListDisabledOnlineResolvers;
   }
   QString resolveOwnNumber(const QString &sNumber) const noexcept {
     return m_OwnNumbers.value(sNumber, "");
@@ -74,6 +78,7 @@ class Settings : public QDialog {
   void closeEvent(QCloseEvent *event) override;
 
  private:
+  void initOnlineResolvers(QDir sharePath);
   void readSettings();
 
   Ui::SettingsDialog *m_pUi;
@@ -84,6 +89,8 @@ class Settings : public QDialog {
   uint m_nPopupTimeout;
   QString m_sCountryCode;
   QStringList m_sListTbAddressbooks;
+  QHash<QString, QString> m_OnlineResolvers;
+  QStringList m_sListDisabledOnlineResolvers;
   uint m_nMaxOwnNumbers;
   QHash<QString, QString> m_OwnNumbers;
   static const QString DEFAULT_HOST_NAME;

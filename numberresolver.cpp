@@ -41,6 +41,8 @@ NumberResolver::NumberResolver(const QDir &sharePath,
   qDebug() << Q_FUNC_INFO;
   this->initCountryCodes(sharePath);
   this->initAreaCodes(sharePath);
+
+  m_pOnlineResolvers = new OnlineResolvers(sharePath);
 }
 
 // ----------------------------------------------------------------------------
@@ -151,7 +153,9 @@ void NumberResolver::readTbPhonebooks(const QStringList &sListTbAddressbooks) {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-auto NumberResolver::resolveNumber(const QString &sNumber) const -> QString {
+auto NumberResolver::resolveNumber(
+    const QString &sNumber,
+    const QStringList &sListDisabledResolvers) const -> QString {
   bool bLocalCall(false);
   QString sCountryCode;
   QString sCountryName(tr("Unknown country"));
@@ -162,16 +166,16 @@ auto NumberResolver::resolveNumber(const QString &sNumber) const -> QString {
 
   // Caller registered in my country calls from abroad
   if (sPhoneNumber.startsWith(m_sLocalCountryCode)) {
-    sPhoneNumber = "0" + sPhoneNumber.remove(0, sCountryCode.length());
+    sPhoneNumber = "0" + sPhoneNumber.remove(0, m_sLocalCountryCode.length());
   }
 
   // Search in contacts
+  // Local country code is automatically removed from address book!
   sKnownCaller = m_KnownContacts.value(sPhoneNumber, QString());
   if (!sKnownCaller.isEmpty()) {
     return sKnownCaller;
   }
 
-  // If caller is not known
   // Resolve country code
   if (sPhoneNumber.startsWith(QStringLiteral("00"))) {
     for (auto i = m_CountryCodes.cbegin(), end = m_CountryCodes.cend();
@@ -190,6 +194,13 @@ auto NumberResolver::resolveNumber(const QString &sNumber) const -> QString {
   if (sCountryCode.isEmpty()) {
     sCountryCode = m_sLocalCountryCode;
     bLocalCall = true;
+  }
+
+  // Search online
+  sKnownCaller = m_pOnlineResolvers->searchOnline(
+      "0" + sPhoneNumber, sCountryCode, sListDisabledResolvers);
+  if (!sKnownCaller.isEmpty()) {
+    return sKnownCaller;
   }
 
   // Resolve city code

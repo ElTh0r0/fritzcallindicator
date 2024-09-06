@@ -26,6 +26,7 @@
 
 #include "settings.h"
 
+#include <QCheckBox>
 #include <QCloseEvent>
 #include <QDebug>
 #include <QMessageBox>
@@ -44,7 +45,8 @@ const uint Settings::DEFAULT_POPUP_TIMEOUT_SEC = 10;
 const QString Settings::DEFAULT_COUNTRY_CODE = QStringLiteral("0049");
 const uint Settings::DEFAULT_MAX_OWN_NUMBERS = 3;
 
-Settings::Settings(QObject *pParent) : m_pUi(new Ui::SettingsDialog()) {
+Settings::Settings(const QDir sharePath, QObject *pParent)
+    : m_pUi(new Ui::SettingsDialog()) {
   Q_UNUSED(pParent)
   qDebug() << Q_FUNC_INFO;
   m_pUi->setupUi(this);
@@ -66,7 +68,9 @@ Settings::Settings(QObject *pParent) : m_pUi(new Ui::SettingsDialog()) {
 
   m_pUi->tableOwnNumbers->horizontalHeader()->setSectionResizeMode(
       QHeaderView::Stretch);
+
   this->readSettings();
+  this->initOnlineResolvers(sharePath);  // After readSettings!
 }
 
 Settings::~Settings() {
@@ -80,6 +84,45 @@ Settings::~Settings() {
 void Settings::showEvent(QShowEvent *pEvent) {
   this->readSettings();
   QDialog::showEvent(pEvent);
+}
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+void Settings::initOnlineResolvers(QDir sharePath) {
+  qDebug() << Q_FUNC_INFO;
+
+  sharePath.cd(QStringLiteral("online_resolvers"));
+  const QStringList resolverFiles =
+      sharePath.entryList(QStringList() << QStringLiteral("*.conf"),
+                          QDir::Files | QDir::NoDotAndDotDot, QDir::Name);
+  for (const auto &confFile : resolverFiles) {
+    QSettings resolver(sharePath.absoluteFilePath(confFile),
+                       QSettings::IniFormat);
+
+    int row = m_pUi->tableOnlineResolvers->rowCount();
+    m_pUi->tableOnlineResolvers->insertRow(row);
+
+    QTableWidgetItem *itemEnabled = new QTableWidgetItem();
+    itemEnabled->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
+    if (m_sListDisabledOnlineResolvers.contains(confFile.chopped(5))) {
+      itemEnabled->setCheckState(Qt::Unchecked);
+    } else {
+      itemEnabled->setCheckState(Qt::Checked);
+    }
+
+    QTableWidgetItem *itemService = new QTableWidgetItem(
+        resolver.value(QStringLiteral("Service"), "").toString().trimmed());
+    QTableWidgetItem *itemCountry = new QTableWidgetItem(
+        resolver.value(QStringLiteral("CountryCode"), "").toString().trimmed());
+    m_pUi->tableOnlineResolvers->setItem(row, 0, itemEnabled);
+    m_pUi->tableOnlineResolvers->setItem(row, 1, itemService);
+    m_pUi->tableOnlineResolvers->setItem(row, 2, itemCountry);
+    // chopped(5) = "remove" last 5 characters (.conf) and return the result
+    m_OnlineResolvers
+        [resolver.value(QStringLiteral("Service"), "").toString().trimmed()] =
+            confFile.chopped(5);
+  }
 }
 
 // ----------------------------------------------------------------------------
@@ -104,6 +147,19 @@ void Settings::readSettings() {
       m_pSettings->value(QStringLiteral("TbAddressbooks"), QStringList())
           .toStringList();
   m_pUi->lineEdit_TbPhonebooks->setText(m_sListTbAddressbooks.join(','));
+
+  m_sListDisabledOnlineResolvers =
+      m_pSettings
+          ->value(QStringLiteral("DisabledOnlineResolvers"), QStringList())
+          .toStringList();
+  for (int row = 0; row < m_pUi->tableOnlineResolvers->rowCount(); ++row) {
+    if (m_sListDisabledOnlineResolvers.contains(m_OnlineResolvers.value(
+            m_pUi->tableOnlineResolvers->item(row, 1)->text()))) {
+      m_pUi->tableOnlineResolvers->item(row, 0)->setCheckState(Qt::Unchecked);
+    } else {
+      m_pUi->tableOnlineResolvers->item(row, 0)->setCheckState(Qt::Checked);
+    }
+  }
 
   m_pSettings->beginGroup(QStringLiteral("Connection"));
   m_sHostName =
@@ -199,6 +255,16 @@ void Settings::accept() {
   }
   m_pSettings->setValue(QStringLiteral("TbAddressbooks"),
                         m_sListTbAddressbooks);
+  m_sListDisabledOnlineResolvers.clear();
+  for (int row = 0; row < m_pUi->tableOnlineResolvers->rowCount(); ++row) {
+    if (Qt::Checked !=
+        m_pUi->tableOnlineResolvers->item(row, 0)->checkState()) {
+      m_sListDisabledOnlineResolvers << m_OnlineResolvers.value(
+          m_pUi->tableOnlineResolvers->item(row, 1)->text());
+    }
+  }
+  m_pSettings->setValue(QStringLiteral("DisabledOnlineResolvers"),
+                        m_sListDisabledOnlineResolvers);
 
   m_pSettings->beginGroup(QStringLiteral("Connection"));
   m_sHostName = m_pUi->lineEditHost->text();
