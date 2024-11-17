@@ -37,7 +37,9 @@ OnlineResolvers::OnlineResolvers(QDir sharePath, QObject *pParent)
     : QObject{pParent} {
   qDebug() << Q_FUNC_INFO;
 
-  sharePath.cd(QStringLiteral("online_resolvers"));
+  if (!sharePath.cd(QStringLiteral("online_resolvers"))) {
+    qWarning() << "Subfolder 'online_resolvers' not found!";
+  }
   const QStringList resolverFiles =
       sharePath.entryList(QStringList() << QStringLiteral("*.conf"),
                           QDir::Files | QDir::NoDotAndDotDot, QDir::Name);
@@ -46,8 +48,6 @@ OnlineResolvers::OnlineResolvers(QDir sharePath, QObject *pParent)
     qDebug() << sharePath.absoluteFilePath(confFile);
     QSettings resolver(sharePath.absoluteFilePath(confFile),
                        QSettings::IniFormat);
-    // TODO: Add found resolvers to settings dialog and give possibility to
-    // enable/disable its usage
 
     QHash<QString, QString> tmpHash;
     tmpHash[QStringLiteral("Service")] =
@@ -97,7 +97,8 @@ auto OnlineResolvers::searchOnline(
 
       QIODevice *pData(pReply);
       if (QNetworkReply::NoError != pReply->error()) {
-        if (QNetworkReply::ContentGoneError != pReply->error()) {
+        if (QNetworkReply::ContentGoneError != pReply->error() &&
+            QNetworkReply::ContentNotFoundError != pReply->error()) {
           qWarning() << "Error (#" << pReply->error()
                      << ") while NW reply:" << pData->errorString();
           // qDebug() << "Reply content:" << pReply->readAll();

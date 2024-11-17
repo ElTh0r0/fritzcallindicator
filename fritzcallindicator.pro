@@ -20,11 +20,11 @@ unix: !macx {
        TARGET  = FritzCallIndicator
 }
 
-win32:VERSION  = 0.3.0.0
-else:VERSION   = 0.3.0
+win32:VERSION  = 0.3.1.0
+else:VERSION   = 0.3.1
 
 QMAKE_TARGET_PRODUCT     = "FritzCallIndicator"
-QMAKE_TARGET_DESCRIPTION = "Simple FritzBox! call indicator"
+QMAKE_TARGET_DESCRIPTION = "FritzBox! call indicator"
 QMAKE_TARGET_COPYRIGHT   = "(C) 2024-present Thorsten Roth"
 
 DEFINES       += APP_NAME=\"\\\"$$QMAKE_TARGET_PRODUCT\\\"\" \
@@ -43,7 +43,7 @@ DEFINES       += QT_NO_FOREACH
 
 CONFIG(debug, debug|release) {
   CONFIG      += warn_on
-  DEFINES     += QT_DISABLE_DEPRECATED_BEFORE=0x060700
+  DEFINES     += QT_DISABLE_DEPRECATED_BEFORE=0x060800
 }
 
 SOURCES       += main.cpp \

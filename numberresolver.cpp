@@ -141,12 +141,15 @@ void NumberResolver::readTbPhonebooks(const QStringList &sListTbAddressbooks) {
   m_KnownContacts.clear();
 
   for (const auto &addressbook : sListTbAddressbooks) {
-    qDebug() << "Reading Thunderbird addressbook:" << addressbook;
-    tmpContacts.clear();
-    tmpContacts = tb.importVCards(QFileInfo(addressbook), m_sLocalCountryCode);
+    if (!addressbook.isEmpty()) {
+      qDebug() << "Reading Thunderbird addressbook:" << addressbook;
+      tmpContacts.clear();
+      tmpContacts =
+          tb.importVCards(QFileInfo(addressbook), m_sLocalCountryCode);
 
-    // Merge into contacts list
-    m_KnownContacts.insert(tmpContacts);
+      // Merge into contacts list
+      m_KnownContacts.insert(tmpContacts);
+    }
   }
 }
 
@@ -204,7 +207,7 @@ auto NumberResolver::resolveNumber(
   }
 
   // Resolve city code
-  for (auto &sCode : m_AreaCodes.value(sCountryCode).keys()) {
+  for (const auto &sCode : m_AreaCodes.value(sCountryCode).keys()) {
     if (sPhoneNumber.startsWith(sCode)) {
       sCityCode = sCode;
       sCityName =

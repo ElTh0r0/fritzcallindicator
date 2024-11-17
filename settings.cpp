@@ -92,7 +92,9 @@ void Settings::showEvent(QShowEvent *pEvent) {
 void Settings::initOnlineResolvers(QDir sharePath) {
   qDebug() << Q_FUNC_INFO;
 
-  sharePath.cd(QStringLiteral("online_resolvers"));
+  if (!sharePath.cd(QStringLiteral("online_resolvers"))) {
+    qWarning() << "Subfolder 'online_resolvers' not found!";
+  }
   const QStringList resolverFiles =
       sharePath.entryList(QStringList() << QStringLiteral("*.conf"),
                           QDir::Files | QDir::NoDotAndDotDot, QDir::Name);
@@ -180,22 +182,21 @@ void Settings::readSettings() {
   m_nMaxOwnNumbers =
       m_pSettings->value(QStringLiteral("MaxNumbers"), DEFAULT_MAX_OWN_NUMBERS)
           .toUInt();
-  QString sTmpNum;
-  QString sTmpDesc;
+
   int row;
   m_OwnNumbers.clear();
   m_pUi->tableOwnNumbers->clearContents();
   m_pUi->tableOwnNumbers->model()->removeRows(
       0, m_pUi->tableOwnNumbers->rowCount());
   for (uint i = 1; i < m_nMaxOwnNumbers + 1; i++) {
-    sTmpNum =
+    QString sTmpNum =
         m_pSettings
             ->value(QStringLiteral("Phone%1_Number").arg(QString::number(i)),
                     "")
             .toString()
             .trimmed();
     if (!sTmpNum.isEmpty()) {
-      sTmpDesc =
+      QString sTmpDesc =
           m_pSettings
               ->value(
                   QStringLiteral("Phone%1_Description").arg(QString::number(i)),
@@ -249,7 +250,7 @@ void Settings::accept() {
   m_pSettings->setValue(QStringLiteral("CountryCode"), m_sCountryCode);
 
   m_sListTbAddressbooks.clear();
-  QStringList sListTemp(m_pUi->lineEdit_TbPhonebooks->text().split(','));
+  const QStringList sListTemp(m_pUi->lineEdit_TbPhonebooks->text().split(','));
   for (auto const &sTb : sListTemp) {
     m_sListTbAddressbooks << sTb.trimmed();
   }
@@ -278,9 +279,8 @@ void Settings::accept() {
   m_pSettings->beginGroup(QStringLiteral("PhoneNumbers"));
   m_pSettings->setValue(QStringLiteral("MaxNumbers"), m_nMaxOwnNumbers);
 
-  QString sTmpNum;
   for (int row = 0; row < m_pUi->tableOwnNumbers->rowCount(); ++row) {
-    sTmpNum = m_pUi->tableOwnNumbers->item(row, 0)->text().trimmed();
+    QString sTmpNum = m_pUi->tableOwnNumbers->item(row, 0)->text().trimmed();
     if (!sTmpNum.isEmpty()) {
       m_OwnNumbers[sTmpNum] =
           m_pUi->tableOwnNumbers->item(row, 1)->text().trimmed();
@@ -298,11 +298,11 @@ void Settings::accept() {
     i++;
   }
   // Delete conf entries if row table was cleared
-  for (uint i = m_OwnNumbers.size() + 1; i < m_nMaxOwnNumbers + 1; i++) {
+  for (uint j = m_OwnNumbers.size() + 1; j < m_nMaxOwnNumbers + 1; j++) {
     m_pSettings->setValue(
-        QStringLiteral("Phone%1_Number").arg(QString::number(i)), "");
+        QStringLiteral("Phone%1_Number").arg(QString::number(j)), "");
     m_pSettings->setValue(
-        QStringLiteral("Phone%1_Description").arg(QString::number(i)), "");
+        QStringLiteral("Phone%1_Description").arg(QString::number(j)), "");
   }
   m_pSettings->endGroup();
 

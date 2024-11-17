@@ -43,10 +43,10 @@ TbAddressbook::TbAddressbook(QObject *pParent) : QObject{pParent} {}
 auto TbAddressbook::importVCards(const QFileInfo &fiDbFile,
                                  const QString &sLocalCountryCode)
     -> QHash<QString, QString> {
-  static quint8 nDB = 1;
   m_PhoneNumbers.clear();
 
   if (fiDbFile.exists()) {
+    static quint8 nDB = 1;
     QString sTmpDb(
         QStandardPaths::writableLocation(QStandardPaths::TempLocation) + +"/" +
         fiDbFile.fileName());
