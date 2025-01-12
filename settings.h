@@ -33,6 +33,7 @@
 #include <QObject>
 
 class QSettings;
+class QStringListModel;
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -52,15 +53,13 @@ class Settings : public QDialog {
   uint getRetryInterval() const noexcept { return m_nRetryInterval; }
   uint getPopupTimeout() const noexcept { return m_nPopupTimeout; }
   QString getCountryCode() const noexcept { return m_sCountryCode; }
-  QStringList getTbAddressbooks() const noexcept {
-    return m_sListTbAddressbooks;
-  }
   QStringList getDisabledOnlineResolvers() const noexcept {
     return m_sListDisabledOnlineResolvers;
   }
   QString resolveOwnNumber(const QString &sNumber) const noexcept {
     return m_OwnNumbers.value(sNumber, "");
   }
+  auto getTbAddressbooks() -> const QStringList;
   auto getLanguage() -> const QString;
   auto getIconTheme() -> const QString;
   void translateUi();
@@ -80,6 +79,7 @@ class Settings : public QDialog {
  private:
   void initOnlineResolvers(QDir sharePath);
   void readSettings();
+  auto getThunderbirdProfilePath() -> const QString;
 
   Ui::SettingsDialog *m_pUi;
   QSettings *m_pSettings;
@@ -88,7 +88,7 @@ class Settings : public QDialog {
   uint m_nRetryInterval;
   uint m_nPopupTimeout;
   QString m_sCountryCode;
-  QStringList m_sListTbAddressbooks;
+  QStringListModel *m_sListModel_TbAddressbooks;
   QHash<QString, QString> m_OnlineResolvers;
   QStringList m_sListDisabledOnlineResolvers;
   uint m_nMaxOwnNumbers;

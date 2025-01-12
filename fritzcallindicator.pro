@@ -20,8 +20,8 @@ unix: !macx {
        TARGET  = FritzCallIndicator
 }
 
-win32:VERSION  = 0.3.1.0
-else:VERSION   = 0.3.1
+win32:VERSION  = 0.3.2.0
+else:VERSION   = 0.3.2
 
 QMAKE_TARGET_PRODUCT     = "FritzCallIndicator"
 QMAKE_TARGET_DESCRIPTION = "FritzBox! call indicator"

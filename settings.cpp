@@ -29,8 +29,11 @@
 #include <QCheckBox>
 #include <QCloseEvent>
 #include <QDebug>
+#include <QFileDialog>
 #include <QMessageBox>
 #include <QSettings>
+#include <QStandardPaths>
+#include <QStringListModel>
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
 #include <QStyleHints>
@@ -50,6 +53,7 @@ Settings::Settings(const QDir sharePath, QObject *pParent)
   Q_UNUSED(pParent)
   qDebug() << Q_FUNC_INFO;
   m_pUi->setupUi(this);
+  m_pUi->tabWidget->setCurrentIndex(0);
 
 #if defined _WIN32
   m_pSettings = new QSettings(QSettings::IniFormat, QSettings::UserScope,
@@ -61,13 +65,39 @@ Settings::Settings(const QDir sharePath, QObject *pParent)
                               qApp->applicationName().toLower());
 #endif
 
+  m_sListModel_TbAddressbooks = new QStringListModel(this);
+  m_pUi->listView_TbAddressbooks->setModel(m_sListModel_TbAddressbooks);
+
+  m_pUi->tableOwnNumbers->horizontalHeader()->setSectionResizeMode(
+      QHeaderView::Stretch);
+
   connect(m_pUi->buttonBox, &QDialogButtonBox::accepted, this,
           &Settings::accept);
   connect(m_pUi->buttonBox, &QDialogButtonBox::rejected, this,
           &QDialog::reject);
 
-  m_pUi->tableOwnNumbers->horizontalHeader()->setSectionResizeMode(
-      QHeaderView::Stretch);
+  connect(m_pUi->toolButton_AddTbAddressbook, &QToolButton::clicked, [=]() {
+    QString sFile =
+        QFileDialog::getOpenFileName(this, tr("Select Thunderbird addressbook"),
+                                     this->getThunderbirdProfilePath(),
+                                     tr("SQLite abook files (abook*.sqlite)"));
+    if (!sFile.isEmpty()) {
+      if (m_sListModel_TbAddressbooks->insertRow(
+              m_sListModel_TbAddressbooks->rowCount())) {
+        QModelIndex index = m_sListModel_TbAddressbooks->index(
+            m_sListModel_TbAddressbooks->rowCount() - 1, 0);
+        m_sListModel_TbAddressbooks->setData(index, sFile);
+      }
+    }
+  });
+
+  connect(m_pUi->toolButton_RemoveTbAddressbook, &QToolButton::clicked, [=]() {
+    QModelIndex index = m_pUi->listView_TbAddressbooks->currentIndex();
+    if (index.isValid() &&
+        index.row() < m_sListModel_TbAddressbooks->stringList().size()) {
+      m_sListModel_TbAddressbooks->removeRows(index.row(), 1);
+    }
+  });
 
   this->readSettings();
   this->initOnlineResolvers(sharePath);  // After readSettings!
@@ -145,10 +175,10 @@ void Settings::readSettings() {
           .toString();
   m_pUi->lineEditCountryCode->setText(m_sCountryCode);
 
-  m_sListTbAddressbooks =
+  QStringList sListTbAddressbooks =
       m_pSettings->value(QStringLiteral("TbAddressbooks"), QStringList())
           .toStringList();
-  m_pUi->lineEdit_TbPhonebooks->setText(m_sListTbAddressbooks.join(','));
+  m_sListModel_TbAddressbooks->setStringList(sListTbAddressbooks);
 
   m_sListDisabledOnlineResolvers =
       m_pSettings
@@ -249,13 +279,8 @@ void Settings::accept() {
   }
   m_pSettings->setValue(QStringLiteral("CountryCode"), m_sCountryCode);
 
-  m_sListTbAddressbooks.clear();
-  const QStringList sListTemp(m_pUi->lineEdit_TbPhonebooks->text().split(','));
-  for (auto const &sTb : sListTemp) {
-    m_sListTbAddressbooks << sTb.trimmed();
-  }
   m_pSettings->setValue(QStringLiteral("TbAddressbooks"),
-                        m_sListTbAddressbooks);
+                        m_sListModel_TbAddressbooks->stringList());
   m_sListDisabledOnlineResolvers.clear();
   for (int row = 0; row < m_pUi->tableOnlineResolvers->rowCount(); ++row) {
     if (Qt::Checked !=
@@ -307,9 +332,30 @@ void Settings::accept() {
   m_pSettings->endGroup();
 
   emit changedConnectionSettings(m_sHostName, m_nPortNumber, m_nRetryInterval);
-  emit changedTbPhonebooks(m_sListTbAddressbooks);
+  emit changedTbPhonebooks(m_sListModel_TbAddressbooks->stringList());
 
   QDialog::accept();
+}
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+auto Settings::getThunderbirdProfilePath() -> const QString {
+  // TODO: Check ~/.thunderbird/profiles.ini which profile folder is used
+  QString sTbPath =
+      QStandardPaths::locate(QStandardPaths::HomeLocation, ".thunderbird",
+                             QStandardPaths::LocateDirectory);
+#ifndef Q_OS_UNIX
+  sTbPath =
+      QStandardPaths::locate(QStandardPaths::AppDataLocation, "Thunderbird",
+                             QStandardPaths::LocateDirectory);
+#endif
+
+  return sTbPath;
+}
+
+auto Settings::getTbAddressbooks() -> const QStringList {
+  return m_sListModel_TbAddressbooks->stringList();
 }
 
 // ----------------------------------------------------------------------------
