@@ -135,7 +135,8 @@ void NumberResolver::initAreaCodes(QDir sharePath) {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-void NumberResolver::readTbPhonebooks(const QStringList &sListTbAddressbooks) {
+void NumberResolver::readTbAddressbooks(
+    const QStringList &sListTbAddressbooks) {
   TbAddressbook tb;
   QHash<QString, QString> tmpContacts;
   m_KnownContacts.clear();

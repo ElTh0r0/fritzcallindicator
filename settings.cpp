@@ -332,7 +332,7 @@ void Settings::accept() {
   m_pSettings->endGroup();
 
   emit changedConnectionSettings(m_sHostName, m_nPortNumber, m_nRetryInterval);
-  emit changedTbPhonebooks(m_sListModel_TbAddressbooks->stringList());
+  emit changedTbAddressbooks(m_sListModel_TbAddressbooks->stringList());
 
   QDialog::accept();
 }

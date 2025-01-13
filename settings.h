@@ -70,7 +70,7 @@ class Settings : public QDialog {
  signals:
   void changedConnectionSettings(const QString &sHostName, const uint nPort,
                                  const uint RetryInterval);
-  void changedTbPhonebooks(const QStringList &sListTbAddressbooks);
+  void changedTbAddressbooks(const QStringList &sListTbAddressbooks);
 
  protected:
   void showEvent(QShowEvent *pEvent) override;

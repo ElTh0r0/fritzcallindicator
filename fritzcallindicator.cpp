@@ -45,9 +45,9 @@ FritzCallIndicator::FritzCallIndicator(const QDir &sharePath)
 
   m_pNumberResolver =
       new NumberResolver(m_sSharePath, m_pSettings->getCountryCode(), this);
-  connect(m_pSettings, &Settings::changedTbPhonebooks, m_pNumberResolver,
-          &NumberResolver::readTbPhonebooks);
-  m_pNumberResolver->readTbPhonebooks(m_pSettings->getTbAddressbooks());
+  connect(m_pSettings, &Settings::changedTbAddressbooks, m_pNumberResolver,
+          &NumberResolver::readTbAddressbooks);
+  m_pNumberResolver->readTbAddressbooks(m_pSettings->getTbAddressbooks());
 
   m_pFritzBox = new FritzBox(this);
   connect(m_pFritzBox, &FritzBox::errorOccured, this,
