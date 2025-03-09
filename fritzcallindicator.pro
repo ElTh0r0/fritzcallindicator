@@ -20,8 +20,8 @@ unix: !macx {
        TARGET  = FritzCallIndicator
 }
 
-win32:VERSION  = 0.3.2.0
-else:VERSION   = 0.3.2
+win32:VERSION  = 0.3.3.0
+else:VERSION   = 0.3.3
 
 QMAKE_TARGET_PRODUCT     = "FritzCallIndicator"
 QMAKE_TARGET_DESCRIPTION = "FritzBox! call indicator"
@@ -69,7 +69,7 @@ RESOURCES      = data/data.qrc \
 TRANSLATIONS  += lang/fritzcallindicator_de.ts \
                  lang/fritzcallindicator_en.ts
 
-win32:RC_ICONS = icons/fritzcallindicator.ico
+win32:RC_FILE  = data/win.rc
 
 macx {
   ICON               = icons/icon.icns

@@ -1,0 +1,24 @@
+IDI_ICON1   ICON    DISCARDABLE    "../icons/fritzcallindicator.ico"
+
+1 VERSIONINFO
+    FILEVERSION    0,3,3,0
+    PRODUCTVERSION 0,3,3,0
+{
+    BLOCK "StringFileInfo"
+    {
+        BLOCK "000004B0"
+        {
+            VALUE "CompanyName",        "com.github.elth0r0.fritzcallindicator\0"
+            VALUE "FileDescription",    "FritzBox! call indicator\0"
+            VALUE "LegalCopyright",     "(c) 2024-present Thorsten Roth\0"
+            VALUE "OriginalFilename",   "FritzCallIndicator.exe\0"
+            VALUE "ProductName",        "FritzCallIndicator\0"
+            VALUE "ProductVersion",     "0.3.3.0\0"
+            VALUE "FileVersion",        "0.3.3.0\0"
+        }
+    }
+    BLOCK "VarFileInfo"
+    {
+        VALUE "Translation", 0x0000, 0x04B0
+    }
+}

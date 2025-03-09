@@ -341,7 +341,6 @@ void Settings::accept() {
 // ----------------------------------------------------------------------------
 
 auto Settings::getThunderbirdProfilePath() -> const QString {
-  // TODO: Check ~/.thunderbird/profiles.ini which profile folder is used
   QString sTbPath =
       QStandardPaths::locate(QStandardPaths::HomeLocation, ".thunderbird",
                              QStandardPaths::LocateDirectory);
@@ -350,6 +349,29 @@ auto Settings::getThunderbirdProfilePath() -> const QString {
       QStandardPaths::locate(QStandardPaths::AppDataLocation, "Thunderbird",
                              QStandardPaths::LocateDirectory);
 #endif
+
+  if (!sTbPath.isEmpty()) {
+    // Find current default profile sub folder
+    QFileInfo fiProfilesIni(sTbPath + "/profiles.ini");
+
+    if (fiProfilesIni.exists()) {
+      QSettings profiles(fiProfilesIni.absoluteFilePath(),
+                         QSettings::IniFormat);
+      const QStringList sListGroups = profiles.childGroups();
+
+      for (const auto &sGroup : sListGroups) {
+        profiles.beginGroup(sGroup);
+        if (profiles.contains("Default")) {
+          QString sSubfolder = profiles.value("Path", "").toString();
+          if (!sSubfolder.isEmpty()) {
+            sTbPath += "/" + sSubfolder;
+            break;
+          }
+        }
+        profiles.endGroup();
+      }
+    }
+  }
 
   return sTbPath;
 }

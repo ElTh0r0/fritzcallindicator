@@ -6,8 +6,8 @@
   <project_license>GPL-3.0-or-later</project_license>
   <name>FritzCallIndicator</name>
   <name xml:lang="de">FritzCallIndicator</name>
-  <summary>Simple FritzBox! call indicator</summary>
-  <summary xml:lang="de">Simple FritzBox! call indicator</summary>
+  <summary>FritzBox! call indicator</summary>
+  <summary xml:lang="de">FritzBox! call indicator</summary>
   
   <description>
     <p>Simple call indication through system tray notifocation.</p>
@@ -33,6 +33,27 @@
   </languages>
   
   <releases>
+    <release version="0.3.3" date="2025-03-09">
+      <description>
+        <ul>
+          <li>Automatically select Thunderbird profile sub folder at addressbook selection.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="0.3.2" date="2025-01-13">
+      <description>
+        <ul>
+          <li>Improve Thunderbird addressbook add/remove</li>
+        </ul>
+      </description>
+    </release>
+    <release version="0.3.1" date="2024-11-17">
+      <description>
+        <ul>
+          <li>Cppcheck code fixes</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.3.0" date="2024-09-06">
       <description>
         <ul>
