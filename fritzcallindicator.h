@@ -49,6 +49,9 @@ class FritzCallIndicator : public QObject {
   FritzCallIndicator(const QDir &sharePath);
   ~FritzCallIndicator();
 
+ private slots:
+  void showCallHistory();
+
  private:
   void createActions();
   void createTrayIcon();
@@ -66,6 +69,7 @@ class FritzCallIndicator : public QObject {
       const QString &sTitle, const QString &sMessage, uint nTimeout = 0,
       const QSystemTrayIcon::MessageIcon icon = QSystemTrayIcon::Information);
 
+  QAction *m_pShowCallHistory;
   QAction *m_pShowSettings;
   QAction *m_pShowInfoBox;
   QAction *m_pQuit;
@@ -79,6 +83,8 @@ class FritzCallIndicator : public QObject {
   Settings *m_pSettings = nullptr;
 
   const QString m_sSharePath;
+  QStringList m_sListCallHistory;
+  static const quint8 MAX_LAST_CALLS;
 };
 
 #endif  // QT_NO_SYSTEMTRAYICON

@@ -28,10 +28,15 @@
 
 #include <QAction>
 #include <QCoreApplication>
+#include <QDialog>
+#include <QGridLayout>
 #include <QIcon>
+#include <QLabel>
 #include <QLibraryInfo>
 #include <QMenu>
 #include <QMessageBox>
+
+const quint8 FritzCallIndicator::MAX_LAST_CALLS = 10;
 
 FritzCallIndicator::FritzCallIndicator(const QDir &sharePath)
     : m_sSharePath(sharePath.absolutePath()) {
@@ -80,6 +85,10 @@ FritzCallIndicator::~FritzCallIndicator() {
 void FritzCallIndicator::createActions() {
   qDebug() << Q_FUNC_INFO;
   QIcon::setThemeName(m_pSettings->getIconTheme());
+  m_pShowCallHistory = new QAction(tr("Call history"), this);
+  connect(m_pShowCallHistory, &QAction::triggered, this,
+          &FritzCallIndicator::showCallHistory);
+
   m_pShowSettings = new QAction(QIcon::fromTheme(QStringLiteral("configure")),
                                 tr("Settings"), this);
   connect(m_pShowSettings, &QAction::triggered, m_pSettings,
@@ -101,6 +110,7 @@ void FritzCallIndicator::createActions() {
 void FritzCallIndicator::createTrayIcon() {
   qDebug() << Q_FUNC_INFO;
   m_pTrayIconMenu = new QMenu();
+  m_pTrayIconMenu->addAction(m_pShowCallHistory);
   m_pTrayIconMenu->addAction(m_pShowSettings);
   m_pTrayIconMenu->addAction(m_pShowInfoBox);
   m_pTrayIconMenu->addSeparator();
@@ -180,7 +190,63 @@ void FritzCallIndicator::onIncomingCall(unsigned /* connectionId */,
   if (!sResolvedCallee.isEmpty()) {
     sTitle = tr("Incoming call to '%1'").arg(sResolvedCallee);
   }
+
+  m_sListCallHistory << QDateTime::currentDateTime().toString(
+                            "dd.MM.yyyy|hh:mm:ss|") +
+                            sResolvedCaller;
+  // Limit the number of recent calls
+  if (m_sListCallHistory.count() > MAX_LAST_CALLS) {
+    m_sListCallHistory =
+        m_sListCallHistory.mid(m_sListCallHistory.count() - MAX_LAST_CALLS);
+  }
+
   this->showMessage(sTitle, tr("Caller: '%1'").arg(sResolvedCaller));
+}
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+void FritzCallIndicator::showCallHistory() {
+  // TODO: Read call history from FritzBox
+  Qt::AlignmentFlag Align;
+  QDialog dialog;
+  dialog.setWindowTitle(tr("Call history"));
+  dialog.setWindowFlags(dialog.window()->windowFlags() &
+                        ~Qt::WindowContextHelpButtonHint);
+
+  auto *layout = new QGridLayout(&dialog);
+  layout->setContentsMargins(10, 10, 10, 10);
+  layout->setSpacing(10);
+
+  layout->addWidget(new QLabel("<b>" + tr("Date") + "</b>", &dialog), 0, 0,
+                    Qt::AlignCenter | Qt::AlignVCenter);
+  layout->addWidget(new QLabel("<b>" + tr("Time") + "</b>", &dialog), 0, 1,
+                    Qt::AlignCenter | Qt::AlignVCenter);
+  layout->addWidget(new QLabel("<b>" + tr("Caller") + "</b>", &dialog), 0, 2,
+                    Qt::AlignCenter | Qt::AlignVCenter);
+
+  for (int nRow = 0; nRow < m_sListCallHistory.count(); nRow++) {
+    QStringList sCall(m_sListCallHistory.at(nRow).split('|'));
+    if (sCall.count() > 2) {
+      for (int nCol = 0; nCol < 3; nCol++) {
+        if (2 == nCol) {
+          Align = Qt::AlignLeft;
+        } else {
+          Align = Qt::AlignCenter;
+        }
+        layout->addWidget(new QLabel(sCall.at(nCol), &dialog), nRow + 1, nCol,
+                          Align | Qt::AlignVCenter);
+      }
+    }
+  }
+
+  auto *button =
+      new QDialogButtonBox(QDialogButtonBox::Close, Qt::Horizontal, &dialog);
+  connect(button, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
+  layout->addWidget(button, m_sListCallHistory.count() + 1, 0, 1, 3,
+                    Qt::AlignCenter);
+
+  dialog.exec();
 }
 
 // ----------------------------------------------------------------------------

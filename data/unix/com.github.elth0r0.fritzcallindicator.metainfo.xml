@@ -33,6 +33,13 @@
   </languages>
   
   <releases>
+    <release version="0.4.0" date="2025-03-16">
+      <description>
+        <ul>
+          <li>Store and show call history.</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.3.3" date="2025-03-09">
       <description>
         <ul>

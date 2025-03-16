@@ -16,7 +16,7 @@
 
 cmake_minimum_required(VERSION 3.16)
 project(FritzCallIndicator
-    VERSION 0.3.3
+    VERSION 0.4.0
     DESCRIPTION "FritzBox! call indicator"
     LANGUAGES C CXX
 )
