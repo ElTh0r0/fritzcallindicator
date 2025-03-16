@@ -345,7 +345,8 @@ auto Settings::getThunderbirdProfilePath() -> const QString {
       QStandardPaths::locate(QStandardPaths::HomeLocation, ".thunderbird",
                              QStandardPaths::LocateDirectory);
 #ifndef Q_OS_UNIX
-  QDir dRoaming(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation));
+  QDir dRoaming(
+      QStandardPaths::writableLocation(QStandardPaths::AppDataLocation));
   // AppDataLocation returns ".../AppData/Roaming/FritzCallIndicator"
   if (dRoaming.cd("../Thunderbird")) {
     sTbPath = dRoaming.absolutePath();
