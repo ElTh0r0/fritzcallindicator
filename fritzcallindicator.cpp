@@ -71,6 +71,8 @@ FritzCallIndicator::FritzCallIndicator(const QDir &sharePath)
   // 03.11.16 13:17:08;RING;0;03023125222;06990009111;SIP0;
   // m_pFritzBox->parseAndSignal(
   //    "03.11.16 13:17:08;RING;0;03023125222;06990009111;SIP0;");
+  // Number suppressed: 03.11.16 13:17:08;RING;0;;06990009111;SIP0;
+  // m_pFritzBox->parseAndSignal("03.11.16 13:17:08;RING;0;;06990009111;SIP0;");
 }
 
 FritzCallIndicator::~FritzCallIndicator() {
@@ -184,8 +186,8 @@ void FritzCallIndicator::onIncomingCall(unsigned /* connectionId */,
                                         const QString &sCaller,
                                         const QString &sCallee) {
   QString sResolvedCaller = m_pNumberResolver->resolveNumber(
-      sCaller, m_pSettings->getDisabledOnlineResolvers());
-  QString sResolvedCallee = m_pSettings->resolveOwnNumber(sCallee);
+      sCaller.trimmed(), m_pSettings->getDisabledOnlineResolvers());
+  QString sResolvedCallee = m_pSettings->resolveOwnNumber(sCallee.trimmed());
   QString sTitle(tr("Incoming call"));
   if (!sResolvedCallee.isEmpty()) {
     sTitle = tr("Incoming call to '%1'").arg(sResolvedCallee);

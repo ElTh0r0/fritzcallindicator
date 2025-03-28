@@ -158,8 +158,8 @@ void NumberResolver::readTbAddressbooks(
 // ----------------------------------------------------------------------------
 
 auto NumberResolver::resolveNumber(
-    const QString &sNumber,
-    const QStringList &sListDisabledResolvers) const -> QString {
+    const QString &sNumber, const QStringList &sListDisabledResolvers) const
+    -> QString {
   bool bLocalCall(false);
   QString sCountryCode;
   QString sCountryName(tr("Unknown country"));
@@ -167,6 +167,10 @@ auto NumberResolver::resolveNumber(
   QString sCityName(tr("Unknown city"));
   QString sPhoneNumber(sNumber);
   QString sKnownCaller;
+
+  if (sPhoneNumber.isEmpty()) {
+    return tr("Number suppressed");
+  }
 
   // Caller registered in my country calls from abroad
   if (sPhoneNumber.startsWith(m_sLocalCountryCode)) {
