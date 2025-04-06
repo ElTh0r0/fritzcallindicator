@@ -26,7 +26,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(QT_MAIN_VERSION Qt6)
-set(QT_MINIMUM_VERSION 6.0)
+set(QT_MINIMUM_VERSION 6.2)
 
 find_package(${QT_MAIN_VERSION} ${QT_MINIMUM_VERSION}
     REQUIRED Core Gui Widgets Network Sql LinguistTools
@@ -115,8 +115,14 @@ set(TRANSLATIONS
     lang/fritzcallindicator_en.ts
 )
 
-qt_add_translation(QM_FILES ${TRANSLATIONS})
-add_custom_target(translations ALL DEPENDS ${QM_FILES})
+set_source_files_properties(${TRANSLATIONS} PROPERTIES OUTPUT_LOCATION "${CMAKE_SOURCE_DIR}/lang")
+qt_add_lrelease(
+    LRELEASE_TARGET fritzcallindicator_lrelease
+    TS_FILES ${TRANSLATIONS}
+)
+
+# Run lrelease automatically
+add_dependencies(fritzcallindicator fritzcallindicator_lrelease)
 
 target_sources(fritzcallindicator PRIVATE ${HEADERS} ${SOURCES} ${FORMS} ${RESOURCES})
 
