@@ -122,10 +122,23 @@ qt_add_lupdate(
     OPTIONS -no-obsolete
 )
 
-set_source_files_properties(${TRANSLATIONS} PROPERTIES OUTPUT_LOCATION "${CMAKE_SOURCE_DIR}/lang")
 qt_add_lrelease(
     LRELEASE_TARGET fritzcallindicator_lrelease
     TS_FILES ${TRANSLATIONS}
+)
+
+# qt_add_lrelease generates the *.qm files in cmake directory by default
+# Copy the *.qm files back to source lang/ dir, because of lang/translations.qrc
+set(QM_FILES)
+foreach(ts_file ${TRANSLATIONS})
+    get_filename_component(qm_file ${ts_file} NAME_WE)
+    list(APPEND QM_FILES "${CMAKE_CURRENT_BINARY_DIR}/${qm_file}.qm")
+endforeach()
+add_custom_command(
+    TARGET fritzcallindicator_lrelease POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        ${QM_FILES}
+        "${CMAKE_SOURCE_DIR}/lang/"
 )
 
 # Run lrelease automatically

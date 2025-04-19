@@ -34,9 +34,7 @@ jobs:
        mkdir build
        cd build
        cmake -DCMAKE_BUILD_TYPE=Release -G "MinGW Makefiles" ..
-       mingw32-make
-      env:
-        Qt6_DIR: ${{ env.Qt6_DIR }}
+       cmake --build .
 
     - name: Create Package
       shell: cmd
