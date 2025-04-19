@@ -22,15 +22,6 @@ jobs:
         host: 'windows'
         target: 'desktop'
         arch: 'win64_mingw'
-
-    - uses: msys2/setup-msys2@v2
-      with:
-        msystem: MINGW64
-        update: true
-        install: >-
-          mingw-w64-x86_64-gcc
-          mingw-w64-x86_64-cmake
-          base-devel
         
     - name: Compile
       run: |

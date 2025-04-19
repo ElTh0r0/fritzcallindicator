@@ -28,7 +28,7 @@ jobs:
         languages: ${{ matrix.language }}
 
     - name: Install Dependencies
-      run: sudo apt update && sudo apt install qt6-base-dev qt6-l10n-tools
+      run: sudo apt update && sudo apt install qt6-base-dev qt6-tools-dev qt6-l10n-tools
 
     - name: Compile
       run: |
