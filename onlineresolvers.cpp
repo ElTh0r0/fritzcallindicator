@@ -73,9 +73,10 @@ OnlineResolvers::OnlineResolvers(QDir sharePath, QObject *pParent)
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-auto OnlineResolvers::searchOnline(
-    const QString &sNumber, const QString &sCountryCode,
-    const QStringList &sListDisabledResolvers) -> QString {
+auto OnlineResolvers::searchOnline(const QString &sNumber,
+                                   const QString &sCountryCode,
+                                   const QStringList &sListDisabledResolvers)
+    -> QString {
   QHashIterator<QString, QHash<QString, QString>> resolver(m_Resolvers);
   while (resolver.hasNext()) {
     resolver.next();
@@ -121,8 +122,9 @@ auto OnlineResolvers::searchOnline(
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-auto OnlineResolvers::parseReply(
-    const QString &sReply, const QHash<QString, QString> &resolver) -> QString {
+auto OnlineResolvers::parseReply(const QString &sReply,
+                                 const QHash<QString, QString> &resolver)
+    -> QString {
   QRegularExpressionMatch match;
   // qDebug() << resolver.value(QStringLiteral("NameRegExp"), "");
   QRegularExpression regexp(resolver.value(QStringLiteral("NameRegExp"), ""));
