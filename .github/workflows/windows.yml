@@ -24,15 +24,15 @@ jobs:
         arch: 'win64_mingw'
 
     - name: Qt 6 environment configuration
-        shell: pwsh
-        run: |
-          Write-Output "${{ env.Qt6_DIR }}/bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-          Write-Output "${{ env.Qt6_DIR }}/../../Tools/${{ matrix.qt_tools_mingw_install }}/bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+      shell: pwsh
+      run: |
+        Write-Output "${{ env.Qt6_DIR }}/bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+        Write-Output "${{ env.Qt6_DIR }}/../../Tools/${{ matrix.qt_tools_mingw_install }}/bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
     - name: Where is mingw32-make
-        shell: pwsh
-        run: |
-          Get-Command -Name 'mingw32-make' | Format-List
+      shell: pwsh
+      run: |
+        Get-Command -Name 'mingw32-make' | Format-List
 
     - name: Compile
       run: |
