@@ -1,0 +1,60 @@
+name: "Windows"
+
+# manual trigger
+on:
+  workflow_dispatch:
+
+env:
+  BUILD_TYPE: Release
+  
+jobs:
+  Windows_Qt6:
+    name: Win 2022 Qt 6
+    runs-on: windows-2022
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v4
+      with:
+        version: '6.8.*'
+
+    - uses: msys2/setup-msys2@v2
+      with:
+        msystem: MINGW64
+        update: true
+        install: >-
+          mingw-w64-x86_64-gcc
+          mingw-w64-x86_64-cmake
+          base-devel
+        
+    - name: Compile
+      run: |
+       mkdir build
+       cd build
+       cmake -DCMAKE_BUILD_TYPE=Release -G "MinGW Makefiles" ..
+       mingw32-make
+    
+    - name: Create Package
+      shell: cmd
+      run: |
+       mkdir FritzCallIndicator\data
+       copy build\FritzCallIndicator.exe FritzCallIndicator\FritzCallIndicator.exe
+       windeployqt --release --no-translations --no-opengl-sw FritzCallIndicator\FritzCallIndicator.exe
+       copy COPYING FritzCallIndicator\
+       copy data\country_codes.csv FritzCallIndicator\data\
+       xcopy /i /e /s data\area_codes FritzCallIndicator\data\area_codes\
+       xcopy /i /e /s data\online_resolvers FritzCallIndicator\data\online_resolvers\
+       git rev-parse --short main > buildnr.txt
+       set /p buildnr= < buildnr.txt
+       del buildnr.txt
+       set output_zip=FritzCallIndicator-Windows_%buildnr%.zip
+       7z a %output_zip% .\FritzCallIndicator\
+       
+    - uses: actions/upload-artifact@v4
+      with:
+        name: FritzCallIndicator-Windows_Artefacts
+        path: FritzCallIndicator-Windows_*.*
+        retention-days: 3
+        overwrite: true

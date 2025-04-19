@@ -1,0 +1,19 @@
+name: "Clang-Format-Check"
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: clang-format lint
+      uses: DoozyX/clang-format-lint-action@v0.20
+      with:
+        source: '.'
+        extensions: 'h,cpp'
+        clangFormatVersion: 19
+        style: Google
