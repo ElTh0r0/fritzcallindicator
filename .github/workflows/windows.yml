@@ -19,6 +19,9 @@ jobs:
       uses: jurplel/install-qt-action@v4
       with:
         version: '6.8.*'
+        host: 'windows'
+        target: 'desktop'
+        arch: 'win64_mingw'
 
     - uses: msys2/setup-msys2@v2
       with:
