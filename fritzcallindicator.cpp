@@ -171,11 +171,13 @@ void FritzCallIndicator::onStateChanged(QTcpSocket::SocketState state) {
   if (state == QTcpSocket::SocketState::ConnectedState) {
     qDebug() << "Connected to" << m_pSettings->getHostName()
              << "- Port:" << m_pSettings->getPortNumber();
+    /*
     this->showMessage(QStringLiteral(APP_NAME),
                       tr("Connected to '%1:%2'")
                           .arg(m_pSettings->getHostName())
                           .arg(m_pSettings->getPortNumber()),
                       3);
+    */
   }
 }
 

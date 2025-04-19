@@ -71,7 +71,7 @@ target_compile_definitions(fritzcallindicator
         APP_COPY="${PROJECT_COPYRIGHT}"
         APP_DESC="${PROJECT_DESCRIPTION}"
         QT_NO_FOREACH
-        $<$<CONFIG:DEBUG>:QT_DISABLE_DEPRECATED_BEFORE=0x060800>
+        $<$<CONFIG:DEBUG>:QT_DISABLE_DEPRECATED_BEFORE=0x060900>
 )
 
 target_link_libraries(fritzcallindicator PRIVATE
@@ -113,6 +113,13 @@ set(RESOURCES
 set(TRANSLATIONS
     lang/fritzcallindicator_de.ts
     lang/fritzcallindicator_en.ts
+)
+
+qt_add_lupdate(
+    SOURCE_TARGETS fritzcallindicator
+    LUPDATE_TARGET fritzcallindicator_lupdate
+    TS_FILES ${TRANSLATIONS}
+    OPTIONS -no-obsolete
 )
 
 set_source_files_properties(${TRANSLATIONS} PROPERTIES OUTPUT_LOCATION "${CMAKE_SOURCE_DIR}/lang")
