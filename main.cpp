@@ -58,10 +58,8 @@ int main(int argc, char *argv[]) {
   app.setWindowIcon(
       QIcon::fromTheme(QStringLiteral("fritzcallindicator"),
                        QIcon(QStringLiteral(":/fritzcallindicator.png"))));
-#if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
   app.setDesktopFileName(
       QStringLiteral("com.github.elth0r0.fritzcallindicator"));
-#endif
 #endif
   QApplication::setQuitOnLastWindowClosed(false);
 

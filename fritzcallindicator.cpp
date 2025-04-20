@@ -259,12 +259,7 @@ void FritzCallIndicator::showCallHistory() {
 void FritzCallIndicator::loadTranslation(const QString &sLang) {
   if (!FritzCallIndicator::switchTranslator(
           &m_translatorQt, "qt_" + sLang,
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-          QLibraryInfo::path(
-#else
-          QLibraryInfo::location(
-#endif
-              QLibraryInfo::TranslationsPath))) {
+          QLibraryInfo::path(QLibraryInfo::TranslationsPath))) {
     FritzCallIndicator::switchTranslator(&m_translatorQt, "qt_" + sLang,
                                          qApp->applicationDirPath() + "/lang");
   }
