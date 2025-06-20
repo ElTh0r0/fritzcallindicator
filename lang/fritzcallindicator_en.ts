@@ -4,12 +4,12 @@
 <context>
     <name>FritzBox</name>
     <message>
-        <location filename="../fritzbox.cpp" line="109"/>
+        <location filename="../fritzbox.cpp" line="103"/>
         <source> (Retry in %1 seconds ...)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../fritzbox.cpp" line="139"/>
+        <location filename="../fritzbox.cpp" line="133"/>
         <source>Unknown command &apos;%1&apos;!</source>
         <translation type="unfinished"></translation>
     </message>
@@ -29,7 +29,7 @@
     </message>
     <message>
         <location filename="../fritzcallindicator.cpp" line="100"/>
-        <location filename="../fritzcallindicator.cpp" line="307"/>
+        <location filename="../fritzcallindicator.cpp" line="302"/>
         <source>About</source>
         <translation type="unfinished"></translation>
     </message>
@@ -74,17 +74,17 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../fritzcallindicator.cpp" line="320"/>
+        <location filename="../fritzcallindicator.cpp" line="315"/>
         <source>License</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../fritzcallindicator.cpp" line="323"/>
+        <location filename="../fritzcallindicator.cpp" line="318"/>
         <source>This application uses &lt;a href=&quot;https://invent.kde.org/frameworks/breeze-icons&quot;&gt;Breeze icons from KDE&lt;/a&gt;.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../fritzcallindicator.cpp" line="326"/>
+        <location filename="../fritzcallindicator.cpp" line="321"/>
         <source>Translations</source>
         <translation type="unfinished"></translation>
     </message>
@@ -159,81 +159,113 @@
     <name>SettingsDialog</name>
     <message>
         <location filename="../settings.ui" line="14"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Debug/fritzcallindicator_autogen/include/ui_settings.h" line="229"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Release/fritzcallindicator_autogen/include/ui_settings.h" line="229"/>
         <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../settings.ui" line="32"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Debug/fritzcallindicator_autogen/include/ui_settings.h" line="241"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Release/fritzcallindicator_autogen/include/ui_settings.h" line="241"/>
         <source>General</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../settings.ui" line="38"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Debug/fritzcallindicator_autogen/include/ui_settings.h" line="230"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Release/fritzcallindicator_autogen/include/ui_settings.h" line="230"/>
         <source>Host name:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../settings.ui" line="55"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Debug/fritzcallindicator_autogen/include/ui_settings.h" line="232"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Release/fritzcallindicator_autogen/include/ui_settings.h" line="232"/>
         <source>Port:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../settings.ui" line="72"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Debug/fritzcallindicator_autogen/include/ui_settings.h" line="233"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Release/fritzcallindicator_autogen/include/ui_settings.h" line="233"/>
         <source>Popup timeout (sec):</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../settings.ui" line="92"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Debug/fritzcallindicator_autogen/include/ui_settings.h" line="234"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Release/fritzcallindicator_autogen/include/ui_settings.h" line="234"/>
         <source>Country code:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../settings.ui" line="106"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Debug/fritzcallindicator_autogen/include/ui_settings.h" line="236"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Release/fritzcallindicator_autogen/include/ui_settings.h" line="236"/>
         <source>Own phone numbers:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../settings.ui" line="129"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Debug/fritzcallindicator_autogen/include/ui_settings.h" line="238"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Release/fritzcallindicator_autogen/include/ui_settings.h" line="238"/>
         <source>Phone number</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../settings.ui" line="134"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Debug/fritzcallindicator_autogen/include/ui_settings.h" line="240"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Release/fritzcallindicator_autogen/include/ui_settings.h" line="240"/>
         <source>Description</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../settings.ui" line="143"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Debug/fritzcallindicator_autogen/include/ui_settings.h" line="254"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Release/fritzcallindicator_autogen/include/ui_settings.h" line="254"/>
         <source>Phone number resolution</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../settings.ui" line="149"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Debug/fritzcallindicator_autogen/include/ui_settings.h" line="242"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Release/fritzcallindicator_autogen/include/ui_settings.h" line="242"/>
         <source>Thunderbird address books:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../settings.ui" line="189"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Debug/fritzcallindicator_autogen/include/ui_settings.h" line="249"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Release/fritzcallindicator_autogen/include/ui_settings.h" line="249"/>
         <source>Online number resolution:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../settings.ui" line="161"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Debug/fritzcallindicator_autogen/include/ui_settings.h" line="244"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Release/fritzcallindicator_autogen/include/ui_settings.h" line="244"/>
         <source>Add Thunderbird address book</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../settings.ui" line="174"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Debug/fritzcallindicator_autogen/include/ui_settings.h" line="247"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Release/fritzcallindicator_autogen/include/ui_settings.h" line="247"/>
         <source>Remove selected Thunderbird address book</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../settings.ui" line="223"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Debug/fritzcallindicator_autogen/include/ui_settings.h" line="251"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Release/fritzcallindicator_autogen/include/ui_settings.h" line="251"/>
         <source>Online Service</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../settings.ui" line="228"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Debug/fritzcallindicator_autogen/include/ui_settings.h" line="253"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Release/fritzcallindicator_autogen/include/ui_settings.h" line="253"/>
         <source>Country</source>
         <translation type="unfinished"></translation>
     </message>

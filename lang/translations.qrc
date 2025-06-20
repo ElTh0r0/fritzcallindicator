@@ -1,6 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>fritzcallindicator_de.qm</file>
-        <file>fritzcallindicator_en.qm</file>
-    </qresource>
-</RCC>

@@ -22,6 +22,8 @@ project(FritzCallIndicator
 )
 set(PROJECT_COPYRIGHT "(C) 2024-present Thorsten Roth")
 
+option(GENERATE_TS "Regenerate translation source files" OFF)
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -107,7 +109,6 @@ set(FORMS
 
 set(RESOURCES
     data/data.qrc
-    lang/translations.qrc
 )
 
 set(TRANSLATIONS
@@ -115,34 +116,23 @@ set(TRANSLATIONS
     lang/fritzcallindicator_en.ts
 )
 
-qt_add_lupdate(
-    SOURCE_TARGETS fritzcallindicator
-    LUPDATE_TARGET fritzcallindicator_lupdate
-    TS_FILES ${TRANSLATIONS}
-    OPTIONS -no-obsolete
-)
-
-qt_add_lrelease(
-    LRELEASE_TARGET fritzcallindicator_lrelease
-    TS_FILES ${TRANSLATIONS}
-)
-
-# qt_add_lrelease generates the *.qm files in cmake directory by default
-# Copy the *.qm files back to source lang/ dir, because of lang/translations.qrc
-set(QM_FILES)
-foreach(ts_file ${TRANSLATIONS})
-    get_filename_component(qm_file ${ts_file} NAME_WE)
-    list(APPEND QM_FILES "${CMAKE_CURRENT_BINARY_DIR}/${qm_file}.qm")
+if (GENERATE_TS)
+    qt6_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TRANSLATIONS} OPTIONS -no-obsolete)
+else ()
+    qt6_add_translation(QM_FILES ${TRANSLATIONS})
+endif ()
+add_custom_target(translations_${PROJECT_NAME} ALL DEPENDS ${QM_FILES})
+foreach(qm_file ${QM_FILES})
+    get_filename_component(qm_filename "${qm_file}" NAME)
+    set_source_files_properties(
+        "${qm_file}"
+        PROPERTIES QT_RESOURCE_ALIAS "${qm_filename}"
+    )
 endforeach()
-add_custom_command(
-    TARGET fritzcallindicator_lrelease POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        ${QM_FILES}
-        "${CMAKE_SOURCE_DIR}/lang/"
+qt_add_resources(fritzcallindicator translations_fritz
+    PREFIX "/"
+    FILES ${QM_FILES}
 )
-
-# Run lrelease automatically
-add_dependencies(fritzcallindicator fritzcallindicator_lrelease)
 
 target_sources(fritzcallindicator PRIVATE ${HEADERS} ${SOURCES} ${FORMS} ${RESOURCES})
 
