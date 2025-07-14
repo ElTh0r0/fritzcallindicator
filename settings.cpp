@@ -29,11 +29,14 @@
 #include <QCheckBox>
 #include <QCloseEvent>
 #include <QDebug>
+#include <QDomDocument>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QSettings>
 #include <QStandardPaths>
 #include <QStringListModel>
+
+#include "fritzphonebook.h"
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
 #include <QStyleHints>
@@ -43,6 +46,7 @@
 
 const QString Settings::DEFAULT_HOST_NAME = QStringLiteral("fritz.box");
 const uint Settings::DEFAULT_CALL_MONITOR_PORT = 1012;
+const uint Settings::DEFAULT_TR064_PORT = 49000;
 const uint Settings::DEFAULT_RETRY_INTERVAL_SEC = 20;
 const uint Settings::DEFAULT_POPUP_TIMEOUT_SEC = 10;
 const QString Settings::DEFAULT_COUNTRY_CODE = QStringLiteral("0049");
@@ -101,6 +105,10 @@ Settings::Settings(const QDir sharePath, QObject *pParent)
 
   this->readSettings();
   this->initOnlineResolvers(sharePath);  // After readSettings!
+  this->initFritzPhonebooks(
+      QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/" +
+      qApp->applicationName().toLower() +
+      QStringLiteral("/fritzbox_phonebooks"));
 }
 
 Settings::~Settings() {
@@ -160,6 +168,73 @@ void Settings::initOnlineResolvers(QDir sharePath) {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
+void Settings::initFritzPhonebooks(QDir sSavePath) {
+  qDebug() << Q_FUNC_INFO;
+  m_FritzPhoneBooks.clear();
+
+  FritzPhonebook fritzpb;
+  fritzpb.setHost(m_sHostName);
+  fritzpb.setPort(m_nTR064Port);
+  fritzpb.setUsername(m_sFritzUser);
+  fritzpb.setPassword(m_sFritzPassword);
+  fritzpb.setSavepath(sSavePath.absolutePath());
+
+  if (!m_sFritzUser.isEmpty() && !m_sFritzPassword.isEmpty()) {
+    qDebug() << "Trying to retrieve FritzBox phonebooks";
+    QStringList list = fritzpb.getPhonebookList();
+
+    QStringList phonebooks =
+        sSavePath.entryList(QStringList() << QStringLiteral("phonebook_*.xml"),
+                            QDir::Files | QDir::NoDotAndDotDot, QDir::Name);
+    for (const auto &pbook : phonebooks) {
+      QFile fPhoneBook(sSavePath.absoluteFilePath(pbook));
+
+      if (!fPhoneBook.open(QIODevice::ReadOnly)) {
+        qWarning() << "Couldn't open local FritzBox phone book"
+                   << sSavePath.absoluteFilePath(pbook);
+        continue;
+      }
+
+      QDomDocument doc;
+      if (!doc.setContent(&fPhoneBook)) {
+        qWarning() << "Could not parse XML content from"
+                   << sSavePath.absoluteFilePath(pbook);
+        continue;
+      }
+
+      QDomElement root = doc.documentElement();
+      QDomNodeList xmlPhonebook =
+          root.elementsByTagName(QStringLiteral("phonebook"));
+      if (xmlPhonebook.isEmpty()) continue;
+
+      QDomElement pb = xmlPhonebook.at(0).toElement();
+      QString sPhonebookName = pb.attribute(QStringLiteral("name")).trimmed();
+
+      QRegularExpression re(QStringLiteral("phonebook_(\\d+)\\.xml"));
+      QRegularExpressionMatch match = re.match(pbook);
+      if (!match.hasMatch()) {
+        qWarning() << "Filename doesn't match expected format:" << pbook;
+        continue;
+      }
+
+      bool ok = false;
+      int id = match.captured(1).toInt(&ok);
+      if (!ok) {
+        qWarning() << "Invalid ID extracted from filename:" << pbook;
+        continue;
+      }
+
+      m_FritzPhoneBooks.insert(sPhonebookName,
+                               sSavePath.absoluteFilePath(pbook));
+    }
+  } else {
+    qWarning() << "FritzBox user/password not set!";
+  }
+}
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
 void Settings::readSettings() {
   qDebug() << Q_FUNC_INFO;
 
@@ -198,10 +273,17 @@ void Settings::readSettings() {
       m_pSettings->value(QStringLiteral("HostName"), DEFAULT_HOST_NAME)
           .toString();
   m_pUi->lineEditHost->setText(m_sHostName);
-  m_nPortNumber =
-      m_pSettings->value(QStringLiteral("Port"), DEFAULT_CALL_MONITOR_PORT)
+  m_nCallMonitorPort =
+      m_pSettings
+          ->value(QStringLiteral("CallMonitorPort"), DEFAULT_CALL_MONITOR_PORT)
           .toUInt();
-  m_pUi->spinBoxPort->setValue(m_nPortNumber);
+  m_pUi->spinBoxCallMonitorPort->setValue(m_nCallMonitorPort);
+  m_nTR064Port =
+      m_pSettings->value(QStringLiteral("TR064Port"), DEFAULT_TR064_PORT)
+          .toUInt();
+  m_sFritzUser = m_pSettings->value(QStringLiteral("FritzUser"), "").toString();
+  m_sFritzPassword =
+      m_pSettings->value(QStringLiteral("FritzPassword"), "").toString();
   m_nRetryInterval =
       m_pSettings
           ->value(QStringLiteral("RetryInterval"), DEFAULT_RETRY_INTERVAL_SEC)
@@ -295,8 +377,11 @@ void Settings::accept() {
   m_pSettings->beginGroup(QStringLiteral("Connection"));
   m_sHostName = m_pUi->lineEditHost->text();
   m_pSettings->setValue(QStringLiteral("HostName"), m_sHostName);
-  m_nPortNumber = m_pUi->spinBoxPort->value();
-  m_pSettings->setValue(QStringLiteral("Port"), m_nPortNumber);
+  m_nCallMonitorPort = m_pUi->spinBoxCallMonitorPort->value();
+  m_pSettings->setValue(QStringLiteral("CallMonitorPort"), m_nCallMonitorPort);
+  m_pSettings->setValue(QStringLiteral("TR064Port"), m_nTR064Port);
+  m_pSettings->setValue(QStringLiteral("FritzUser"), m_sFritzUser);
+  m_pSettings->setValue(QStringLiteral("FritzPassword"), m_sFritzPassword);
   m_pSettings->setValue(QStringLiteral("RetryInterval"), m_nRetryInterval);
   m_pSettings->endGroup();
 
@@ -331,8 +416,9 @@ void Settings::accept() {
   }
   m_pSettings->endGroup();
 
-  emit changedConnectionSettings(m_sHostName, m_nPortNumber, m_nRetryInterval);
-  emit changedTbAddressbooks(m_sListModel_TbAddressbooks->stringList());
+  emit changedConnectionSettings(m_sHostName, m_nCallMonitorPort,
+                                 m_nRetryInterval);
+  emit changedPhonebooks(this->getTbAddressbooks(), this->getFritzPhonebooks());
 
   QDialog::accept();
 }
@@ -379,8 +465,18 @@ auto Settings::getThunderbirdProfilePath() -> const QString {
   return sTbPath;
 }
 
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
 auto Settings::getTbAddressbooks() -> const QStringList {
   return m_sListModel_TbAddressbooks->stringList();
+}
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+auto Settings::getFritzPhonebooks() -> const QHash<QString, QString> {
+  return m_FritzPhoneBooks;
 }
 
 // ----------------------------------------------------------------------------

@@ -49,7 +49,10 @@ class Settings : public QDialog {
   virtual ~Settings();
 
   QString getHostName() const noexcept { return m_sHostName; }
-  uint getPortNumber() const noexcept { return m_nPortNumber; }
+  uint getCallMonitorPort() const noexcept { return m_nCallMonitorPort; }
+  uint getTR064Port() const noexcept { return m_nTR064Port; }
+  QString getFritzUser() const noexcept { return m_sFritzUser; }
+  QString getFritzPassword() const noexcept { return m_sFritzPassword; }
   uint getRetryInterval() const noexcept { return m_nRetryInterval; }
   uint getPopupTimeout() const noexcept { return m_nPopupTimeout; }
   QString getCountryCode() const noexcept { return m_sCountryCode; }
@@ -60,6 +63,7 @@ class Settings : public QDialog {
     return m_OwnNumbers.value(sNumber, "");
   }
   auto getTbAddressbooks() -> const QStringList;
+  auto getFritzPhonebooks() -> const QHash<QString, QString>;
   auto getLanguage() -> const QString;
   auto getIconTheme() -> const QString;
   void translateUi();
@@ -68,9 +72,11 @@ class Settings : public QDialog {
   void accept() override;
 
  signals:
-  void changedConnectionSettings(const QString &sHostName, const uint nPort,
+  void changedConnectionSettings(const QString &sHostName,
+                                 const uint nMonitorPort,
                                  const uint RetryInterval);
-  void changedTbAddressbooks(const QStringList &sListTbAddressbooks);
+  void changedPhonebooks(const QStringList &sListTbAddressbooks,
+                         const QHash<QString, QString> &sListFritzPhonebooks);
 
  protected:
   void showEvent(QShowEvent *pEvent) override;
@@ -78,23 +84,29 @@ class Settings : public QDialog {
 
  private:
   void initOnlineResolvers(QDir sharePath);
+  void initFritzPhonebooks(QDir savePath);
   void readSettings();
   auto getThunderbirdProfilePath() -> const QString;
 
   Ui::SettingsDialog *m_pUi;
   QSettings *m_pSettings;
   QString m_sHostName;
-  uint m_nPortNumber;
+  uint m_nCallMonitorPort;
+  uint m_nTR064Port;
+  QString m_sFritzUser;
+  QString m_sFritzPassword;
   uint m_nRetryInterval;
   uint m_nPopupTimeout;
   QString m_sCountryCode;
   QStringListModel *m_sListModel_TbAddressbooks;
+  QHash<QString, QString> m_FritzPhoneBooks;
   QHash<QString, QString> m_OnlineResolvers;
   QStringList m_sListDisabledOnlineResolvers;
   uint m_nMaxOwnNumbers;
   QHash<QString, QString> m_OwnNumbers;
   static const QString DEFAULT_HOST_NAME;
   static const uint DEFAULT_CALL_MONITOR_PORT;
+  static const uint DEFAULT_TR064_PORT;
   static const uint DEFAULT_RETRY_INTERVAL_SEC;
   static const uint DEFAULT_POPUP_TIMEOUT_SEC;
   static const QString DEFAULT_COUNTRY_CODE;

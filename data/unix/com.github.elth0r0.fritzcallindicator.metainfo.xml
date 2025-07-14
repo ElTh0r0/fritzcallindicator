@@ -33,6 +33,13 @@
   </languages>
   
   <releases>
+    <release version="0.5.0" date="2025-07-13">
+      <description>
+        <ul>
+          <li>Add support for FritzBox phonebooks.</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.4.0" date="2025-03-16">
       <description>
         <ul>

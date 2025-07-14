@@ -171,8 +171,8 @@ void TbAddressbook::extractNumber(const QString &sVCard,
         sNumber =
             sNumber.replace(0, sLocalCountryCode.length(), QStringLiteral("0"));
       }
-      // Cleanup number
-      sNumber.remove('/').remove('-').remove('(').remove(')').remove(' ');
+      // Cleanup number (remove spaces, '-', '(', ')', '/')
+      sNumber.remove(QRegularExpression(QStringLiteral("[\\s\\-\\(\\)/]")));
 
       m_PhoneNumbers[sNumber] = sName + sPhoneType;
       sNumber.clear();     // Reset after adding to list!

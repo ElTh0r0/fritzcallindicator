@@ -50,9 +50,10 @@ FritzCallIndicator::FritzCallIndicator(const QDir &sharePath)
 
   m_pNumberResolver =
       new NumberResolver(m_sSharePath, m_pSettings->getCountryCode(), this);
-  connect(m_pSettings, &Settings::changedTbAddressbooks, m_pNumberResolver,
-          &NumberResolver::readTbAddressbooks);
-  m_pNumberResolver->readTbAddressbooks(m_pSettings->getTbAddressbooks());
+  connect(m_pSettings, &Settings::changedPhonebooks, m_pNumberResolver,
+          &NumberResolver::readPhonebooks);
+  m_pNumberResolver->readPhonebooks(m_pSettings->getTbAddressbooks(),
+                                    m_pSettings->getFritzPhonebooks());
 
   m_pFritzBox = new FritzBox(this);
   connect(m_pFritzBox, &FritzBox::errorOccured, this,
@@ -65,7 +66,7 @@ FritzCallIndicator::FritzCallIndicator(const QDir &sharePath)
           &FritzBox::connectTo);
 
   m_pFritzBox->connectTo(m_pSettings->getHostName(),
-                         m_pSettings->getPortNumber(),
+                         m_pSettings->getCallMonitorPort(),
                          m_pSettings->getRetryInterval());
 
   // 03.11.16 13:17:08;RING;0;03023125222;06990009111;SIP0;
@@ -151,7 +152,7 @@ void FritzCallIndicator::onErrorOccured(QTcpSocket::SocketError,
   this->showMessage(QStringLiteral(APP_NAME),
                     tr("Connecting to '%1:%2' failed, because: '%3'")
                         .arg(m_pSettings->getHostName())
-                        .arg(m_pSettings->getPortNumber())
+                        .arg(m_pSettings->getCallMonitorPort())
                         .arg(errorMessage),
                     m_pSettings->getRetryInterval() / 2,
                     QSystemTrayIcon::Warning);
@@ -159,7 +160,7 @@ void FritzCallIndicator::onErrorOccured(QTcpSocket::SocketError,
   QMessageBox::critical(nullptr, QString::fromLatin1(APP_NAME),
                         tr("Connecting to '%1:%2' failed, because: '%3'")
                             .arg(m_pSettings->getHostName())
-                            .arg(m_pSettings->getPortNumber())
+                            .arg(m_pSettings->getCallMonitorPort())
                             .arg(errorMessage));
   */
 }
@@ -170,7 +171,7 @@ void FritzCallIndicator::onErrorOccured(QTcpSocket::SocketError,
 void FritzCallIndicator::onStateChanged(QTcpSocket::SocketState state) {
   if (state == QTcpSocket::SocketState::ConnectedState) {
     qDebug() << "Connected to" << m_pSettings->getHostName()
-             << "- Port:" << m_pSettings->getPortNumber();
+             << "- Port:" << m_pSettings->getCallMonitorPort();
     /*
     this->showMessage(QStringLiteral(APP_NAME),
                       tr("Connected to '%1:%2'")
@@ -313,7 +314,7 @@ void FritzCallIndicator::showInfoBox() {
                "URL: <a href=\"https://github.com/ElTh0r0/fritzcallindicator\">"
                "https://github.com/ElTh0r0/fritzcallindicator</a>",
                tr("License") +
-                   ": <a href=\"http://www.gnu.org/licenses/gpl-3.0.html\">"
+                   ": <a href=\"https://www.gnu.org/licenses/gpl-3.0.html\">"
                    "GNU General Public License Version 3</a>",
                tr("This application uses "
                   "<a href=\"https://invent.kde.org/frameworks/breeze-icons\">"

@@ -30,6 +30,7 @@
 #include <QDirIterator>
 #include <QMessageBox>
 
+#include "fritzphonebook.h"
 #include "tbaddressbook.h"
 
 NumberResolver::NumberResolver(const QDir &sharePath,
@@ -135,9 +136,11 @@ void NumberResolver::initAreaCodes(QDir sharePath) {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-void NumberResolver::readTbAddressbooks(
-    const QStringList &sListTbAddressbooks) {
+void NumberResolver::readPhonebooks(
+    const QStringList &sListTbAddressbooks,
+    const QHash<QString, QString> &sListFritzPhonebooks) {
   TbAddressbook tb;
+  FritzPhonebook fb;
   QHash<QString, QString> tmpContacts;
   m_KnownContacts.clear();
 
@@ -151,6 +154,17 @@ void NumberResolver::readTbAddressbooks(
       // Merge into contacts list
       m_KnownContacts.insert(tmpContacts);
     }
+  }
+
+  QHashIterator<QString, QString> i(sListFritzPhonebooks);
+  while (i.hasNext()) {
+    i.next();
+    qDebug() << "Reading FritzBox phonebook:" << i.key() << i.value();
+    tmpContacts.clear();
+    tmpContacts = fb.loadFromFile(i.value(), m_sLocalCountryCode);
+
+    // Merge into contacts list
+    m_KnownContacts.insert(tmpContacts);
   }
 }
 

@@ -16,7 +16,7 @@
 
 cmake_minimum_required(VERSION 3.16)
 project(FritzCallIndicator
-    VERSION 0.4.0
+    VERSION 0.5.0
     DESCRIPTION "FritzBox! call indicator"
     LANGUAGES C CXX
 )
@@ -31,7 +31,7 @@ set(QT_MAIN_VERSION Qt6)
 set(QT_MINIMUM_VERSION 6.2)
 
 find_package(${QT_MAIN_VERSION} ${QT_MINIMUM_VERSION}
-    REQUIRED Core Gui Widgets Network Sql LinguistTools
+    REQUIRED Core Gui Widgets Network Sql LinguistTools Xml
 )
 
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
@@ -79,14 +79,16 @@ target_compile_definitions(fritzcallindicator
 target_link_libraries(fritzcallindicator PRIVATE
     ${QT_MAIN_VERSION}::Core
     ${QT_MAIN_VERSION}::Gui
-    ${QT_MAIN_VERSION}::Widgets
     ${QT_MAIN_VERSION}::Network
     ${QT_MAIN_VERSION}::Sql
+    ${QT_MAIN_VERSION}::Widgets
+    ${QT_MAIN_VERSION}::Xml
 )
 
 set(HEADERS
     fritzbox.h
     fritzcallindicator.h
+    fritzphonebook.h
     numberresolver.h
     onlineresolvers.h
     settings.h
@@ -97,6 +99,7 @@ set(SOURCES
     main.cpp
     fritzbox.cpp
     fritzcallindicator.cpp
+    fritzphonebook.cpp
     numberresolver.cpp
     onlineresolvers.cpp
     settings.cpp
