@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>360</height>
+    <height>469</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -50,7 +50,7 @@
         </widget>
        </item>
        <item row="1" column="0">
-        <widget class="QLabel" name="lblPort">
+        <widget class="QLabel" name="lblCallMonitorPort">
          <property name="text">
           <string>Call monitor port:</string>
          </property>
@@ -67,47 +67,79 @@
         </widget>
        </item>
        <item row="2" column="0">
-        <widget class="QLabel" name="lblTimeout">
+        <widget class="QLabel" name="lblCallTR064Port">
          <property name="text">
-          <string>Popup timeout (sec):</string>
+          <string>TR064 port:</string>
          </property>
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QSpinBox" name="spinBoxTimeout">
-         <property name="minimum">
-          <number>1</number>
-         </property>
+        <widget class="QSpinBox" name="spinBoxTR064Port">
          <property name="maximum">
-          <number>20</number>
-         </property>
-         <property name="value">
-          <number>1</number>
+          <number>99999</number>
          </property>
         </widget>
        </item>
        <item row="3" column="0">
+        <widget class="QLabel" name="lblUserName">
+         <property name="text">
+          <string>User name:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QLineEdit" name="lineEditUserName">
+         <property name="toolTip">
+          <string>FRITZ!Box user with call list and phonebook access</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="lblPassword">
+         <property name="text">
+          <string>Password:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QLineEdit" name="lineEditPassword">
+         <property name="toolTip">
+          <string>Attention: Password is not encrypted!</string>
+         </property>
+         <property name="echoMode">
+          <enum>QLineEdit::EchoMode::Password</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="0" colspan="2">
+        <widget class="Line" name="line">
+         <property name="orientation">
+          <enum>Qt::Orientation::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="0">
         <widget class="QLabel" name="lblCountryCode">
          <property name="text">
           <string>Country code:</string>
          </property>
         </widget>
        </item>
-       <item row="3" column="1">
+       <item row="6" column="1">
         <widget class="QLineEdit" name="lineEditCountryCode">
          <property name="text">
           <string/>
          </property>
         </widget>
        </item>
-       <item row="4" column="0">
+       <item row="7" column="0">
         <widget class="QLabel" name="lblOwnNumbers">
          <property name="text">
           <string>Own phone numbers:</string>
          </property>
         </widget>
        </item>
-       <item row="5" column="0" colspan="2">
+       <item row="8" column="0" colspan="2">
         <widget class="QTableWidget" name="tableOwnNumbers">
          <property name="alternatingRowColors">
           <bool>true</bool>
@@ -134,6 +166,26 @@
            <string>Description</string>
           </property>
          </column>
+        </widget>
+       </item>
+       <item row="9" column="0">
+        <widget class="QLabel" name="lblTimeout">
+         <property name="text">
+          <string>Popup timeout (sec):</string>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="1">
+        <widget class="QSpinBox" name="spinBoxTimeout">
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="maximum">
+          <number>20</number>
+         </property>
+         <property name="value">
+          <number>1</number>
+         </property>
         </widget>
        </item>
       </layout>
@@ -183,14 +235,21 @@
          </item>
         </layout>
        </item>
-       <item row="3" column="0">
+       <item row="3" column="0" colspan="2">
+        <widget class="Line" name="line_2">
+         <property name="orientation">
+          <enum>Qt::Orientation::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
         <widget class="QLabel" name="lblOnlineREsolvers">
          <property name="text">
           <string>Online number resolution:</string>
          </property>
         </widget>
        </item>
-       <item row="4" column="0" colspan="2">
+       <item row="5" column="0" colspan="2">
         <widget class="QTableWidget" name="tableOnlineResolvers">
          <property name="editTriggers">
           <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>

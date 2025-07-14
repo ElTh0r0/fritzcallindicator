@@ -250,6 +250,32 @@ void Settings::readSettings() {
           .toString();
   m_pUi->lineEditCountryCode->setText(m_sCountryCode);
 
+  m_pSettings->beginGroup(QStringLiteral("Connection"));
+  m_sHostName =
+      m_pSettings->value(QStringLiteral("HostName"), DEFAULT_HOST_NAME)
+          .toString();
+  m_pUi->lineEditHost->setText(m_sHostName);
+  m_nCallMonitorPort =
+      m_pSettings
+          ->value(QStringLiteral("CallMonitorPort"), DEFAULT_CALL_MONITOR_PORT)
+          .toUInt();
+  m_pUi->spinBoxCallMonitorPort->setValue(m_nCallMonitorPort);
+  m_nTR064Port =
+      m_pSettings->value(QStringLiteral("TR064Port"), DEFAULT_TR064_PORT)
+          .toUInt();
+  m_pUi->spinBoxTR064Port->setValue(m_nTR064Port);
+  m_sFritzUser = m_pSettings->value(QStringLiteral("FritzUser"), "").toString();
+  m_pUi->lineEditUserName->setText(m_sFritzUser);
+  m_sFritzPassword =
+      m_pSettings->value(QStringLiteral("FritzPassword"), "").toString();
+  m_pUi->lineEditPassword->setText(m_sFritzPassword);
+  m_nRetryInterval =
+      m_pSettings
+          ->value(QStringLiteral("RetryInterval"), DEFAULT_RETRY_INTERVAL_SEC)
+          .toUInt();
+  m_pSettings->endGroup();
+
+  m_pSettings->beginGroup(QStringLiteral("NumberResolvers"));
   QStringList sListTbAddressbooks =
       m_pSettings->value(QStringLiteral("TbAddressbooks"), QStringList())
           .toStringList();
@@ -267,27 +293,6 @@ void Settings::readSettings() {
       m_pUi->tableOnlineResolvers->item(row, 0)->setCheckState(Qt::Checked);
     }
   }
-
-  m_pSettings->beginGroup(QStringLiteral("Connection"));
-  m_sHostName =
-      m_pSettings->value(QStringLiteral("HostName"), DEFAULT_HOST_NAME)
-          .toString();
-  m_pUi->lineEditHost->setText(m_sHostName);
-  m_nCallMonitorPort =
-      m_pSettings
-          ->value(QStringLiteral("CallMonitorPort"), DEFAULT_CALL_MONITOR_PORT)
-          .toUInt();
-  m_pUi->spinBoxCallMonitorPort->setValue(m_nCallMonitorPort);
-  m_nTR064Port =
-      m_pSettings->value(QStringLiteral("TR064Port"), DEFAULT_TR064_PORT)
-          .toUInt();
-  m_sFritzUser = m_pSettings->value(QStringLiteral("FritzUser"), "").toString();
-  m_sFritzPassword =
-      m_pSettings->value(QStringLiteral("FritzPassword"), "").toString();
-  m_nRetryInterval =
-      m_pSettings
-          ->value(QStringLiteral("RetryInterval"), DEFAULT_RETRY_INTERVAL_SEC)
-          .toUInt();
   m_pSettings->endGroup();
 
   m_pSettings->beginGroup(QStringLiteral("PhoneNumbers"));
@@ -361,6 +366,21 @@ void Settings::accept() {
   }
   m_pSettings->setValue(QStringLiteral("CountryCode"), m_sCountryCode);
 
+  m_pSettings->beginGroup(QStringLiteral("Connection"));
+  m_sHostName = m_pUi->lineEditHost->text();
+  m_pSettings->setValue(QStringLiteral("HostName"), m_sHostName);
+  m_nCallMonitorPort = m_pUi->spinBoxCallMonitorPort->value();
+  m_pSettings->setValue(QStringLiteral("CallMonitorPort"), m_nCallMonitorPort);
+  m_nTR064Port = m_pUi->spinBoxTR064Port->value();
+  m_pSettings->setValue(QStringLiteral("TR064Port"), m_nTR064Port);
+  m_sFritzUser = m_pUi->lineEditUserName->text();
+  m_pSettings->setValue(QStringLiteral("FritzUser"), m_sFritzUser);
+  m_sFritzPassword = m_pUi->lineEditPassword->text();
+  m_pSettings->setValue(QStringLiteral("FritzPassword"), m_sFritzPassword);
+  m_pSettings->setValue(QStringLiteral("RetryInterval"), m_nRetryInterval);
+  m_pSettings->endGroup();
+
+  m_pSettings->beginGroup(QStringLiteral("NumberResolvers"));
   m_pSettings->setValue(QStringLiteral("TbAddressbooks"),
                         m_sListModel_TbAddressbooks->stringList());
   m_sListDisabledOnlineResolvers.clear();
@@ -373,16 +393,6 @@ void Settings::accept() {
   }
   m_pSettings->setValue(QStringLiteral("DisabledOnlineResolvers"),
                         m_sListDisabledOnlineResolvers);
-
-  m_pSettings->beginGroup(QStringLiteral("Connection"));
-  m_sHostName = m_pUi->lineEditHost->text();
-  m_pSettings->setValue(QStringLiteral("HostName"), m_sHostName);
-  m_nCallMonitorPort = m_pUi->spinBoxCallMonitorPort->value();
-  m_pSettings->setValue(QStringLiteral("CallMonitorPort"), m_nCallMonitorPort);
-  m_pSettings->setValue(QStringLiteral("TR064Port"), m_nTR064Port);
-  m_pSettings->setValue(QStringLiteral("FritzUser"), m_sFritzUser);
-  m_pSettings->setValue(QStringLiteral("FritzPassword"), m_sFritzPassword);
-  m_pSettings->setValue(QStringLiteral("RetryInterval"), m_nRetryInterval);
   m_pSettings->endGroup();
 
   m_OwnNumbers.clear();
