@@ -59,8 +59,9 @@ void FritzPhonebook::setPassword(const QString &pass) { m_pass = pass; }
 void FritzPhonebook::setSavepath(const QString &savepath) {
   m_savepath = savepath;
 }
+const QDir FritzPhonebook::getSavepath() { return QDir(m_savepath); }
 
-QStringList FritzPhonebook::getPhonebookList() {
+QHash<QString, QHash<QString, QString> > FritzPhonebook::getPhonebookList() {
   const QString body =
       u"<u:GetPhonebookList xmlns:u=\"urn:dslforum-org:service:X_AVM-DE_OnTel:1\"/>"_s;
 
@@ -68,12 +69,12 @@ QStringList FritzPhonebook::getPhonebookList() {
       u"urn:dslforum-org:service:X_AVM-DE_OnTel:1"_s, u"GetPhonebookList"_s,
       body, u"/upnp/control/x_contact"_s);
 
-  QStringList phonebooks;
+  QStringList phonebookIDs;
   QXmlStreamReader xml(response);
   while (!xml.atEnd()) {
     xml.readNext();
     if (xml.isStartElement() && xml.name() == u"NewPhonebookList"_s) {
-      phonebooks =
+      phonebookIDs =
           xml.readElementText().split(QStringLiteral(","), Qt::SkipEmptyParts);
     }
   }
@@ -82,9 +83,9 @@ QStringList FritzPhonebook::getPhonebookList() {
     qWarning() << "XML Parse Error:" << xml.errorString();
   }
 
-  QStringList ids = phonebooks;
+  QHash<QString, QHash<QString, QString> > phonebooks;
 
-  for (const QString &idStr : ids) {
+  for (const QString &idStr : phonebookIDs) {
     bool ok = false;
     int id = idStr.toInt(&ok);
     if (!ok) {
@@ -92,12 +93,16 @@ QStringList FritzPhonebook::getPhonebookList() {
       continue;
     }
 
-    QString url = getPhonebookUrl(id);
-    if (!url.isEmpty()) {
-      qDebug() << "Phonebook ID" << id << "→ URL:" << url;
-      downloadPhonebook(id, QUrl(url));
+    QStringList sListInfo = getPhonebookUrlAndName(id);
+    if (sListInfo.size() == 2) {
+      qDebug() << "Phonebook ID" << id << "→ Name:" << sListInfo.at(0)
+               << "→ URL:" << sListInfo.at(1);
+      QHash<QString, QString> info;
+      info.insert(QStringLiteral("Name"), sListInfo.at(0));
+      info.insert(QStringLiteral("URL"), sListInfo.at(1));
+      phonebooks.insert(idStr, info);
     } else {
-      qWarning() << "No URL for phonebook ID" << id;
+      qWarning() << "No Name and/or URL for phonebook ID" << id;
     }
   }
 
@@ -145,7 +150,7 @@ bool FritzPhonebook::downloadPhonebook(int id, const QUrl &url) {
   return true;
 }
 
-QString FritzPhonebook::getPhonebookUrl(int phonebookId) {
+QStringList FritzPhonebook::getPhonebookUrlAndName(int phonebookId) {
   const QString body =
       u"<u:GetPhonebook xmlns:u=\"urn:dslforum-org:service:X_AVM-DE_OnTel:1\">"
       u"<NewPhonebookID>"_s +
@@ -163,19 +168,29 @@ QString FritzPhonebook::getPhonebookUrl(int phonebookId) {
   }
 
   QXmlStreamReader xml(response);
+  QStringList sListInfo;
+  QString sUrl;
+  QString sName;
   qDebug() << response;
   while (!xml.atEnd()) {
     xml.readNext();
     if (xml.isStartElement() && xml.name() == u"NewPhonebookURL") {
-      return xml.readElementText().trimmed();
+      sUrl = xml.readElementText().trimmed();
+    }
+    if (xml.isStartElement() && xml.name() == u"NewPhonebookName") {
+      sName = xml.readElementText().trimmed();
     }
   }
 
   if (xml.hasError()) {
     qWarning() << "XML Parse Error:" << xml.errorString();
+    sListInfo.clear();
+  }
+  if (!sUrl.isEmpty() && !sName.isEmpty()) {
+    sListInfo << sName << sUrl;
   }
 
-  return {};
+  return sListInfo;
 }
 
 QString FritzPhonebook::sendSoapRequest(const QString &service,

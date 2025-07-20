@@ -36,8 +36,6 @@
 #include <QStandardPaths>
 #include <QStringListModel>
 
-#include "fritzphonebook.h"
-
 #if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
 #include <QStyleHints>
 #endif
@@ -47,7 +45,7 @@
 const QString Settings::DEFAULT_HOST_NAME = QStringLiteral("fritz.box");
 const uint Settings::DEFAULT_CALL_MONITOR_PORT = 1012;
 const uint Settings::DEFAULT_TR064_PORT = 49000;
-const uint Settings::DEFAULT_RETRY_INTERVAL_SEC = 20;
+const uint Settings::DEFAULT_RETRY_INTERVAL_SEC = 60;
 const uint Settings::DEFAULT_POPUP_TIMEOUT_SEC = 10;
 const QString Settings::DEFAULT_COUNTRY_CODE = QStringLiteral("0049");
 const uint Settings::DEFAULT_MAX_OWN_NUMBERS = 3;
@@ -105,10 +103,16 @@ Settings::Settings(const QDir sharePath, QObject *pParent)
 
   this->readSettings();
   this->initOnlineResolvers(sharePath);  // After readSettings!
-  this->initFritzPhonebooks(
+  m_pFritzPb = new FritzPhonebook(this);
+  m_pFritzPb->setHost(m_sHostName);
+  m_pFritzPb->setPort(m_nTR064Port);
+  m_pFritzPb->setUsername(m_sFritzUser);
+  m_pFritzPb->setPassword(m_sFritzPassword);
+  m_pFritzPb->setSavepath(
       QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/" +
       qApp->applicationName().toLower() +
       QStringLiteral("/fritzbox_phonebooks"));
+  this->initFritzPhonebooks();
 }
 
 Settings::~Settings() {
@@ -168,68 +172,88 @@ void Settings::initOnlineResolvers(QDir sharePath) {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-void Settings::initFritzPhonebooks(QDir sSavePath) {
+void Settings::initFritzPhonebooks() {
   qDebug() << Q_FUNC_INFO;
   m_FritzPhoneBooks.clear();
 
-  FritzPhonebook fritzpb;
-  fritzpb.setHost(m_sHostName);
-  fritzpb.setPort(m_nTR064Port);
-  fritzpb.setUsername(m_sFritzUser);
-  fritzpb.setPassword(m_sFritzPassword);
-  fritzpb.setSavepath(sSavePath.absolutePath());
+  m_FritzPhoneBooks = m_pFritzPb->getPhonebookList();
 
+  QHashIterator<QString, QHash<QString, QString>> i(m_FritzPhoneBooks);
+  while (i.hasNext()) {
+    i.next();
+
+    int row = m_pUi->tableFritzPhonebooks->rowCount();
+    m_pUi->tableFritzPhonebooks->insertRow(row);
+
+    QTableWidgetItem *itemEnabled = new QTableWidgetItem();
+    itemEnabled->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
+    if (m_sListEnabledFritzPhoneBooks.contains(
+            i.value()[QStringLiteral("Name")])) {
+      itemEnabled->setCheckState(Qt::Checked);
+    } else {
+      itemEnabled->setCheckState(Qt::Unchecked);
+    }
+
+    QTableWidgetItem *itemName =
+        new QTableWidgetItem(i.value()[QStringLiteral("Name")]);
+    m_pUi->tableFritzPhonebooks->setItem(row, 0, itemEnabled);
+    m_pUi->tableFritzPhonebooks->setItem(row, 1, itemName);
+  }
+}
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+QString Settings::downloadFritzPhonebook(const QString &sId,
+                                         const QString &sUrl) {
+  QString sFilePath;
   if (!m_sFritzUser.isEmpty() && !m_sFritzPassword.isEmpty()) {
     qDebug() << "Trying to retrieve FritzBox phonebooks";
-    QStringList list = fritzpb.getPhonebookList();
 
-    QStringList phonebooks =
-        sSavePath.entryList(QStringList() << QStringLiteral("phonebook_*.xml"),
-                            QDir::Files | QDir::NoDotAndDotDot, QDir::Name);
-    for (const auto &pbook : phonebooks) {
-      QFile fPhoneBook(sSavePath.absoluteFilePath(pbook));
+    if (m_pFritzPb->downloadPhonebook(sId.toInt(), sUrl)) {
+      sFilePath = m_pFritzPb->getSavepath().absoluteFilePath("phonebook_" +
+                                                             sId + ".xml");
+      QFile fPhoneBook(sFilePath);
 
       if (!fPhoneBook.open(QIODevice::ReadOnly)) {
-        qWarning() << "Couldn't open local FritzBox phone book"
-                   << sSavePath.absoluteFilePath(pbook);
-        continue;
+        qWarning() << "Couldn't open local FritzBox phone book" << sFilePath;
+        return QString();
       }
 
       QDomDocument doc;
       if (!doc.setContent(&fPhoneBook)) {
-        qWarning() << "Could not parse XML content from"
-                   << sSavePath.absoluteFilePath(pbook);
-        continue;
+        qWarning() << "Could not parse XML content from" << sFilePath;
+        return QString();
       }
 
       QDomElement root = doc.documentElement();
       QDomNodeList xmlPhonebook =
           root.elementsByTagName(QStringLiteral("phonebook"));
-      if (xmlPhonebook.isEmpty()) continue;
+      if (xmlPhonebook.isEmpty()) return QString();
 
       QDomElement pb = xmlPhonebook.at(0).toElement();
       QString sPhonebookName = pb.attribute(QStringLiteral("name")).trimmed();
 
       QRegularExpression re(QStringLiteral("phonebook_(\\d+)\\.xml"));
-      QRegularExpressionMatch match = re.match(pbook);
+      QRegularExpressionMatch match = re.match(fPhoneBook.fileName());
       if (!match.hasMatch()) {
-        qWarning() << "Filename doesn't match expected format:" << pbook;
-        continue;
+        qWarning() << "Filename doesn't match expected format:" << sFilePath;
+        return QString();
       }
 
       bool ok = false;
       int id = match.captured(1).toInt(&ok);
       if (!ok) {
-        qWarning() << "Invalid ID extracted from filename:" << pbook;
-        continue;
+        qWarning() << "Invalid ID extracted from filename:" << sFilePath;
+        return QString();
       }
-
-      m_FritzPhoneBooks.insert(sPhonebookName,
-                               sSavePath.absoluteFilePath(pbook));
     }
   } else {
     qWarning() << "FritzBox user/password not set!";
+    return QString();
   }
+
+  return sFilePath;
 }
 
 // ----------------------------------------------------------------------------
@@ -280,6 +304,19 @@ void Settings::readSettings() {
       m_pSettings->value(QStringLiteral("TbAddressbooks"), QStringList())
           .toStringList();
   m_sListModel_TbAddressbooks->setStringList(sListTbAddressbooks);
+
+  m_sListEnabledFritzPhoneBooks =
+      m_pSettings
+          ->value(QStringLiteral("EnabledFritzPhoneBooks"), QStringList())
+          .toStringList();
+  for (int row = 0; row < m_pUi->tableFritzPhonebooks->rowCount(); ++row) {
+    if (m_sListEnabledFritzPhoneBooks.contains(
+            m_pUi->tableFritzPhonebooks->item(row, 1)->text())) {
+      m_pUi->tableFritzPhonebooks->item(row, 0)->setCheckState(Qt::Checked);
+    } else {
+      m_pUi->tableFritzPhonebooks->item(row, 0)->setCheckState(Qt::Unchecked);
+    }
+  }
 
   m_sListDisabledOnlineResolvers =
       m_pSettings
@@ -383,6 +420,18 @@ void Settings::accept() {
   m_pSettings->beginGroup(QStringLiteral("NumberResolvers"));
   m_pSettings->setValue(QStringLiteral("TbAddressbooks"),
                         m_sListModel_TbAddressbooks->stringList());
+
+  m_sListEnabledFritzPhoneBooks.clear();
+  for (int row = 0; row < m_pUi->tableFritzPhonebooks->rowCount(); ++row) {
+    if (Qt::Checked ==
+        m_pUi->tableFritzPhonebooks->item(row, 0)->checkState()) {
+      m_sListEnabledFritzPhoneBooks
+          << m_pUi->tableFritzPhonebooks->item(row, 1)->text();
+    }
+  }
+  m_pSettings->setValue(QStringLiteral("EnabledFritzPhoneBooks"),
+                        m_sListEnabledFritzPhoneBooks);
+
   m_sListDisabledOnlineResolvers.clear();
   for (int row = 0; row < m_pUi->tableOnlineResolvers->rowCount(); ++row) {
     if (Qt::Checked !=
@@ -486,7 +535,22 @@ auto Settings::getTbAddressbooks() -> const QStringList {
 // ----------------------------------------------------------------------------
 
 auto Settings::getFritzPhonebooks() -> const QHash<QString, QString> {
-  return m_FritzPhoneBooks;
+  QHash<QString, QString> fritzPhoneBooks;
+  QHashIterator<QString, QHash<QString, QString>> i(m_FritzPhoneBooks);
+  while (i.hasNext()) {
+    i.next();
+
+    if (m_sListEnabledFritzPhoneBooks.contains(
+            i.value()[QStringLiteral("Name")])) {
+      QString sFilePath = this->downloadFritzPhonebook(
+          i.key(), i.value()[QStringLiteral("URL")]);
+      if (!sFilePath.isEmpty()) {
+        fritzPhoneBooks.insert(i.value()[QStringLiteral("Name")], sFilePath);
+      }
+    }
+  }
+
+  return fritzPhoneBooks;
 }
 
 // ----------------------------------------------------------------------------

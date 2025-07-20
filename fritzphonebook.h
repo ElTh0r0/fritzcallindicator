@@ -34,6 +34,7 @@
 #ifndef FRITZPHONEBOOK_H_
 #define FRITZPHONEBOOK_H_
 
+#include <QDir>
 #include <QObject>
 #include <QStringList>
 
@@ -48,8 +49,10 @@ class FritzPhonebook : public QObject {
   void setUsername(const QString &user);
   void setPassword(const QString &pass);
   void setSavepath(const QString &savepath);
+  const QDir getSavepath();
 
-  QStringList getPhonebookList();
+  QHash<QString, QHash<QString, QString> > getPhonebookList();
+  bool downloadPhonebook(int id, const QUrl &url);
   QHash<QString, QString> loadFromFile(const QString &xmlFilePath,
                                        const QString &countryCode);
 
@@ -57,8 +60,7 @@ class FritzPhonebook : public QObject {
   void phonebookDownloaded(int id, const QString &path);
 
  private:
-  QString getPhonebookUrl(int id);
-  bool downloadPhonebook(int id, const QUrl &url);
+  QStringList getPhonebookUrlAndName(int id);
   QString normalizeNumber(QString number, const QString &countryCode) const;
 
   QString m_host, m_user, m_pass, m_savepath;
