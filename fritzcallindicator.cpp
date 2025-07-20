@@ -189,7 +189,7 @@ void FritzCallIndicator::onIncomingCall(unsigned /* connectionId */,
                                         const QString &sCaller,
                                         const QString &sCallee) {
   QString sResolvedCaller = m_pNumberResolver->resolveNumber(
-      sCaller.trimmed(), m_pSettings->getDisabledOnlineResolvers());
+      sCaller.trimmed(), m_pSettings->getEnabledOnlineResolvers());
   QString sResolvedCallee = m_pSettings->resolveOwnNumber(sCallee.trimmed());
   QString sTitle(tr("Incoming call"));
   if (!sResolvedCallee.isEmpty()) {

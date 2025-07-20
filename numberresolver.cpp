@@ -172,7 +172,7 @@ void NumberResolver::readPhonebooks(
 // ----------------------------------------------------------------------------
 
 auto NumberResolver::resolveNumber(
-    const QString &sNumber, const QStringList &sListDisabledResolvers) const
+    const QString &sNumber, const QStringList &sListEnabledResolvers) const
     -> QString {
   bool bLocalCall(false);
   QString sCountryCode;
@@ -220,7 +220,7 @@ auto NumberResolver::resolveNumber(
 
   // Search online
   sKnownCaller = m_pOnlineResolvers->searchOnline(
-      "0" + sPhoneNumber, sCountryCode, sListDisabledResolvers);
+      "0" + sPhoneNumber, sCountryCode, sListEnabledResolvers);
   if (!sKnownCaller.isEmpty()) {
     return sKnownCaller;
   }

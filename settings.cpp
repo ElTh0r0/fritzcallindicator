@@ -149,10 +149,10 @@ void Settings::initOnlineResolvers(QDir sharePath) {
 
     QTableWidgetItem *itemEnabled = new QTableWidgetItem();
     itemEnabled->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
-    if (m_sListDisabledOnlineResolvers.contains(confFile.chopped(5))) {
-      itemEnabled->setCheckState(Qt::Unchecked);
-    } else {
+    if (m_sListEnabledOnlineResolvers.contains(confFile.chopped(5))) {
       itemEnabled->setCheckState(Qt::Checked);
+    } else {
+      itemEnabled->setCheckState(Qt::Unchecked);
     }
 
     QTableWidgetItem *itemService = new QTableWidgetItem(
@@ -306,8 +306,7 @@ void Settings::readSettings() {
   m_sListModel_TbAddressbooks->setStringList(sListTbAddressbooks);
 
   m_sListEnabledFritzPhoneBooks =
-      m_pSettings
-          ->value(QStringLiteral("EnabledFritzPhoneBooks"), QStringList())
+      m_pSettings->value(QStringLiteral("FritzPhoneBooks"), QStringList())
           .toStringList();
   for (int row = 0; row < m_pUi->tableFritzPhonebooks->rowCount(); ++row) {
     if (m_sListEnabledFritzPhoneBooks.contains(
@@ -318,16 +317,15 @@ void Settings::readSettings() {
     }
   }
 
-  m_sListDisabledOnlineResolvers =
-      m_pSettings
-          ->value(QStringLiteral("DisabledOnlineResolvers"), QStringList())
+  m_sListEnabledOnlineResolvers =
+      m_pSettings->value(QStringLiteral("OnlineResolvers"), QStringList())
           .toStringList();
   for (int row = 0; row < m_pUi->tableOnlineResolvers->rowCount(); ++row) {
-    if (m_sListDisabledOnlineResolvers.contains(m_OnlineResolvers.value(
+    if (m_sListEnabledOnlineResolvers.contains(m_OnlineResolvers.value(
             m_pUi->tableOnlineResolvers->item(row, 1)->text()))) {
-      m_pUi->tableOnlineResolvers->item(row, 0)->setCheckState(Qt::Unchecked);
-    } else {
       m_pUi->tableOnlineResolvers->item(row, 0)->setCheckState(Qt::Checked);
+    } else {
+      m_pUi->tableOnlineResolvers->item(row, 0)->setCheckState(Qt::Unchecked);
     }
   }
   m_pSettings->endGroup();
@@ -429,19 +427,19 @@ void Settings::accept() {
           << m_pUi->tableFritzPhonebooks->item(row, 1)->text();
     }
   }
-  m_pSettings->setValue(QStringLiteral("EnabledFritzPhoneBooks"),
+  m_pSettings->setValue(QStringLiteral("FritzPhoneBooks"),
                         m_sListEnabledFritzPhoneBooks);
 
-  m_sListDisabledOnlineResolvers.clear();
+  m_sListEnabledOnlineResolvers.clear();
   for (int row = 0; row < m_pUi->tableOnlineResolvers->rowCount(); ++row) {
-    if (Qt::Checked !=
+    if (Qt::Checked ==
         m_pUi->tableOnlineResolvers->item(row, 0)->checkState()) {
-      m_sListDisabledOnlineResolvers << m_OnlineResolvers.value(
+      m_sListEnabledOnlineResolvers << m_OnlineResolvers.value(
           m_pUi->tableOnlineResolvers->item(row, 1)->text());
     }
   }
-  m_pSettings->setValue(QStringLiteral("DisabledOnlineResolvers"),
-                        m_sListDisabledOnlineResolvers);
+  m_pSettings->setValue(QStringLiteral("OnlineResolvers"),
+                        m_sListEnabledOnlineResolvers);
   m_pSettings->endGroup();
 
   m_OwnNumbers.clear();

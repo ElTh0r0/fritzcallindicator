@@ -58,8 +58,8 @@ class Settings : public QDialog {
   uint getRetryInterval() const noexcept { return m_nRetryInterval; }
   uint getPopupTimeout() const noexcept { return m_nPopupTimeout; }
   QString getCountryCode() const noexcept { return m_sCountryCode; }
-  QStringList getDisabledOnlineResolvers() const noexcept {
-    return m_sListDisabledOnlineResolvers;
+  QStringList getEnabledOnlineResolvers() const noexcept {
+    return m_sListEnabledOnlineResolvers;
   }
   QString resolveOwnNumber(const QString &sNumber) const noexcept {
     return m_OwnNumbers.value(sNumber, "");
@@ -106,7 +106,7 @@ class Settings : public QDialog {
   QHash<QString, QHash<QString, QString>> m_FritzPhoneBooks;
   QStringList m_sListEnabledFritzPhoneBooks;
   QHash<QString, QString> m_OnlineResolvers;
-  QStringList m_sListDisabledOnlineResolvers;
+  QStringList m_sListEnabledOnlineResolvers;
   uint m_nMaxOwnNumbers;
   QHash<QString, QString> m_OwnNumbers;
   static const QString DEFAULT_HOST_NAME;

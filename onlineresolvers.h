@@ -37,7 +37,7 @@ class OnlineResolvers : public QObject {
  public:
   explicit OnlineResolvers(QDir sharePath, QObject *pParent = nullptr);
   auto searchOnline(const QString &sNumber, const QString &sCountryCode,
-                    const QStringList &sListDisabledResolvers) -> QString;
+                    const QStringList &sListEnabledResolvers) -> QString;
 
  private:
   auto parseReply(const QString &sReply,

@@ -41,8 +41,7 @@ class NumberResolver : public QObject {
                           const QString &sLocalCountryCode,
                           QObject *pParent = nullptr);
   auto resolveNumber(const QString &sNumber,
-                     const QStringList &sListDisabledResolvers) const
-      -> QString;
+                     const QStringList &sListEnabledResolvers) const -> QString;
 
  public slots:
   void readPhonebooks(const QStringList &sListTbAddressbooks,

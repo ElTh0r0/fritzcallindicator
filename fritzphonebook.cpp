@@ -306,6 +306,9 @@ QHash<QString, QString> FritzPhonebook::loadFromFile(
         if (type == u"fax"_s) {
           type = " (" + tr("Fax") + ")";
         }
+        if (type == u"fax_work"_s) {
+          type = " (" + tr("Fax") + ")";
+        }
         if (type == u"other"_s) {
           type = " (" + tr("Other") + ")";
         }

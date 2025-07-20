@@ -75,14 +75,14 @@ OnlineResolvers::OnlineResolvers(QDir sharePath, QObject *pParent)
 
 auto OnlineResolvers::searchOnline(const QString &sNumber,
                                    const QString &sCountryCode,
-                                   const QStringList &sListDisabledResolvers)
+                                   const QStringList &sListEnabledResolvers)
     -> QString {
   QHashIterator<QString, QHash<QString, QString>> resolver(m_Resolvers);
   while (resolver.hasNext()) {
     resolver.next();
     if (sCountryCode ==
             resolver.value().value(QStringLiteral("CountryCode"), "") &&
-        !sListDisabledResolvers.contains(resolver.key())) {
+        sListEnabledResolvers.contains(resolver.key())) {
       qDebug() << "Searching online:"
                << resolver.value().value(QStringLiteral("Service"), "");
       QString sUrl = resolver.value().value(QStringLiteral("URL"), "");
