@@ -58,6 +58,8 @@ class Settings : public QDialog {
   uint getRetryInterval() const noexcept { return m_nRetryInterval; }
   uint getPopupTimeout() const noexcept { return m_nPopupTimeout; }
   QString getCountryCode() const noexcept { return m_sCountryCode; }
+  uint getMaxDaysOfOldCalls() const noexcept { return m_nMaxDaysOfOldCalls; }
+  uint getMaxCallHistory() const noexcept { return m_nMaxCallHistory; }
   QStringList getEnabledOnlineResolvers() const noexcept {
     return m_sListEnabledOnlineResolvers;
   }
@@ -109,6 +111,8 @@ class Settings : public QDialog {
   QStringList m_sListEnabledOnlineResolvers;
   uint m_nMaxOwnNumbers;
   QHash<QString, QString> m_OwnNumbers;
+  uint m_nMaxDaysOfOldCalls;
+  uint m_nMaxCallHistory;
   static const QString DEFAULT_HOST_NAME;
   static const uint DEFAULT_CALL_MONITOR_PORT;
   static const uint DEFAULT_TR064_PORT;
@@ -116,6 +120,8 @@ class Settings : public QDialog {
   static const uint DEFAULT_POPUP_TIMEOUT_SEC;
   static const QString DEFAULT_COUNTRY_CODE;
   static const uint DEFAULT_MAX_OWN_NUMBERS;
+  static const uint DEFAULT_MAX_DAYS_OLD_CALLS;
+  static const uint DEFAULT_MAX_CALL_HISTORY;
 };
 
 #endif  // SETTINGS_H_

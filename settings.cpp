@@ -49,6 +49,8 @@ const uint Settings::DEFAULT_RETRY_INTERVAL_SEC = 60;
 const uint Settings::DEFAULT_POPUP_TIMEOUT_SEC = 10;
 const QString Settings::DEFAULT_COUNTRY_CODE = QStringLiteral("0049");
 const uint Settings::DEFAULT_MAX_OWN_NUMBERS = 3;
+const uint Settings::DEFAULT_MAX_DAYS_OLD_CALLS = 7;
+const uint Settings::DEFAULT_MAX_CALL_HISTORY = 10;
 
 Settings::Settings(const QDir sharePath, QObject *pParent)
     : m_pUi(new Ui::SettingsDialog()) {
@@ -274,6 +276,16 @@ void Settings::readSettings() {
           .toString();
   m_pUi->lineEditCountryCode->setText(m_sCountryCode);
 
+  m_nMaxDaysOfOldCalls = m_pSettings
+                             ->value(QStringLiteral("MaxDaysOfOldCalls"),
+                                     DEFAULT_MAX_DAYS_OLD_CALLS)
+                             .toUInt();
+
+  m_nMaxCallHistory = m_pSettings
+                          ->value(QStringLiteral("MaxEntriesCallHistory"),
+                                  DEFAULT_MAX_CALL_HISTORY)
+                          .toUInt();
+
   m_pSettings->beginGroup(QStringLiteral("Connection"));
   m_sHostName =
       m_pSettings->value(QStringLiteral("HostName"), DEFAULT_HOST_NAME)
@@ -297,7 +309,7 @@ void Settings::readSettings() {
       m_pSettings
           ->value(QStringLiteral("RetryInterval"), DEFAULT_RETRY_INTERVAL_SEC)
           .toUInt();
-  m_pSettings->endGroup();
+  m_pSettings->endGroup();  // Connetion
 
   m_pSettings->beginGroup(QStringLiteral("NumberResolvers"));
   QStringList sListTbAddressbooks =
@@ -328,7 +340,7 @@ void Settings::readSettings() {
       m_pUi->tableOnlineResolvers->item(row, 0)->setCheckState(Qt::Unchecked);
     }
   }
-  m_pSettings->endGroup();
+  m_pSettings->endGroup();  // NumberResolvers
 
   m_pSettings->beginGroup(QStringLiteral("PhoneNumbers"));
   m_nMaxOwnNumbers =
@@ -365,7 +377,7 @@ void Settings::readSettings() {
       m_pUi->tableOwnNumbers->setItem(row, 1, itemDesc);
     }
   }
-  m_pSettings->endGroup();
+  m_pSettings->endGroup();  // PhoneNumbers
 
   // Fill table with empty rows
   for (uint i = 0; i < m_nMaxOwnNumbers - m_OwnNumbers.size(); i++) {
@@ -401,6 +413,11 @@ void Settings::accept() {
   }
   m_pSettings->setValue(QStringLiteral("CountryCode"), m_sCountryCode);
 
+  m_pSettings->setValue(QStringLiteral("MaxDaysOfOldCalls"),
+                        m_nMaxDaysOfOldCalls);
+  m_pSettings->setValue(QStringLiteral("MaxEntriesCallHistory"),
+                        m_nMaxCallHistory);
+
   m_pSettings->beginGroup(QStringLiteral("Connection"));
   m_sHostName = m_pUi->lineEditHost->text();
   m_pSettings->setValue(QStringLiteral("HostName"), m_sHostName);
@@ -413,7 +430,7 @@ void Settings::accept() {
   m_sFritzPassword = m_pUi->lineEditPassword->text();
   m_pSettings->setValue(QStringLiteral("FritzPassword"), m_sFritzPassword);
   m_pSettings->setValue(QStringLiteral("RetryInterval"), m_nRetryInterval);
-  m_pSettings->endGroup();
+  m_pSettings->endGroup();  // Connection
 
   m_pSettings->beginGroup(QStringLiteral("NumberResolvers"));
   m_pSettings->setValue(QStringLiteral("TbAddressbooks"),
@@ -440,7 +457,7 @@ void Settings::accept() {
   }
   m_pSettings->setValue(QStringLiteral("OnlineResolvers"),
                         m_sListEnabledOnlineResolvers);
-  m_pSettings->endGroup();
+  m_pSettings->endGroup();  // NumberResolvers
 
   m_OwnNumbers.clear();
   m_pSettings->beginGroup(QStringLiteral("PhoneNumbers"));
@@ -471,7 +488,7 @@ void Settings::accept() {
     m_pSettings->setValue(
         QStringLiteral("Phone%1_Description").arg(QString::number(j)), "");
   }
-  m_pSettings->endGroup();
+  m_pSettings->endGroup();  // PhoneNumbers
 
   emit changedConnectionSettings(m_sHostName, m_nCallMonitorPort,
                                  m_nRetryInterval);

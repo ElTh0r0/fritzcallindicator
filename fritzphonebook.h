@@ -51,6 +51,7 @@ class FritzPhonebook : public QObject {
   void setSavepath(const QString &savepath);
   const QDir getSavepath();
 
+  QStringList getCallHistory(uint nMaxDays, uint nMaxLastCalls);
   QHash<QString, QHash<QString, QString> > getPhonebookList();
   bool downloadPhonebook(int id, const QUrl &url);
   QHash<QString, QString> loadFromFile(const QString &xmlFilePath,

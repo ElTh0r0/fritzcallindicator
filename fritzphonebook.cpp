@@ -341,3 +341,122 @@ QString FritzPhonebook::normalizeNumber(QString number,
 
   return number;
 }
+
+QStringList FritzPhonebook::getCallHistory(uint nMaxDays, uint nMaxLastCalls) {
+  qDebug() << Q_FUNC_INFO;
+  QStringList sListCalls;
+
+  const QString body =
+      u"<u:GetCallList xmlns:u=\"urn:dslforum-org:service:X_AVM-DE_OnTel:1\"/>"_s;
+
+  const QString response =
+      sendSoapRequest(u"urn:dslforum-org:service:X_AVM-DE_OnTel:1"_s,
+                      u"GetCallList"_s, body, u"/upnp/control/x_contact"_s);
+
+  QString sCallListUrl;
+  QXmlStreamReader xml(response);
+  while (!xml.atEnd()) {
+    xml.readNext();
+    if (xml.isStartElement() && xml.name() == u"NewCallListURL"_s) {
+      sCallListUrl = xml.readElementText();
+    }
+  }
+
+  if (xml.hasError() || sCallListUrl.isEmpty()) {
+    qWarning() << "XML Parse Error:" << xml.errorString();
+    return sListCalls;
+  }
+
+  sCallListUrl += "&days=" + QString::number(nMaxDays);
+
+  qDebug() << "Downloading call list from" << sCallListUrl;
+
+  QNetworkAccessManager nam;
+  QNetworkRequest request(sCallListUrl);
+  QNetworkReply *reply = nam.get(request);
+
+  QEventLoop loop;
+  QObject::connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
+  loop.exec();
+
+  if (reply->error() != QNetworkReply::NoError) {
+    qWarning() << "Download failed:" << reply->errorString();
+    reply->deleteLater();
+    return sListCalls;
+  }
+
+  QByteArray data = reply->readAll();
+  reply->deleteLater();
+  // qDebug() << data;
+  xml.clear();
+  xml.addData(data);
+
+  bool inCall = false;
+  bool typeIsOne = false;
+  QString sName;
+  QString sNumber;
+  QString sDate;
+  QString sTime;
+  while (!xml.atEnd() && !xml.hasError()) {
+    xml.readNext();
+
+    if (xml.isStartElement()) {
+      if (xml.name() == "Call") {
+        inCall = true;
+        typeIsOne = false;
+        sName.clear();
+        sNumber.clear();
+        sDate.clear();
+        sTime.clear();
+      } else if (inCall) {
+        if (xml.name() == "Type") {
+          QString typeText = xml.readElementText();
+          typeIsOne = (typeText == "1");  // 1 = Incoming call
+        } else if (xml.name() == "Caller") {
+          if (typeIsOne)
+            sNumber = xml.readElementText();
+          else
+            xml.skipCurrentElement();
+        } else if (xml.name() == "Name") {
+          if (typeIsOne)
+            sName = xml.readElementText();
+          else
+            xml.skipCurrentElement();
+        } else if (xml.name() == "Date") {
+          if (typeIsOne) {
+            sDate = xml.readElementText();
+            // TODO: Configurable date format
+            // Date format from XML: dd.MM.yy HH:mm
+            QStringList sListDateTime = sDate.split(' ');
+            if (sListDateTime.size() == 2) {
+              sDate = sListDateTime.at(0);
+              sTime = sListDateTime.at(1);
+            }
+          } else {
+            xml.skipCurrentElement();
+          }
+        } else {
+          // Skip all other elements
+          xml.skipCurrentElement();
+        }
+      }
+    } else if (xml.isEndElement() && xml.name() == "Call") {
+      if (typeIsOne) {
+        // TODO: Trying to resolve number from Thunderbird or online???
+        if (sName.isEmpty()) sName = sNumber;
+
+        sListCalls.push_back(sDate + "|" + sTime + "|" + sName);
+        if (sListCalls.size() >= nMaxLastCalls) break;
+      }
+      inCall = false;
+      typeIsOne = false;
+    }
+  }
+
+  if (xml.hasError()) {
+    qWarning() << "XML Parse Error:" << xml.errorString();
+    return sListCalls;
+  }
+
+  return sListCalls;
+}

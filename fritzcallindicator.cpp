@@ -36,7 +36,7 @@
 #include <QMenu>
 #include <QMessageBox>
 
-const quint8 FritzCallIndicator::MAX_LAST_CALLS = 10;
+#include "fritzphonebook.h"
 
 FritzCallIndicator::FritzCallIndicator(const QDir &sharePath)
     : m_sSharePath(sharePath.absolutePath()) {
@@ -68,6 +68,14 @@ FritzCallIndicator::FritzCallIndicator(const QDir &sharePath)
   m_pFritzBox->connectTo(m_pSettings->getHostName(),
                          m_pSettings->getCallMonitorPort(),
                          m_pSettings->getRetryInterval());
+
+  FritzPhonebook fb;
+  fb.setHost(m_pSettings->getHostName());
+  fb.setUsername(m_pSettings->getFritzUser());
+  fb.setPassword(m_pSettings->getFritzPassword());
+  fb.setPort(m_pSettings->getTR064Port());
+  m_sListCallHistory = fb.getCallHistory(m_pSettings->getMaxDaysOfOldCalls(),
+                                         m_pSettings->getMaxCallHistory());
 
   // 03.11.16 13:17:08;RING;0;03023125222;06990009111;SIP0;
   // m_pFritzBox->parseAndSignal(
@@ -196,13 +204,14 @@ void FritzCallIndicator::onIncomingCall(unsigned /* connectionId */,
     sTitle = tr("Incoming call to '%1'").arg(sResolvedCallee);
   }
 
-  m_sListCallHistory << QDateTime::currentDateTime().toString(
-                            "dd.MM.yyyy|hh:mm:ss|") +
-                            sResolvedCaller;
+  // TODO: Configurable date format
+  m_sListCallHistory.push_front(
+      QDateTime::currentDateTime().toString("dd.MM.yy|hh:mm|") +
+      sResolvedCaller);
   // Limit the number of recent calls
-  if (m_sListCallHistory.count() > MAX_LAST_CALLS) {
+  if (m_sListCallHistory.count() > m_pSettings->getMaxCallHistory()) {
     m_sListCallHistory =
-        m_sListCallHistory.mid(m_sListCallHistory.count() - MAX_LAST_CALLS);
+        m_sListCallHistory.mid(0, m_pSettings->getMaxCallHistory());
   }
 
   this->showMessage(sTitle, tr("Caller: '%1'").arg(sResolvedCaller));
@@ -212,7 +221,6 @@ void FritzCallIndicator::onIncomingCall(unsigned /* connectionId */,
 // ----------------------------------------------------------------------------
 
 void FritzCallIndicator::showCallHistory() {
-  // TODO: Read call history from FritzBox
   Qt::AlignmentFlag Align;
   QDialog dialog;
   dialog.setWindowTitle(tr("Call history"));

@@ -84,7 +84,6 @@ class FritzCallIndicator : public QObject {
 
   const QString m_sSharePath;
   QStringList m_sListCallHistory;
-  static const quint8 MAX_LAST_CALLS;
 };
 
 #endif  // QT_NO_SYSTEMTRAYICON

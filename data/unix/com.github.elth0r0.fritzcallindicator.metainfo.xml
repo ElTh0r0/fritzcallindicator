@@ -33,6 +33,13 @@
   </languages>
   
   <releases>
+    <release version="0.6.0" date="2025-07-26">
+      <description>
+        <ul>
+          <li>Add FritzBox call history.</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.5.0" date="2025-07-13">
       <description>
         <ul>
