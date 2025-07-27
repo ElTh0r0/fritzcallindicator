@@ -29,6 +29,7 @@
 #include <QAction>
 #include <QCoreApplication>
 #include <QDialog>
+#include <QDialogButtonBox>
 #include <QGridLayout>
 #include <QIcon>
 #include <QLabel>
