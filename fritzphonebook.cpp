@@ -401,7 +401,7 @@ QStringList FritzPhonebook::getCallHistory(uint nMaxDays, uint nMaxLastCalls) {
     xml.readNext();
 
     if (xml.isStartElement()) {
-      if (xml.name() == "Call") {
+      if (xml.name() == u"Call"_s) {
         inCall = true;
         typeIsOne = false;
         sName.clear();
@@ -409,20 +409,20 @@ QStringList FritzPhonebook::getCallHistory(uint nMaxDays, uint nMaxLastCalls) {
         sDate.clear();
         sTime.clear();
       } else if (inCall) {
-        if (xml.name() == "Type") {
+        if (xml.name() == u"Type"_s) {
           QString typeText = xml.readElementText();
-          typeIsOne = (typeText == "1");  // 1 = Incoming call
-        } else if (xml.name() == "Caller") {
+          typeIsOne = (typeText == u"1"_s);  // 1 = Incoming call
+        } else if (xml.name() == u"Caller"_s) {
           if (typeIsOne)
             sNumber = xml.readElementText();
           else
             xml.skipCurrentElement();
-        } else if (xml.name() == "Name") {
+        } else if (xml.name() == u"Name"_s) {
           if (typeIsOne)
             sName = xml.readElementText();
           else
             xml.skipCurrentElement();
-        } else if (xml.name() == "Date") {
+        } else if (xml.name() == u"Date"_s) {
           if (typeIsOne) {
             sDate = xml.readElementText();
             // TODO: Configurable date format
@@ -440,7 +440,7 @@ QStringList FritzPhonebook::getCallHistory(uint nMaxDays, uint nMaxLastCalls) {
           xml.skipCurrentElement();
         }
       }
-    } else if (xml.isEndElement() && xml.name() == "Call") {
+    } else if (xml.isEndElement() && xml.name() == u"Call"_s) {
       if (typeIsOne) {
         // TODO: Trying to resolve number from Thunderbird or online???
         if (sName.isEmpty()) sName = sNumber;
