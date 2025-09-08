@@ -27,92 +27,47 @@
 #ifndef SETTINGS_H_
 #define SETTINGS_H_
 
-#include <QDialog>
 #include <QDir>
-#include <QHash>
-#include <QObject>
+#include <QSettings>
 
-#include "fritzphonebook.h"
-
-class QSettings;
-class QStringListModel;
-
-QT_BEGIN_NAMESPACE
-namespace Ui {
-class SettingsDialog;
-}
-QT_END_NAMESPACE
-
-class Settings : public QDialog {
+class Settings : public QObject {
   Q_OBJECT
 
  public:
-  explicit Settings(const QDir sharePath, QObject *pParent = nullptr);
-  virtual ~Settings();
+  explicit Settings(QObject* pParent = nullptr);
+  static Settings* instance();
 
-  QString getHostName() const noexcept { return m_sHostName; }
-  uint getCallMonitorPort() const noexcept { return m_nCallMonitorPort; }
-  uint getTR064Port() const noexcept { return m_nTR064Port; }
-  QString getFritzUser() const noexcept { return m_sFritzUser; }
-  QString getFritzPassword() const noexcept { return m_sFritzPassword; }
-  uint getRetryInterval() const noexcept { return m_nRetryInterval; }
-  uint getPopupTimeout() const noexcept { return m_nPopupTimeout; }
-  QString getCountryCode() const noexcept { return m_sCountryCode; }
-  uint getMaxDaysOfOldCalls() const noexcept { return m_nMaxDaysOfOldCalls; }
-  uint getMaxCallHistory() const noexcept { return m_nMaxCallHistory; }
-  QStringList getEnabledOnlineResolvers() const noexcept {
-    return m_sListEnabledOnlineResolvers;
-  }
-  QString resolveOwnNumber(const QString &sNumber) const noexcept {
-    return m_OwnNumbers.value(sNumber, "");
-  }
+  // General
+  auto getCountryCode() const -> QString;
+  auto getPopupTimeout() const -> uint;
+  auto getMaxDaysOfOldCalls() const -> uint;
+  auto getMaxCallHistory() const -> uint;
+  // Connection
+  auto getHostName() const -> QString;
+  auto getCallMonitorPort() const -> uint;
+  auto getTR064Port() const -> uint;
+  auto getFritzUser() const -> QString;
+  auto getFritzPassword() const -> QString;
+  auto getRetryInterval() const -> uint;
+  // NumberResolvers
   auto getTbAddressbooks() -> const QStringList;
-  auto getFritzPhonebooks() -> const QHash<QString, QString>;
-  auto getLanguage() -> const QString;
-  auto getIconTheme() -> const QString;
-  void translateUi();
+  auto getEnabledOnlineResolvers() const -> QStringList;
+  auto getEnabledFritzPhonebooks() -> const QStringList;
+  // PhoneNumbers
+  auto getMaxOwnNumbers() const -> uint;
+  auto getOwnNumbers() -> QMap<QString, QString>;
+  auto setOwnNumbers(const QMap<QString, QString> &ownNumbers) -> void;
+  auto resolveOwnNumber(const QString& sNumber) const -> QString;
 
- public slots:
-  void accept() override;
+  static auto getLanguage() -> const QString;
+  static auto getIconTheme() -> const QString;
 
- signals:
-  void changedConnectionSettings(const QString &sHostName,
-                                 const uint nMonitorPort,
-                                 const uint RetryInterval);
-  void changedPhonebooks(const QStringList &sListTbAddressbooks,
-                         const QHash<QString, QString> &sListFritzPhonebooks);
-
- protected:
-  void showEvent(QShowEvent *pEvent) override;
-  void closeEvent(QCloseEvent *event) override;
+  auto setValue(const QString& sKey, const QVariant& vValue) -> void;
 
  private:
-  void initOnlineResolvers(QDir sharePath);
-  void initFritzPhonebooks();
-  QString downloadFritzPhonebook(const QString &sId, const QString &sUrl);
-  void readSettings();
-  auto getThunderbirdProfilePath() -> const QString;
+  QSettings m_settings;
+  QMap<QString, QString> m_OwnNumbers;
 
-  Ui::SettingsDialog *m_pUi;
-  QSettings *m_pSettings;
-  QString m_sHostName;
-  uint m_nCallMonitorPort;
-  uint m_nTR064Port;
-  QString m_sFritzUser;
-  QString m_sFritzPassword;
-  uint m_nRetryInterval;
-  uint m_nPopupTimeout;
-  QString m_sCountryCode;
-  QStringListModel *m_sListModel_TbAddressbooks;
-  FritzPhonebook *m_pFritzPb;
-  QHash<QString, QHash<QString, QString>> m_FritzPhoneBooks;
-  QStringList m_sListEnabledFritzPhoneBooks;
-  QHash<QString, QString> m_OnlineResolvers;
-  QStringList m_sListEnabledOnlineResolvers;
-  uint m_nMaxOwnNumbers;
-  QHash<QString, QString> m_OwnNumbers;
-  uint m_nMaxDaysOfOldCalls;
-  uint m_nMaxCallHistory;
   static const QString DEFAULT_HOST_NAME;
   static const uint DEFAULT_CALL_MONITOR_PORT;
   static const uint DEFAULT_TR064_PORT;

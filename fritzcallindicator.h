@@ -30,12 +30,14 @@
 #include <QSystemTrayIcon>
 #include <QTranslator>
 
+#include "settings.h"
+#include "settingsdialog.h"
+
 #ifndef QT_NO_SYSTEMTRAYICON
 #include <QDir>
 
 #include "fritzbox.h"
 #include "numberresolver.h"
-#include "settings.h"
 
 QT_BEGIN_NAMESPACE
 class QAction;
@@ -70,17 +72,18 @@ class FritzCallIndicator : public QObject {
       const QSystemTrayIcon::MessageIcon icon = QSystemTrayIcon::Information);
 
   QAction *m_pShowCallHistory;
-  QAction *m_pShowSettings;
+  QAction *m_pShowSettingsDialog;
   QAction *m_pShowInfoBox;
   QAction *m_pQuit;
   QSystemTrayIcon *m_pTrayIcon;
   QMenu *m_pTrayIconMenu;
   QTranslator m_translator;    // App translations
   QTranslator m_translatorQt;  // Qt translations
+  Settings m_settings;
 
+  SettingsDialog *m_pSettingsDialog = nullptr;
   FritzBox *m_pFritzBox = nullptr;
   NumberResolver *m_pNumberResolver = nullptr;
-  Settings *m_pSettings = nullptr;
 
   const QString m_sSharePath;
   QStringList m_sListCallHistory;

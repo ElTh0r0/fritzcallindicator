@@ -16,7 +16,7 @@
 
 cmake_minimum_required(VERSION 3.16)
 project(FritzCallIndicator
-    VERSION 0.6.0
+    VERSION 0.7.0
     DESCRIPTION "FritzBox! call indicator"
     LANGUAGES C CXX
 )
@@ -92,6 +92,7 @@ set(HEADERS
     numberresolver.h
     onlineresolvers.h
     settings.h
+    settingsdialog.h
     tbaddressbook.h
 )
 
@@ -103,11 +104,12 @@ set(SOURCES
     numberresolver.cpp
     onlineresolvers.cpp
     settings.cpp
+    settingsdialog.cpp
     tbaddressbook.cpp
 )
 
 set(FORMS
-    settings.ui
+    settingsdialog.ui
 )
 
 set(RESOURCES
