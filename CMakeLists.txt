@@ -86,7 +86,7 @@ target_link_libraries(fritzcallindicator PRIVATE
 )
 
 set(HEADERS
-    fritzbox.h
+    callmonitor.h
     fritzcallindicator.h
     fritzphonebook.h
     numberresolver.h
@@ -98,7 +98,7 @@ set(HEADERS
 
 set(SOURCES
     main.cpp
-    fritzbox.cpp
+    callmonitor.cpp
     fritzcallindicator.cpp
     fritzphonebook.cpp
     numberresolver.cpp

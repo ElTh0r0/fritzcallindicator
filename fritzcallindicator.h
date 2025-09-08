@@ -36,7 +36,7 @@
 #ifndef QT_NO_SYSTEMTRAYICON
 #include <QDir>
 
-#include "fritzbox.h"
+#include "callmonitor.h"
 #include "numberresolver.h"
 
 QT_BEGIN_NAMESPACE
@@ -82,7 +82,7 @@ class FritzCallIndicator : public QObject {
   Settings m_settings;
 
   SettingsDialog *m_pSettingsDialog = nullptr;
-  FritzBox *m_pFritzBox = nullptr;
+  CallMonitor *m_pCallMonitor = nullptr;
   NumberResolver *m_pNumberResolver = nullptr;
 
   const QString m_sSharePath;

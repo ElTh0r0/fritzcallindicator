@@ -1,5 +1,5 @@
 /**
- * \file fritzbox.h
+ * \file callmonitor.h
  *
  * \section LICENSE
  *
@@ -21,7 +21,7 @@
  * along with FritzCallIndicator.  If not, see <https://www.gnu.org/licenses/>.
  *
  * \section DESCRIPTION
- * FritzBox! connection
+ * FritzBox! connection for call monitor
  *
  * \section SOURCE
  * This file incorporates work covered by the following copyright:
@@ -30,16 +30,16 @@
  * Original code form: https://github.com/petermost/FritzBoxCallMonitor
  */
 
-#ifndef FRITZBOX_H_
-#define FRITZBOX_H_
+#ifndef CALLMONITOR_H_
+#define CALLMONITOR_H_
 
 #include <QObject>
 #include <QTcpSocket>
 
-class FritzBox : public QObject {
+class CallMonitor : public QObject {
   Q_OBJECT
  public:
-  FritzBox(QObject *pParent = nullptr) noexcept;
+  CallMonitor(QObject *pParent = nullptr) noexcept;
 
   void connectTo(const QString &sHostName, uint nPortNumber,
                  uint nRetryInterval) noexcept;
@@ -68,4 +68,4 @@ class FritzBox : public QObject {
   void reconnect();
 };
 
-#endif  // FRITZBOX_H_
+#endif  // CALLMONITOR_H_

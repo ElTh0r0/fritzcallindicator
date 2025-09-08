@@ -1,5 +1,5 @@
 /**
- * \file fritzbox.cpp
+ * \file callmonitor.cpp
  *
  * \section LICENSE
  *
@@ -21,7 +21,7 @@
  * along with FritzCallIndicator.  If not, see <https://www.gnu.org/licenses/>.
  *
  * \section DESCRIPTION
- * FritzBox! connection
+ * FritzBox! connection for call monitor
  *
  * \section SOURCE
  * This file incorporates work covered by the following copyright:
@@ -30,24 +30,26 @@
  * Original code form: https://github.com/petermost/FritzBoxCallMonitor
  */
 
-#include "fritzbox.h"
+#include "callmonitor.h"
 
 #include <QTimer>
 
-FritzBox::FritzBox(QObject *pParent) noexcept : QObject(pParent) {
+CallMonitor::CallMonitor(QObject *pParent) noexcept : QObject(pParent) {
   qDebug() << Q_FUNC_INFO;
   m_pSocket = new QTcpSocket(this);
-  connect(m_pSocket, &QTcpSocket::disconnected, this, &FritzBox::onConnected);
-  connect(m_pSocket, &QTcpSocket::errorOccurred, this, &FritzBox::onError);
-  connect(m_pSocket, &QTcpSocket::stateChanged, this, &FritzBox::stateChanged);
-  connect(m_pSocket, &QTcpSocket::readyRead, this, &FritzBox::onReadyRead);
+  connect(m_pSocket, &QTcpSocket::disconnected, this,
+          &CallMonitor::onConnected);
+  connect(m_pSocket, &QTcpSocket::errorOccurred, this, &CallMonitor::onError);
+  connect(m_pSocket, &QTcpSocket::stateChanged, this,
+          &CallMonitor::stateChanged);
+  connect(m_pSocket, &QTcpSocket::readyRead, this, &CallMonitor::onReadyRead);
 }
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-void FritzBox::connectTo(const QString &sHostName, uint nPortNumber,
-                         uint nRetryInterval) noexcept {
+void CallMonitor::connectTo(const QString &sHostName, uint nPortNumber,
+                            uint nRetryInterval) noexcept {
   qDebug() << Q_FUNC_INFO;
   m_nRetryInterval = nRetryInterval;
   if (sHostName != m_sHostName || nPortNumber != m_nPortNumber) {
@@ -63,7 +65,7 @@ void FritzBox::connectTo(const QString &sHostName, uint nPortNumber,
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-void FritzBox::disconnectFrom() noexcept {
+void CallMonitor::disconnectFrom() noexcept {
   qDebug() << Q_FUNC_INFO;
   if (m_pSocket->state() != QTcpSocket::SocketState::ConnectedState)
     m_pSocket->abort();
@@ -75,12 +77,12 @@ void FritzBox::disconnectFrom() noexcept {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-void FritzBox::onConnected() {}
+void CallMonitor::onConnected() {}
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-void FritzBox::reconnect() {
+void CallMonitor::reconnect() {
   qDebug() << Q_FUNC_INFO;
   m_pSocket->connectToHost(m_sHostName, m_nPortNumber);
 }
@@ -97,7 +99,7 @@ inline bool isRetryableError(QTcpSocket::SocketError socketError) {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-void FritzBox::onError(QTcpSocket::SocketError socketError) {
+void CallMonitor::onError(QTcpSocket::SocketError socketError) {
   emit errorOccured(socketError,
                     m_pSocket->errorString() +
                         tr(" (Retry in %1 seconds ...)").arg(m_nRetryInterval));
@@ -113,7 +115,7 @@ void FritzBox::onError(QTcpSocket::SocketError socketError) {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-void FritzBox::parseAndSignal(const QString &sLine) {
+void CallMonitor::parseAndSignal(const QString &sLine) {
   QStringList parts = sLine.split(';');
   // QString dateTime = parts[0];
   QString command = parts[1];
@@ -137,7 +139,7 @@ void FritzBox::parseAndSignal(const QString &sLine) {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-void FritzBox::onReadyRead() {
+void CallMonitor::onReadyRead() {
   qint64 length;
   char buffer[100];
 

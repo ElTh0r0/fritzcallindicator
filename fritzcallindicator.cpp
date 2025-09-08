@@ -57,19 +57,19 @@ FritzCallIndicator::FritzCallIndicator(const QDir &sharePath)
   m_pNumberResolver->readPhonebooks(m_settings.getTbAddressbooks(),
                                     m_pSettingsDialog->getFritzPhonebooks());
 
-  m_pFritzBox = new FritzBox(this);
-  connect(m_pFritzBox, &FritzBox::errorOccured, this,
+  m_pCallMonitor = new CallMonitor(this);
+  connect(m_pCallMonitor, &CallMonitor::errorOccured, this,
           &FritzCallIndicator::onErrorOccured);
-  connect(m_pFritzBox, &FritzBox::stateChanged, this,
+  connect(m_pCallMonitor, &CallMonitor::stateChanged, this,
           &FritzCallIndicator::onStateChanged);
-  connect(m_pFritzBox, &FritzBox::incomingCall, this,
+  connect(m_pCallMonitor, &CallMonitor::incomingCall, this,
           &FritzCallIndicator::onIncomingCall);
   connect(m_pSettingsDialog, &SettingsDialog::changedConnectionSettings,
-          m_pFritzBox, &FritzBox::connectTo);
+          m_pCallMonitor, &CallMonitor::connectTo);
 
-  m_pFritzBox->connectTo(m_settings.getHostName(),
-                         m_settings.getCallMonitorPort(),
-                         m_settings.getRetryInterval());
+  m_pCallMonitor->connectTo(m_settings.getHostName(),
+                            m_settings.getCallMonitorPort(),
+                            m_settings.getRetryInterval());
 
   FritzPhonebook fb;
   fb.setHost(m_settings.getHostName());
@@ -80,14 +80,15 @@ FritzCallIndicator::FritzCallIndicator(const QDir &sharePath)
                                          m_settings.getMaxCallHistory());
 
   // 03.11.16 13:17:08;RING;0;03023125222;06990009111;SIP0;
-  // m_pFritzBox->parseAndSignal(
+  // m_pCallMonitor->parseAndSignal(
   //    "03.11.16 13:17:08;RING;0;03023125222;06990009111;SIP0;");
   // Number suppressed: 03.11.16 13:17:08;RING;0;;06990009111;SIP0;
-  // m_pFritzBox->parseAndSignal("03.11.16 13:17:08;RING;0;;06990009111;SIP0;");
+  // m_pCallMonitor->parseAndSignal("03.11.16
+  // 13:17:08;RING;0;;06990009111;SIP0;");
 }
 
 FritzCallIndicator::~FritzCallIndicator() {
-  m_pFritzBox->disconnectFrom();
+  m_pCallMonitor->disconnectFrom();
   delete m_pSettingsDialog;
   m_pSettingsDialog = nullptr;
 }
