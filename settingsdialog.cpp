@@ -321,42 +321,24 @@ void SettingsDialog::accept() {
   Settings settings;
 
   // General
-  QString sCountryCode = m_pUi->lineEditCountryCode->text().trimmed();
-  if (sCountryCode.startsWith('+')) {
-    sCountryCode = "00" + sCountryCode.remove('+');
-  }
-  if (!sCountryCode.startsWith(QStringLiteral("00"))) {
-    if (sCountryCode.startsWith('0')) {
-      sCountryCode = "0" + sCountryCode;
-    } else {
-      sCountryCode = "00" + sCountryCode;
-    }
-  }
-  settings.setValue(QStringLiteral("CountryCode"), sCountryCode);
-  settings.setValue(QStringLiteral("PopupTimeout"),
-                    m_pUi->spinBoxTimeout->value());
-  settings.setValue(QStringLiteral("MaxDaysOfOldCalls"),
-                    settings.getMaxDaysOfOldCalls());  // TODO: Add to dialog
-  settings.setValue(QStringLiteral("MaxEntriesCallHistory"),
-                    settings.getMaxCallHistory());  // TODO: Add to dialog
+  settings.setCountryCode(m_pUi->lineEditCountryCode->text().trimmed());
+  settings.setPopupTimeout(m_pUi->spinBoxTimeout->value());
+  settings.setMaxDaysOfOldCalls(
+      settings.getMaxDaysOfOldCalls());  // TODO: Add to dialog
+  settings.setMaxEntriesCallHistory(
+      settings.getMaxEntriesCallHistory());  // TODO: Add to dialog
 
   // Connection
-  settings.setValue(QStringLiteral("Connection/HostName"),
-                    m_pUi->lineEditHost->text().trimmed());
-  settings.setValue(QStringLiteral("Connection/CallMonitorPort"),
-                    m_pUi->spinBoxCallMonitorPort->value());
-  settings.setValue(QStringLiteral("Connection/TR064Port"),
-                    m_pUi->spinBoxTR064Port->value());
-  settings.setValue(QStringLiteral("Connection/FritzUser"),
-                    m_pUi->lineEditUserName->text().trimmed());
-  settings.setValue(QStringLiteral("Connection/FritzPassword"),
-                    m_pUi->lineEditPassword->text().trimmed());
-  settings.setValue(QStringLiteral("Connection/RetryInterval"),
-                    settings.getRetryInterval());  // TODO: Add to dialog
+  settings.setHostName(m_pUi->lineEditHost->text().trimmed());
+  settings.setCallMonitorPort(m_pUi->spinBoxCallMonitorPort->value());
+  settings.setTR064Port(m_pUi->spinBoxTR064Port->value());
+  settings.setFritzUser(m_pUi->lineEditUserName->text().trimmed());
+  settings.setFritzPassword(m_pUi->lineEditPassword->text().trimmed());
+  settings.setRetryInterval(
+      settings.getRetryInterval());  // TODO: Add to dialog
 
   // NumberResolvers
-  settings.setValue(QStringLiteral("NumberResolvers/TbAddressbooks"),
-                    m_sListModel_TbAddressbooks->stringList());
+  settings.setTbAddressbooks(m_sListModel_TbAddressbooks->stringList());
 
   m_sListEnabledOnlineResolvers.clear();
   for (int row = 0; row < m_pUi->tableOnlineResolvers->rowCount(); ++row) {
@@ -366,8 +348,7 @@ void SettingsDialog::accept() {
           m_pUi->tableOnlineResolvers->item(row, 1)->text());
     }
   }
-  settings.setValue(QStringLiteral("NumberResolvers/OnlineResolvers"),
-                    m_sListEnabledOnlineResolvers);
+  settings.setEnabledOnlineResolvers(m_sListEnabledOnlineResolvers);
 
   m_sListEnabledFritzPhoneBooks.clear();
   for (int row = 0; row < m_pUi->tableFritzPhonebooks->rowCount(); ++row) {
@@ -377,12 +358,11 @@ void SettingsDialog::accept() {
           << m_pUi->tableFritzPhonebooks->item(row, 1)->text();
     }
   }
-  settings.setValue(QStringLiteral("NumberResolvers/FritzPhoneBooks"),
-                    m_sListEnabledFritzPhoneBooks);
+  settings.setEnabledFritzPhonebooks(m_sListEnabledFritzPhoneBooks);
 
   // PhoneNumbers
-  settings.setValue(QStringLiteral("PhoneNumbers/MaxNumbers"),
-                    settings.getMaxOwnNumbers());  // TODO: Add to dialog
+  settings.setMaxOwnNumbers(
+      settings.getMaxOwnNumbers());  // TODO: Add to dialog
   QMap<QString, QString> ownNumbers;
   for (int row = 0; row < m_pUi->tableOwnNumbers->rowCount(); ++row) {
     QString sTmpNum = m_pUi->tableOwnNumbers->item(row, 0)->text().trimmed();

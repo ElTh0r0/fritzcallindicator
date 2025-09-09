@@ -39,44 +39,66 @@ class Settings : public QObject {
 
   // General
   auto getCountryCode() const -> QString;
+  void setCountryCode(QString sCountryCode);
   auto getPopupTimeout() const -> uint;
+  void setPopupTimeout(const uint nPopupTimeout);
   auto getMaxDaysOfOldCalls() const -> uint;
-  auto getMaxCallHistory() const -> uint;
+  void setMaxDaysOfOldCalls(const uint nMaxDays);
+  auto getMaxEntriesCallHistory() const -> uint;
+  void setMaxEntriesCallHistory(const uint nMaxEntries);
+
   // Connection
   auto getHostName() const -> QString;
+  void setHostName(const QString& sHostName);
   auto getCallMonitorPort() const -> uint;
+  void setCallMonitorPort(const uint nCallMonitorPort);
   auto getTR064Port() const -> uint;
+  void setTR064Port(const uint nTR064Port);
   auto getFritzUser() const -> QString;
+  void setFritzUser(const QString& sUser);
   auto getFritzPassword() const -> QString;
+  void setFritzPassword(const QString& sPassword);
   auto getRetryInterval() const -> uint;
+  void setRetryInterval(const uint nRetryInterval);
+
   // NumberResolvers
   auto getTbAddressbooks() -> const QStringList;
+  void setTbAddressbooks(const QStringList& sListTbAddressbooks);
   auto getEnabledOnlineResolvers() const -> QStringList;
+  void setEnabledOnlineResolvers(const QStringList& sListOnlineResolvers);
   auto getEnabledFritzPhonebooks() -> const QStringList;
+  void setEnabledFritzPhonebooks(const QStringList& sListFritzPhonebooks);
+
   // PhoneNumbers
   auto getMaxOwnNumbers() const -> uint;
+  void setMaxOwnNumbers(const uint nMaxOwnNumbers);
   auto getOwnNumbers() -> QMap<QString, QString>;
-  auto setOwnNumbers(const QMap<QString, QString> &ownNumbers) -> void;
+  void setOwnNumbers(const QMap<QString, QString>& ownNumbers);
   auto resolveOwnNumber(const QString& sNumber) const -> QString;
 
   static auto getLanguage() -> const QString;
   static auto getIconTheme() -> const QString;
 
-  auto setValue(const QString& sKey, const QVariant& vValue) -> void;
-
  private:
   QSettings m_settings;
   QMap<QString, QString> m_OwnNumbers;
 
+  // Ini groups
+  static const QString GROUP_CONNECTION;
+  static const QString GROUP_NUMBER_RESOLVERS;
+  static const QString GROUP_PHONE_NUMBERS;
+  // General
+  static const QString DEFAULT_COUNTRY_CODE;
+  static const uint DEFAULT_POPUP_TIMEOUT_SEC;
+  static const uint DEFAULT_MAX_DAYS_OLD_CALLS;
+  static const uint DEFAULT_MAX_CALL_HISTORY;
+  // Connection
   static const QString DEFAULT_HOST_NAME;
   static const uint DEFAULT_CALL_MONITOR_PORT;
   static const uint DEFAULT_TR064_PORT;
   static const uint DEFAULT_RETRY_INTERVAL_SEC;
-  static const uint DEFAULT_POPUP_TIMEOUT_SEC;
-  static const QString DEFAULT_COUNTRY_CODE;
+  // PhoneNumbers
   static const uint DEFAULT_MAX_OWN_NUMBERS;
-  static const uint DEFAULT_MAX_DAYS_OLD_CALLS;
-  static const uint DEFAULT_MAX_CALL_HISTORY;
 };
 
 #endif  // SETTINGS_H_

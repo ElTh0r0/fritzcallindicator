@@ -77,7 +77,7 @@ FritzCallIndicator::FritzCallIndicator(const QDir &sharePath)
   fb.setPassword(m_settings.getFritzPassword());
   fb.setPort(m_settings.getTR064Port());
   m_sListCallHistory = fb.getCallHistory(m_settings.getMaxDaysOfOldCalls(),
-                                         m_settings.getMaxCallHistory());
+                                         m_settings.getMaxEntriesCallHistory());
 
   // 03.11.16 13:17:08;RING;0;03023125222;06990009111;SIP0;
   // m_pCallMonitor->parseAndSignal(
@@ -212,9 +212,9 @@ void FritzCallIndicator::onIncomingCall(unsigned /* connectionId */,
       QDateTime::currentDateTime().toString("dd.MM.yy|hh:mm|") +
       sResolvedCaller);
   // Limit the number of recent calls
-  if (m_sListCallHistory.count() > m_settings.getMaxCallHistory()) {
+  if (m_sListCallHistory.count() > m_settings.getMaxEntriesCallHistory()) {
     m_sListCallHistory =
-        m_sListCallHistory.mid(0, m_settings.getMaxCallHistory());
+        m_sListCallHistory.mid(0, m_settings.getMaxEntriesCallHistory());
   }
 
   this->showMessage(sTitle, tr("Caller: '%1'").arg(sResolvedCaller));

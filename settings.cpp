@@ -33,15 +33,26 @@
 #include <QStyleHints>
 #endif
 
+// Ini groups
+const QString Settings::GROUP_CONNECTION = QStringLiteral("Connection");
+const QString Settings::GROUP_NUMBER_RESOLVERS =
+    QStringLiteral("NumberResolvers");
+const QString Settings::GROUP_PHONE_NUMBERS = QStringLiteral("PhoneNumbers");
+// General
+const QString Settings::DEFAULT_COUNTRY_CODE = QStringLiteral("0049");
+const uint Settings::DEFAULT_POPUP_TIMEOUT_SEC = 10;
+const uint Settings::DEFAULT_MAX_DAYS_OLD_CALLS = 7;
+const uint Settings::DEFAULT_MAX_CALL_HISTORY = 10;
+// Connection
 const QString Settings::DEFAULT_HOST_NAME = QStringLiteral("fritz.box");
 const uint Settings::DEFAULT_CALL_MONITOR_PORT = 1012;
 const uint Settings::DEFAULT_TR064_PORT = 49000;
 const uint Settings::DEFAULT_RETRY_INTERVAL_SEC = 60;
-const uint Settings::DEFAULT_POPUP_TIMEOUT_SEC = 10;
-const QString Settings::DEFAULT_COUNTRY_CODE = QStringLiteral("0049");
+// PhoneNumbers
 const uint Settings::DEFAULT_MAX_OWN_NUMBERS = 3;
-const uint Settings::DEFAULT_MAX_DAYS_OLD_CALLS = 7;
-const uint Settings::DEFAULT_MAX_CALL_HISTORY = 10;
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
 Settings *Settings::instance() {
   static Settings _instance;
@@ -63,11 +74,33 @@ auto Settings::getCountryCode() const -> QString {
       .toString();
 }
 
+void Settings::setCountryCode(QString sCountryCode) {
+  if (sCountryCode.startsWith('+')) {
+    sCountryCode = "00" + sCountryCode.remove('+');
+  }
+  if (!sCountryCode.startsWith(QStringLiteral("00"))) {
+    if (sCountryCode.startsWith('0')) {
+      sCountryCode = "0" + sCountryCode;
+    } else {
+      sCountryCode = "00" + sCountryCode;
+    }
+  }
+  m_settings.setValue(QStringLiteral("CountryCode"), sCountryCode);
+}
+
+// ----------------------------------------------------------------------------
+
 auto Settings::getPopupTimeout() const -> uint {
   return m_settings
       .value(QStringLiteral("PopupTimeout"), DEFAULT_POPUP_TIMEOUT_SEC)
       .toUInt();
 }
+
+void Settings::setPopupTimeout(const uint nPopupTimeout) {
+  m_settings.setValue(QStringLiteral("PopupTimeout"), nPopupTimeout);
+}
+
+// ----------------------------------------------------------------------------
 
 auto Settings::getMaxDaysOfOldCalls() const -> uint {
   return m_settings
@@ -75,10 +108,20 @@ auto Settings::getMaxDaysOfOldCalls() const -> uint {
       .toUInt();
 }
 
-auto Settings::getMaxCallHistory() const -> uint {
+void Settings::setMaxDaysOfOldCalls(const uint nMaxDays) {
+  m_settings.setValue(QStringLiteral("MaxDaysOfOldCalls"), nMaxDays);
+}
+
+// ----------------------------------------------------------------------------
+
+auto Settings::getMaxEntriesCallHistory() const -> uint {
   return m_settings
       .value(QStringLiteral("MaxEntriesCallHistory"), DEFAULT_MAX_CALL_HISTORY)
       .toUInt();
+}
+
+void Settings::setMaxEntriesCallHistory(const uint nMaxEntries) {
+  m_settings.setValue(QStringLiteral("MaxEntriesCallHistory"), nMaxEntries);
 }
 
 // ----------------------------------------------------------------------------
@@ -87,38 +130,83 @@ auto Settings::getMaxCallHistory() const -> uint {
 
 auto Settings::getHostName() const -> QString {
   return m_settings
-      .value(QStringLiteral("Connection/HostName"), DEFAULT_HOST_NAME)
+      .value(GROUP_CONNECTION + "/" + QStringLiteral("HostName"),
+             DEFAULT_HOST_NAME)
       .toString();
 }
 
+void Settings::setHostName(const QString &sHostName) {
+  m_settings.setValue(GROUP_CONNECTION + "/" + QStringLiteral("HostName"),
+                      sHostName.trimmed());
+}
+
+// ----------------------------------------------------------------------------
+
 auto Settings::getCallMonitorPort() const -> uint {
   return m_settings
-      .value(QStringLiteral("Connection/CallMonitorPort"),
+      .value(GROUP_CONNECTION + "/" + QStringLiteral("CallMonitorPort"),
              DEFAULT_CALL_MONITOR_PORT)
       .toUInt();
 }
 
+void Settings::setCallMonitorPort(const uint nCallMonitorPort) {
+  m_settings.setValue(
+      GROUP_CONNECTION + "/" + QStringLiteral("CallMonitorPort"),
+      nCallMonitorPort);
+}
+
+// ----------------------------------------------------------------------------
+
 auto Settings::getTR064Port() const -> uint {
   return m_settings
-      .value(QStringLiteral("Connection/TR064Port"), DEFAULT_TR064_PORT)
+      .value(GROUP_CONNECTION + "/" + QStringLiteral("TR064Port"),
+             DEFAULT_TR064_PORT)
       .toUInt();
 }
 
+void Settings::setTR064Port(const uint nTR064Port) {
+  m_settings.setValue(GROUP_CONNECTION + "/" + QStringLiteral("TR064Port"),
+                      nTR064Port);
+}
+
+// ----------------------------------------------------------------------------
+
 auto Settings::getFritzUser() const -> QString {
-  return m_settings.value(QStringLiteral("Connection/FritzUser"), "")
+  return m_settings
+      .value(GROUP_CONNECTION + "/" + QStringLiteral("FritzUser"), "")
       .toString();
 }
 
+void Settings::setFritzUser(const QString &sUser) {
+  m_settings.setValue(GROUP_CONNECTION + "/" + QStringLiteral("FritzUser"),
+                      sUser.trimmed());
+}
+
+// ----------------------------------------------------------------------------
+
 auto Settings::getFritzPassword() const -> QString {
-  return m_settings.value(QStringLiteral("Connection/FritzPassword"), "")
+  return m_settings
+      .value(GROUP_CONNECTION + "/" + QStringLiteral("FritzPassword"), "")
       .toString();
 }
+
+void Settings::setFritzPassword(const QString &sPassword) {
+  m_settings.setValue(GROUP_CONNECTION + "/" + QStringLiteral("FritzPassword"),
+                      sPassword.trimmed());
+}
+
+// ----------------------------------------------------------------------------
 
 auto Settings::getRetryInterval() const -> uint {
   return m_settings
-      .value(QStringLiteral("Connection/RetryInterval"),
+      .value(GROUP_CONNECTION + "/" + QStringLiteral("RetryInterval"),
              DEFAULT_RETRY_INTERVAL_SEC)
       .toUInt();
+}
+
+void Settings::setRetryInterval(const uint nRetryInterval) {
+  m_settings.setValue(GROUP_CONNECTION + "/" + QStringLiteral("RetryInterval"),
+                      nRetryInterval);
 }
 
 // ----------------------------------------------------------------------------
@@ -127,20 +215,47 @@ auto Settings::getRetryInterval() const -> uint {
 
 auto Settings::getTbAddressbooks() -> const QStringList {
   return m_settings
-      .value(QStringLiteral("NumberResolvers/TbAddressbooks"), QStringList())
+      .value(GROUP_NUMBER_RESOLVERS + "/" + QStringLiteral("TbAddressbooks"),
+             QStringList())
       .toStringList();
 }
+
+void Settings::setTbAddressbooks(const QStringList &sListTbAddressbooks) {
+  m_settings.setValue(
+      GROUP_NUMBER_RESOLVERS + "/" + QStringLiteral("TbAddressbooks"),
+      sListTbAddressbooks);
+}
+
+// ----------------------------------------------------------------------------
 
 auto Settings::getEnabledOnlineResolvers() const -> QStringList {
   return m_settings
-      .value(QStringLiteral("NumberResolvers/OnlineResolvers"), QStringList())
+      .value(GROUP_NUMBER_RESOLVERS + "/" + QStringLiteral("OnlineResolvers"),
+             QStringList())
       .toStringList();
 }
 
+void Settings::setEnabledOnlineResolvers(
+    const QStringList &sListOnlineResolvers) {
+  m_settings.setValue(
+      GROUP_NUMBER_RESOLVERS + "/" + QStringLiteral("OnlineResolvers"),
+      sListOnlineResolvers);
+}
+
+// ----------------------------------------------------------------------------
+
 auto Settings::getEnabledFritzPhonebooks() -> const QStringList {
   return m_settings
-      .value(QStringLiteral("NumberResolvers/FritzPhoneBooks"), QStringList())
+      .value(GROUP_NUMBER_RESOLVERS + "/" + QStringLiteral("FritzPhoneBooks"),
+             QStringList())
       .toStringList();
+}
+
+void Settings::setEnabledFritzPhonebooks(
+    const QStringList &sListFritzPhonebooks) {
+  m_settings.setValue(
+      GROUP_NUMBER_RESOLVERS + "/" + QStringLiteral("FritzPhoneBooks"),
+      sListFritzPhonebooks);
 }
 
 // ----------------------------------------------------------------------------
@@ -149,28 +264,37 @@ auto Settings::getEnabledFritzPhonebooks() -> const QStringList {
 
 auto Settings::getMaxOwnNumbers() const -> uint {
   return m_settings
-      .value(QStringLiteral("PhoneNumbers/MaxNumbers"), DEFAULT_MAX_OWN_NUMBERS)
+      .value(GROUP_PHONE_NUMBERS + "/" + QStringLiteral("MaxNumbers"),
+             DEFAULT_MAX_OWN_NUMBERS)
       .toUInt();
 }
+
+void Settings::setMaxOwnNumbers(const uint nMaxOwnNumbers) {
+  m_settings.setValue(GROUP_PHONE_NUMBERS + "/" + QStringLiteral("MaxNumbers"),
+                      nMaxOwnNumbers);
+}
+
+// ----------------------------------------------------------------------------
 
 auto Settings::getOwnNumbers() -> QMap<QString, QString> {
   m_OwnNumbers.clear();
 
   for (uint i = 1; i < this->getMaxOwnNumbers() + 1; i++) {
-    QString sTmpNum = m_settings
-                          .value(QStringLiteral("PhoneNumbers/Phone%1_Number")
-                                     .arg(QString::number(i)),
-                                 "")
-                          .toString()
-                          .trimmed();
+    QString sTmpNum =
+        m_settings
+            .value(GROUP_PHONE_NUMBERS + "/" +
+                       QStringLiteral("Phone%1_Number").arg(QString::number(i)),
+                   "")
+            .toString()
+            .trimmed();
     if (!sTmpNum.isEmpty()) {
-      QString sTmpDesc =
-          m_settings
-              .value(QStringLiteral("PhoneNumbers/Phone%1_Description")
-                         .arg(QString::number(i)),
-                     "")
-              .toString()
-              .trimmed();
+      QString sTmpDesc = m_settings
+                             .value(GROUP_PHONE_NUMBERS + "/" +
+                                        QStringLiteral("Phone%1_Description")
+                                            .arg(QString::number(i)),
+                                    "")
+                             .toString()
+                             .trimmed();
       m_OwnNumbers[sTmpNum] = sTmpDesc;
     }
   }
@@ -178,7 +302,7 @@ auto Settings::getOwnNumbers() -> QMap<QString, QString> {
   return m_OwnNumbers;
 }
 
-auto Settings::setOwnNumbers(const QMap<QString, QString> &ownNumbers) -> void {
+void Settings::setOwnNumbers(const QMap<QString, QString> &ownNumbers) {
   m_OwnNumbers.clear();
   m_OwnNumbers = ownNumbers;
 
@@ -186,11 +310,13 @@ auto Settings::setOwnNumbers(const QMap<QString, QString> &ownNumbers) -> void {
   for (auto entry = m_OwnNumbers.begin(), end = m_OwnNumbers.end();
        entry != end; ++entry) {
     m_settings.setValue(
-        QStringLiteral("PhoneNumbers/Phone%1_Number").arg(QString::number(i)),
+        GROUP_PHONE_NUMBERS + "/" +
+            QStringLiteral("Phone%1_Number").arg(QString::number(i)),
         entry.key());
-    m_settings.setValue(QStringLiteral("PhoneNumbers/Phone%1_Description")
-                            .arg(QString::number(i)),
-                        entry.value());
+    m_settings.setValue(
+        GROUP_PHONE_NUMBERS + "/" +
+            QStringLiteral("Phone%1_Description").arg(QString::number(i)),
+        entry.value());
     i++;
   }
 
@@ -198,13 +324,17 @@ auto Settings::setOwnNumbers(const QMap<QString, QString> &ownNumbers) -> void {
   for (uint j = m_OwnNumbers.size() + 1; j < this->getMaxOwnNumbers() + 1;
        j++) {
     m_settings.setValue(
-        QStringLiteral("PhoneNumbers/Phone%1_Number").arg(QString::number(j)),
+        GROUP_PHONE_NUMBERS + "/" +
+            QStringLiteral("Phone%1_Number").arg(QString::number(j)),
         "");
-    m_settings.setValue(QStringLiteral("PhoneNumbers/Phone%1_Description")
-                            .arg(QString::number(j)),
-                        "");
+    m_settings.setValue(
+        GROUP_PHONE_NUMBERS + "/" +
+            QStringLiteral("Phone%1_Description").arg(QString::number(j)),
+        "");
   }
 }
+
+// ----------------------------------------------------------------------------
 
 auto Settings::resolveOwnNumber(const QString &sNumber) const -> QString {
   return m_OwnNumbers.value(sNumber, "");
@@ -250,11 +380,4 @@ auto Settings::getIconTheme() -> const QString {
   }
 
   return sIconTheme;
-}
-
-// ----------------------------------------------------------------------------
-// ----------------------------------------------------------------------------
-
-auto Settings::setValue(const QString &sKey, const QVariant &vValue) -> void {
-  m_settings.setValue(sKey, vValue);
 }
