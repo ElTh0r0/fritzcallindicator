@@ -1,5 +1,5 @@
 /**
- * \file fritzphonebook.h
+ * \file fritzsoap.h
  *
  * \section LICENSE
  *
@@ -21,7 +21,7 @@
  * along with FritzCallIndicator.  If not, see <https://www.gnu.org/licenses/>.
  *
  * \section DESCRIPTION
- * Class definition for FritzBox phonebook.
+ * Class definition for FritzBox SOAP request
  *
  * \section SOURCE
  * This file incorporates work covered by the following copyright:
@@ -31,36 +31,24 @@
  * https://github.com/Agundur-KDE/kfritz
  */
 
-#ifndef FRITZPHONEBOOK_H_
-#define FRITZPHONEBOOK_H_
+#ifndef FRITZSOAP_H_
+#define FRITZSOAP_H_
 
 #include <QDir>
 #include <QObject>
 #include <QStringList>
 
-class FritzPhonebook : public QObject {
+class FritzSOAP : public QObject {
   Q_OBJECT
 
  public:
-  explicit FritzPhonebook(QObject *parent = nullptr);
+  static FritzSOAP *instance();
 
-  void setSavepath(const QString &savepath);
-  const QDir getSavepath();
-
-  QStringList getCallHistory(uint nMaxDays, uint nMaxLastCalls);
-  QHash<QString, QHash<QString, QString> > getPhonebookList();
-  bool downloadPhonebook(int id, const QUrl &url);
-  QHash<QString, QString> loadFromFile(const QString &xmlFilePath,
-                                       const QString &countryCode);
-
- Q_SIGNALS:
-  void phonebookDownloaded(int id, const QString &path);
+  QString sendRequest(const QString &service, const QString &action,
+                      const QString &body, const QString &controlUrl);
 
  private:
-  QStringList getPhonebookUrlAndName(int id);
-  QString normalizeNumber(QString number, const QString &countryCode) const;
-
-  QString m_savepath;
+  explicit FritzSOAP(QObject *pParent = nullptr);
 };
 
-#endif  // FRITZPHONEBOOK_H_
+#endif  // FRITZSOAP_H_

@@ -84,10 +84,6 @@ SettingsDialog::SettingsDialog(const QDir sharePath, QObject *pParent)
   this->readSettings();
   this->initOnlineResolvers(sharePath);  // After readSettings!
   m_pFritzPb = new FritzPhonebook(this);
-  m_pFritzPb->setHost(Settings().getHostName());
-  m_pFritzPb->setPort(Settings().getTR064Port());
-  m_pFritzPb->setUsername(Settings().getFritzUser());
-  m_pFritzPb->setPassword(Settings().getFritzPassword());
   m_pFritzPb->setSavepath(
       QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/" +
       qApp->applicationName().toLower() +

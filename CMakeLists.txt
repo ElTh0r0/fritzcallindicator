@@ -89,6 +89,7 @@ set(HEADERS
     callmonitor.h
     fritzcallindicator.h
     fritzphonebook.h
+    fritzsoap.h
     numberresolver.h
     onlineresolvers.h
     settings.h
@@ -101,6 +102,7 @@ set(SOURCES
     callmonitor.cpp
     fritzcallindicator.cpp
     fritzphonebook.cpp
+    fritzsoap.cpp
     numberresolver.cpp
     onlineresolvers.cpp
     settings.cpp

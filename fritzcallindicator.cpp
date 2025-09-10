@@ -72,10 +72,6 @@ FritzCallIndicator::FritzCallIndicator(const QDir &sharePath)
                             m_settings.getRetryInterval());
 
   FritzPhonebook fb;
-  fb.setHost(m_settings.getHostName());
-  fb.setUsername(m_settings.getFritzUser());
-  fb.setPassword(m_settings.getFritzPassword());
-  fb.setPort(m_settings.getTR064Port());
   m_sListCallHistory = fb.getCallHistory(m_settings.getMaxDaysOfOldCalls(),
                                          m_settings.getMaxEntriesCallHistory());
 

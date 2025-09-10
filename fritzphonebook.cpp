@@ -33,12 +33,10 @@
 
 #include "fritzphonebook.h"
 
-#include <QAuthenticator>
 #include <QCoreApplication>
 #include <QDebug>
 #include <QDir>
 #include <QDomDocument>
-#include <QEventLoop>
 #include <QFile>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
@@ -48,14 +46,12 @@
 #include <QUrl>
 #include <QXmlStreamReader>
 
+#include "fritzsoap.h"
+
 using namespace Qt::StringLiterals;
 
 FritzPhonebook::FritzPhonebook(QObject *parent) : QObject(parent) {}
 
-void FritzPhonebook::setHost(const QString &host) { m_host = host; }
-void FritzPhonebook::setPort(int port) { m_port = port; }
-void FritzPhonebook::setUsername(const QString &user) { m_user = user; }
-void FritzPhonebook::setPassword(const QString &pass) { m_pass = pass; }
 void FritzPhonebook::setSavepath(const QString &savepath) {
   m_savepath = savepath;
 }
@@ -65,7 +61,7 @@ QHash<QString, QHash<QString, QString> > FritzPhonebook::getPhonebookList() {
   const QString body =
       u"<u:GetPhonebookList xmlns:u=\"urn:dslforum-org:service:X_AVM-DE_OnTel:1\"/>"_s;
 
-  const QString response = sendSoapRequest(
+  const QString response = FritzSOAP::instance()->sendRequest(
       u"urn:dslforum-org:service:X_AVM-DE_OnTel:1"_s, u"GetPhonebookList"_s,
       body, u"/upnp/control/x_contact"_s);
 
@@ -158,9 +154,9 @@ QStringList FritzPhonebook::getPhonebookUrlAndName(int phonebookId) {
       u"</NewPhonebookID>"
       u"</u:GetPhonebook>"_s;
 
-  const QString response =
-      sendSoapRequest(u"urn:dslforum-org:service:X_AVM-DE_OnTel:1"_s,
-                      u"GetPhonebook"_s, body, u"/upnp/control/x_contact"_s);
+  const QString response = FritzSOAP::instance()->sendRequest(
+      u"urn:dslforum-org:service:X_AVM-DE_OnTel:1"_s, u"GetPhonebook"_s, body,
+      u"/upnp/control/x_contact"_s);
 
   if (response.isEmpty()) {
     qWarning() << "Empty SOAP response for GetPhonebook";
@@ -191,64 +187,6 @@ QStringList FritzPhonebook::getPhonebookUrlAndName(int phonebookId) {
   }
 
   return sListInfo;
-}
-
-QString FritzPhonebook::sendSoapRequest(const QString &service,
-                                        const QString &action,
-                                        const QString &body,
-                                        const QString &controlUrl) {
-  const QUrl url = QUrl(u"http://"_s + m_host + u":"_s +
-                        QString::number(m_port) + controlUrl);
-
-  QNetworkRequest request(url);
-
-  // 🔐 Authorization
-  QString credentials = m_user + u":"_s + m_pass;
-  QByteArray auth = "Basic " + credentials.toUtf8().toBase64();
-
-  request.setRawHeader("Authorization", auth);
-
-  // 📄 Content & SOAP
-  request.setHeader(QNetworkRequest::ContentTypeHeader,
-                    QStringLiteral("text/xml; charset=\"utf-8\""));
-
-  request.setRawHeader("SOAPACTION",
-                       "\"" + service.toUtf8() + "#" + action.toUtf8() + "\"");
-
-  const QString envelope =
-      uR"(<?xml version="1.0" encoding="utf-8"?>
-<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"
-            s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
-  <s:Body>)"_s +
-      body + u"</s:Body></s:Envelope>"_s;
-
-  QNetworkAccessManager nam;
-
-  // 🔐 Optional: Auth-Fallback über QAuthenticator (nur wenn RawHeader nicht
-  // greift)
-  QObject::connect(
-      &nam, &QNetworkAccessManager::authenticationRequired,
-      [this](QNetworkReply * /*reply*/, QAuthenticator *authenticator) {
-        qDebug() << "authenticationRequired() triggered!";
-        authenticator->setUser(m_user);
-        authenticator->setPassword(m_pass);
-      });
-
-  QNetworkReply *reply = nam.post(request, envelope.toUtf8());
-
-  QEventLoop loop;
-  QObject::connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
-  loop.exec();
-
-  QString result;
-  if (reply->error() != QNetworkReply::NoError) {
-    qWarning() << "SOAP request failed:" << reply->errorString();
-  } else {
-    result = QString::fromUtf8(reply->readAll());
-  }
-
-  reply->deleteLater();
-  return result;
 }
 
 QHash<QString, QString> FritzPhonebook::loadFromFile(
@@ -349,9 +287,9 @@ QStringList FritzPhonebook::getCallHistory(uint nMaxDays, uint nMaxLastCalls) {
   const QString body =
       u"<u:GetCallList xmlns:u=\"urn:dslforum-org:service:X_AVM-DE_OnTel:1\"/>"_s;
 
-  const QString response =
-      sendSoapRequest(u"urn:dslforum-org:service:X_AVM-DE_OnTel:1"_s,
-                      u"GetCallList"_s, body, u"/upnp/control/x_contact"_s);
+  const QString response = FritzSOAP::instance()->sendRequest(
+      u"urn:dslforum-org:service:X_AVM-DE_OnTel:1"_s, u"GetCallList"_s, body,
+      u"/upnp/control/x_contact"_s);
 
   QString sCallListUrl;
   QXmlStreamReader xml(response);
