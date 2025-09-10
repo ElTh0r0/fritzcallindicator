@@ -71,6 +71,8 @@ class FritzCallIndicator : public QObject {
       const QString &sTitle, const QString &sMessage, uint nTimeout = 0,
       const QSystemTrayIcon::MessageIcon icon = QSystemTrayIcon::Information);
 
+  QStringList getCallHistory();
+
   QAction *m_pShowCallHistory;
   QAction *m_pShowSettingsDialog;
   QAction *m_pShowInfoBox;

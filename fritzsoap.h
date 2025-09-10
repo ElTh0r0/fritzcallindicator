@@ -34,9 +34,7 @@
 #ifndef FRITZSOAP_H_
 #define FRITZSOAP_H_
 
-#include <QDir>
 #include <QObject>
-#include <QStringList>
 
 class FritzSOAP : public QObject {
   Q_OBJECT
