@@ -33,13 +33,17 @@
 
 class TbAddressbook : public QObject {
   Q_OBJECT
+
  public:
-  explicit TbAddressbook(QObject *pParent = nullptr);
-  auto importVCards(const QFileInfo &fiDbFile, const QString &sLocalCountryCode)
-      -> QHash<QString, QString>;
+  static TbAddressbook *instance();
+  auto getContacts() -> QHash<QString, QString>;
 
  private:
+  explicit TbAddressbook(QObject *pParent = nullptr);
+
+  void importVCards(const QFileInfo &fiDbFile);
   void extractNumber(const QString &sVCard, const QString &sLocalCountryCode);
+
   QHash<QString, QString> m_PhoneNumbers;
 };
 

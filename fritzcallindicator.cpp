@@ -55,9 +55,7 @@ FritzCallIndicator::FritzCallIndicator(const QDir &sharePath)
       new NumberResolver(m_sSharePath, m_settings.getCountryCode(), this);
   connect(m_pSettingsDialog, &SettingsDialog::changedPhonebooks,
           m_pNumberResolver, &NumberResolver::readPhonebooks);
-  // TODO: getFritzPhonebooks() should not be part of SettingsDialog
-  m_pNumberResolver->readPhonebooks(m_settings.getTbAddressbooks(),
-                                    m_pSettingsDialog->getFritzPhonebooks());
+  m_pNumberResolver->readPhonebooks();
 
   m_pCallMonitor = new CallMonitor(this);
   connect(m_pCallMonitor, &CallMonitor::errorOccured, this,

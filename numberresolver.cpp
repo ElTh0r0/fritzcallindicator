@@ -136,36 +136,12 @@ void NumberResolver::initAreaCodes(QDir sharePath) {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-void NumberResolver::readPhonebooks(
-    const QStringList &sListTbAddressbooks,
-    const QHash<QString, QString> &sListFritzPhonebooks) {
-  TbAddressbook tb;
-  FritzPhonebook fb;
-  QHash<QString, QString> tmpContacts;
+void NumberResolver::readPhonebooks() {
   m_KnownContacts.clear();
 
-  for (const auto &addressbook : sListTbAddressbooks) {
-    if (!addressbook.isEmpty()) {
-      qDebug() << "Reading Thunderbird addressbook:" << addressbook;
-      tmpContacts.clear();
-      tmpContacts =
-          tb.importVCards(QFileInfo(addressbook), m_sLocalCountryCode);
-
-      // Merge into contacts list
-      m_KnownContacts.insert(tmpContacts);
-    }
-  }
-
-  QHashIterator<QString, QString> i(sListFritzPhonebooks);
-  while (i.hasNext()) {
-    i.next();
-    qDebug() << "Reading FritzBox phonebook:" << i.key() << i.value();
-    tmpContacts.clear();
-    tmpContacts = fb.loadFromFile(i.value(), m_sLocalCountryCode);
-
-    // Merge into contacts list
-    m_KnownContacts.insert(tmpContacts);
-  }
+  // Merge external addressbooks into contacts list
+  m_KnownContacts.insert(TbAddressbook::instance()->getContacts());
+  m_KnownContacts.insert(FritzPhonebook::instance()->getContacts());
 }
 
 // ----------------------------------------------------------------------------

@@ -42,24 +42,22 @@ class FritzPhonebook : public QObject {
   Q_OBJECT
 
  public:
-  explicit FritzPhonebook(QObject *parent = nullptr);
+  static FritzPhonebook *instance();
 
-  void setSavepath(const QString &savepath);
-  const QDir getSavepath();
+  auto getContacts() -> QHash<QString, QString>;
+  QStringList getPhonebookList();
 
-  QHash<QString, QHash<QString, QString> > getPhonebookList();
+ private:
+  explicit FritzPhonebook(QObject *pParent = nullptr);
+
+  QStringList getPhonebookUrlAndName(int id);
   bool downloadPhonebook(int id, const QUrl &url);
   QHash<QString, QString> loadFromFile(const QString &xmlFilePath,
                                        const QString &countryCode);
-
- Q_SIGNALS:
-  void phonebookDownloaded(int id, const QString &path);
-
- private:
-  QStringList getPhonebookUrlAndName(int id);
   QString normalizeNumber(QString number, const QString &countryCode) const;
 
-  QString m_savepath;
+  QHash<QString, QString> m_Phonebooks;
+  static QString m_sSavepath;
 };
 
 #endif  // FRITZPHONEBOOK_H_

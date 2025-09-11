@@ -44,8 +44,7 @@ class NumberResolver : public QObject {
                      const QStringList &sListEnabledResolvers) const -> QString;
 
  public slots:
-  void readPhonebooks(const QStringList &sListTbAddressbooks,
-                      const QHash<QString, QString> &sListFritzPhonebooks);
+  void readPhonebooks();
 
  private:
   void initCountryCodes(const QDir &sharePath);

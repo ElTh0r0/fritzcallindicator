@@ -32,8 +32,6 @@
 #include <QHash>
 #include <QObject>
 
-#include "fritzphonebook.h"
-
 class QSettings;
 class QStringListModel;
 
@@ -52,9 +50,6 @@ class SettingsDialog : public QDialog {
 
   void translateUi();
 
-  // TODO: Quick and dirty... this function should not be part of SettingsDialog
-  auto getFritzPhonebooks() -> const QHash<QString, QString>;
-
  public slots:
   void accept() override;
 
@@ -62,8 +57,7 @@ class SettingsDialog : public QDialog {
   void changedConnectionSettings(const QString &sHostName,
                                  const uint nMonitorPort,
                                  const uint nRetryInterval);
-  void changedPhonebooks(const QStringList &sListTbAddressbooks,
-                         const QHash<QString, QString> &sListFritzPhonebooks);
+  void changedPhonebooks();
 
  protected:
   void showEvent(QShowEvent *pEvent) override;
@@ -72,14 +66,11 @@ class SettingsDialog : public QDialog {
  private:
   void initOnlineResolvers(QDir sharePath);
   void initFritzPhonebooks();
-  QString downloadFritzPhonebook(const QString &sId, const QString &sUrl);
   void readSettings();
   auto getThunderbirdProfilePath() -> const QString;
 
   Ui::SettingsDialog *m_pUi;
   QStringListModel *m_sListModel_TbAddressbooks;
-  FritzPhonebook *m_pFritzPb;
-  QHash<QString, QHash<QString, QString>> m_FritzPhoneBooks;
   QStringList m_sListEnabledFritzPhoneBooks;
   QHash<QString, QString> m_OnlineResolvers;
   QStringList m_sListEnabledOnlineResolvers;

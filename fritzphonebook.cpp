@@ -47,17 +47,54 @@
 #include <QXmlStreamReader>
 
 #include "fritzsoap.h"
+#include "settings.h"
 
 using namespace Qt::StringLiterals;
 
-FritzPhonebook::FritzPhonebook(QObject *parent) : QObject(parent) {}
+QString FritzPhonebook::m_sSavepath;
 
-void FritzPhonebook::setSavepath(const QString &savepath) {
-  m_savepath = savepath;
+FritzPhonebook::FritzPhonebook(QObject *pParent) : QObject(pParent) {}
+
+FritzPhonebook *FritzPhonebook::instance() {
+  static FritzPhonebook _instance;
+  m_sSavepath =
+      QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/" +
+      qApp->applicationName().toLower() +
+      QStringLiteral("/fritzbox_phonebooks");
+  return &_instance;
 }
-const QDir FritzPhonebook::getSavepath() { return QDir(m_savepath); }
 
-QHash<QString, QHash<QString, QString> > FritzPhonebook::getPhonebookList() {
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+auto FritzPhonebook::getContacts() -> QHash<QString, QString> {
+  QHash<QString, QString> tmpContacts;
+  QHash<QString, QString> PhoneNumbers;
+
+  QHashIterator<QString, QString> i(m_Phonebooks);
+  while (i.hasNext()) {
+    i.next();
+    tmpContacts.clear();
+
+    if (Settings().getEnabledFritzPhonebooks().contains(i.value())) {
+      qDebug() << "Reading FritzBox phonebook:" << i.key() << i.value();
+      QString path = m_sSavepath + u"/phonebook_"_s + i.key() + u".xml"_s;
+      tmpContacts = this->loadFromFile(path, Settings().getCountryCode());
+
+      // Merge into contacts list
+      PhoneNumbers.insert(tmpContacts);
+    }
+  }
+
+  return PhoneNumbers;
+}
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+QStringList FritzPhonebook::getPhonebookList() {
+  m_Phonebooks.clear();
+
   const QString body =
       u"<u:GetPhonebookList xmlns:u=\"urn:dslforum-org:service:X_AVM-DE_OnTel:1\"/>"_s;
 
@@ -79,8 +116,6 @@ QHash<QString, QHash<QString, QString> > FritzPhonebook::getPhonebookList() {
     qWarning() << "XML Parse Error:" << xml.errorString();
   }
 
-  QHash<QString, QHash<QString, QString> > phonebooks;
-
   for (const QString &idStr : phonebookIDs) {
     bool ok = false;
     int id = idStr.toInt(&ok);
@@ -93,17 +128,18 @@ QHash<QString, QHash<QString, QString> > FritzPhonebook::getPhonebookList() {
     if (sListInfo.size() == 2) {
       qDebug() << "Phonebook ID" << id << "→ Name:" << sListInfo.at(0)
                << "→ URL:" << sListInfo.at(1);
-      QHash<QString, QString> info;
-      info.insert(QStringLiteral("Name"), sListInfo.at(0));
-      info.insert(QStringLiteral("URL"), sListInfo.at(1));
-      phonebooks.insert(idStr, info);
+      m_Phonebooks.insert(idStr, sListInfo.at(0));
+      downloadPhonebook(id, QUrl(sListInfo.at(1)));
     } else {
       qWarning() << "No Name and/or URL for phonebook ID" << id;
     }
   }
 
-  return phonebooks;
+  return m_Phonebooks.values();
 }
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
 bool FritzPhonebook::downloadPhonebook(int id, const QUrl &url) {
   qDebug() << "Downloading phonebook ID" << id << "from" << url;
@@ -125,13 +161,17 @@ bool FritzPhonebook::downloadPhonebook(int id, const QUrl &url) {
   QByteArray data = reply->readAll();
   reply->deleteLater();
 
-  QString baseDir = m_savepath;
-  // QString baseDir =
-  // QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) +
-  // u"/phonebooks"_s;
+  /*
+  QString baseDir =
+      QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) +
+      u"/phonebooks"_s;
   QDir().mkpath(baseDir);
   QString filePath =
       baseDir + u"/phonebook_"_s + QString::number(id) + u".xml"_s;
+  */
+  QDir().mkpath(m_sSavepath);
+  QString filePath =
+      m_sSavepath + u"/phonebook_"_s + QString::number(id) + u".xml"_s;
 
   QFile file(filePath);
   if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
@@ -145,6 +185,9 @@ bool FritzPhonebook::downloadPhonebook(int id, const QUrl &url) {
 
   return true;
 }
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
 QStringList FritzPhonebook::getPhonebookUrlAndName(int phonebookId) {
   const QString body =
@@ -189,6 +232,9 @@ QStringList FritzPhonebook::getPhonebookUrlAndName(int phonebookId) {
   return sListInfo;
 }
 
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
 QHash<QString, QString> FritzPhonebook::loadFromFile(
     const QString &xmlFilePath, const QString &countryCode) {
   QHash<QString, QString> phoneNumbers;
@@ -211,7 +257,6 @@ QHash<QString, QString> FritzPhonebook::loadFromFile(
   for (int i = 0; i < contacts.count(); ++i) {
     QDomElement contact = contacts.at(i).toElement();
     QString name;
-    QStringList numbers;
 
     QDomElement person = contact.firstChildElement(u"person"_s);
     if (!person.isNull()) {
@@ -264,6 +309,9 @@ QHash<QString, QString> FritzPhonebook::loadFromFile(
   qDebug() << "✅ Phonebook loaded:" << phoneNumbers.size() << "entries.";
   return phoneNumbers;
 }
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
 QString FritzPhonebook::normalizeNumber(QString number,
                                         const QString &countryCode) const {

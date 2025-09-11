@@ -35,16 +35,35 @@
 #include <QSqlRecord>
 #include <QStandardPaths>
 
+#include "settings.h"
+
 TbAddressbook::TbAddressbook(QObject *pParent) : QObject{pParent} {}
 
+TbAddressbook *TbAddressbook::instance() {
+  static TbAddressbook _instance;
+  return &_instance;
+}
+
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-auto TbAddressbook::importVCards(const QFileInfo &fiDbFile,
-                                 const QString &sLocalCountryCode)
-    -> QHash<QString, QString> {
+auto TbAddressbook::getContacts() -> QHash<QString, QString> {
   m_PhoneNumbers.clear();
 
+  for (const auto &addressbook : Settings().getTbAddressbooks()) {
+    if (!addressbook.isEmpty()) {
+      qDebug() << "Reading Thunderbird addressbook:" << addressbook;
+      this->importVCards(QFileInfo(addressbook));
+    }
+  }
+
+  return m_PhoneNumbers;
+}
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+void TbAddressbook::importVCards(const QFileInfo &fiDbFile) {
   if (fiDbFile.exists()) {
     static quint8 nDB = 1;
     QString sTmpDb(
@@ -61,7 +80,7 @@ auto TbAddressbook::importVCards(const QFileInfo &fiDbFile,
     if (!QFile::copy(fiDbFile.absoluteFilePath(), sTmpDb)) {
       qWarning() << "Couldn't copy DB to temp - source:"
                  << fiDbFile.absoluteFilePath() << " - destination:" << sTmpDb;
-      return QHash<QString, QString>();
+      return;
     }
 
     QString sConnection = QStringLiteral("SQLite_") + QString::number(nDB);
@@ -82,7 +101,7 @@ auto TbAddressbook::importVCards(const QFileInfo &fiDbFile,
             // qDebug() << query.value(QStringLiteral("value")).toString() +
             // "\n";
             this->extractNumber(query.value(QStringLiteral("value")).toString(),
-                                sLocalCountryCode);
+                                Settings().getCountryCode());
           }
         } else {
           qDebug() << "ERROR while reading database:" << query.lastError();
@@ -100,8 +119,6 @@ auto TbAddressbook::importVCards(const QFileInfo &fiDbFile,
   } else {
     qWarning() << "ERROR DB file not found:" << fiDbFile.absoluteFilePath();
   }
-
-  return m_PhoneNumbers;
 }
 
 // ----------------------------------------------------------------------------
