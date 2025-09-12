@@ -93,7 +93,9 @@ FritzCallIndicator::~FritzCallIndicator() {
 void FritzCallIndicator::createActions() {
   qDebug() << Q_FUNC_INFO;
   QIcon::setThemeName(m_settings.getIconTheme());
-  m_pShowCallHistory = new QAction(tr("Call history"), this);
+  m_pShowCallHistory =
+      new QAction(QIcon::fromTheme(QStringLiteral("view-history")),
+                  tr("Call history"), this);
   connect(m_pShowCallHistory, &QAction::triggered, this,
           &FritzCallIndicator::showCallHistory);
 
@@ -319,9 +321,15 @@ QStringList FritzCallIndicator::getCallHistory() {
       }
     } else if (xml.isEndElement() && xml.name() == QStringLiteral("Call")) {
       if (typeIsOne) {
-        // TODO: Trying to resolve number from Thunderbird or online???
-        if (sName.isEmpty()) sName = sNumber;
-
+        if (sName.isEmpty()) {
+#ifdef QT_DEBUG
+          // Don't use online resolvers during debugging to prevent rate limits
+          sName = m_pNumberResolver->resolveNumber(sNumber, QStringList());
+#else
+          sName = m_pNumberResolver->resolveNumber(
+              sNumber, m_settings.getEnabledOnlineResolvers());
+#endif
+        }
         sListCalls.push_back(sDate + "|" + sTime + "|" + sName);
         if (sListCalls.size() >= m_settings.getMaxEntriesCallHistory()) break;
       }
