@@ -85,6 +85,11 @@ SettingsDialog::SettingsDialog(const QDir sharePath, QObject *pParent)
   this->readSettings();
   this->initOnlineResolvers(sharePath);  // After readSettings!
   this->initFritzPhonebooks();
+
+  bool bAutostart = Settings().getAutostart();
+  if (bAutostart != Settings().isAutostartEnabled()) {
+    Settings().setAutostart(bAutostart);
+  }
 }
 
 SettingsDialog::~SettingsDialog() {
@@ -173,15 +178,20 @@ void SettingsDialog::readSettings() {
   Settings settings;
 
   // General
+  m_pUi->cbAutostart->setChecked(settings.getAutostart());
   m_pUi->lineEditCountryCode->setText(settings.getCountryCode());
+  m_pUi->spinBoxMaxEntriesCallHistory->setValue(
+      settings.getMaxEntriesCallHistory());
+  m_pUi->spinBoxMaxDaysOfOldCalls->setValue(settings.getMaxDaysOfOldCalls());
   m_pUi->spinBoxTimeout->setValue(settings.getPopupTimeout());
 
-  // Connection
+  // FritzBox
   m_pUi->lineEditHost->setText(settings.getHostName());
   m_pUi->spinBoxCallMonitorPort->setValue(settings.getCallMonitorPort());
   m_pUi->spinBoxTR064Port->setValue(settings.getTR064Port());
   m_pUi->lineEditUserName->setText(settings.getFritzUser());
   m_pUi->lineEditPassword->setText(settings.getFritzPassword());
+  m_pUi->spinBoxRetryInterval->setValue(settings.getRetryInterval());
 
   // NumberResolvers
   m_sListModel_TbAddressbooks->setStringList(settings.getTbAddressbooks());
@@ -252,19 +262,18 @@ void SettingsDialog::accept() {
   // General
   settings.setCountryCode(m_pUi->lineEditCountryCode->text().trimmed());
   settings.setPopupTimeout(m_pUi->spinBoxTimeout->value());
-  settings.setMaxDaysOfOldCalls(
-      settings.getMaxDaysOfOldCalls());  // TODO: Add to dialog
   settings.setMaxEntriesCallHistory(
-      settings.getMaxEntriesCallHistory());  // TODO: Add to dialog
+      m_pUi->spinBoxMaxEntriesCallHistory->value());
+  settings.setMaxDaysOfOldCalls(m_pUi->spinBoxMaxDaysOfOldCalls->value());
+  settings.setAutostart(m_pUi->cbAutostart->isChecked());
 
-  // Connection
+  // FritzBox
   settings.setHostName(m_pUi->lineEditHost->text().trimmed());
   settings.setCallMonitorPort(m_pUi->spinBoxCallMonitorPort->value());
   settings.setTR064Port(m_pUi->spinBoxTR064Port->value());
   settings.setFritzUser(m_pUi->lineEditUserName->text().trimmed());
   settings.setFritzPassword(m_pUi->lineEditPassword->text().trimmed());
-  settings.setRetryInterval(
-      settings.getRetryInterval());  // TODO: Add to dialog
+  settings.setRetryInterval(m_pUi->spinBoxRetryInterval->value());
 
   // NumberResolvers
   if (settings.getTbAddressbooks() !=
@@ -311,7 +320,7 @@ void SettingsDialog::accept() {
 
   emit changedConnectionSettings(m_pUi->lineEditHost->text().trimmed(),
                                  m_pUi->spinBoxCallMonitorPort->value(),
-                                 settings.getRetryInterval());
+                                 m_pUi->spinBoxRetryInterval->value());
 
   if (bAddressbookChanged) {
     emit changedPhonebooks();

@@ -161,8 +161,7 @@ void FritzCallIndicator::onErrorOccured(QTcpSocket::SocketError,
                         .arg(m_settings.getHostName())
                         .arg(m_settings.getCallMonitorPort())
                         .arg(errorMessage),
-                    m_settings.getRetryInterval() / 2,
-                    QSystemTrayIcon::Warning);
+                    m_settings.getPopupTimeout(), QSystemTrayIcon::Warning);
   /*
   QMessageBox::critical(nullptr, QString::fromLatin1(APP_NAME),
                         tr("Connecting to '%1:%2' failed, because: '%3'")

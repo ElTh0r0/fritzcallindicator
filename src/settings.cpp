@@ -28,13 +28,14 @@
 
 #include <QGuiApplication>
 #include <QPalette>
+#include <QStandardPaths>
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
 #include <QStyleHints>
 #endif
 
 // Ini groups
-const QString Settings::GROUP_CONNECTION = QStringLiteral("Connection");
+const QString Settings::GROUP_FRITZBOX = QStringLiteral("FritzBox");
 const QString Settings::GROUP_NUMBER_RESOLVERS =
     QStringLiteral("NumberResolvers");
 const QString Settings::GROUP_PHONE_NUMBERS = QStringLiteral("PhoneNumbers");
@@ -43,7 +44,8 @@ const QString Settings::DEFAULT_COUNTRY_CODE = QStringLiteral("0049");
 const uint Settings::DEFAULT_POPUP_TIMEOUT_SEC = 10;
 const uint Settings::DEFAULT_MAX_DAYS_OLD_CALLS = 7;
 const uint Settings::DEFAULT_MAX_CALL_HISTORY = 10;
-// Connection
+const bool Settings::DEFAULT_AUTOSTART = false;
+// FritzBox
 const QString Settings::DEFAULT_HOST_NAME = QStringLiteral("fritz.box");
 const uint Settings::DEFAULT_CALL_MONITOR_PORT = 1012;
 const uint Settings::DEFAULT_TR064_PORT = 49000;
@@ -125,18 +127,101 @@ void Settings::setMaxEntriesCallHistory(const uint nMaxEntries) {
 }
 
 // ----------------------------------------------------------------------------
+
+auto Settings::getAutostart() const -> bool {
+  return m_settings.value(QStringLiteral("Autostart"), DEFAULT_AUTOSTART)
+      .toBool();
+}
+
+void Settings::setAutostart(const bool bAutostart) {
+  m_settings.setValue(QStringLiteral("Autostart"), bAutostart);
+
+#if defined(Q_OS_LINUX) || defined(Q_OS_UNIX)
+  QString sAutostartPath =
+      QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) +
+      "/autostart/";
+  QDir dAutostart(sAutostartPath);
+  if (!dAutostart.exists()) {
+    dAutostart.mkpath(".");
+  }
+
+  QFile fDesktop(sAutostartPath + QString(APP_NAME).toLower() +
+                 QStringLiteral(".desktop"));
+  if (bAutostart) {
+    if (fDesktop.open(QIODevice::WriteOnly)) {
+      QByteArray content(
+          "[Desktop Entry]\nName=" + QByteArray(APP_NAME).toLower() +
+          "\nIcon=" + QByteArray(APP_NAME).toLower() +
+          "\nExec=" + QCoreApplication::applicationFilePath().toLatin1() +
+          "\nTerminal=false\nType=Application"
+          "\nX-GNOME-Autostart-enabled=true\n");
+      fDesktop.write(content);
+    }
+  } else {
+    fDesktop.remove();
+  }
+#elif defined(Q_OS_WIN)
+  QSettings regAutostart(
+      "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
+      QSettings::NativeFormat);
+  QSettings regWorkDir(
+      "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App "
+      "Paths",
+      QSettings::NativeFormat);
+  if (bAutostart) {
+    QString sAppPath =
+        QDir::toNativeSeparators(QCoreApplication::applicationFilePath());
+    regAutostart.setValue(APP_NAME, sAppPath);
+
+    // set application workdir
+    regWorkDir.beginGroup(APP_NAME + ".exe");
+    regWorkDir.setValue("Path", QCoreApplication::applicationDirPath());
+    regWorkDir.endGroup();
+
+  } else {
+    regAutostart.remove(APP_NAME);
+
+    // remove application workdir
+    regWorkDir.beginGroup(APP_NAME + ".exe");
+    regWorkDir.remove("");
+    regWorkDir.endGroup();
+  }
+#endif
+}
+
+auto Settings::isAutostartEnabled() -> const bool {
+  bool bEnabled = false;
+
+#if defined(Q_OS_LINUX) || defined(Q_OS_UNIX)
+  QString sAutostartPath =
+      QStandardPaths::locate(QStandardPaths::GenericConfigLocation,
+                             "autostart/", QStandardPaths::LocateDirectory) +
+      QString(APP_NAME).toLower() + QStringLiteral(".desktop");
+  bEnabled = QFile(sAutostartPath).exists();
+#elif defined(Q_OS_WIN)
+  QSettings regAutostart(
+      "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
+      QSettings::NativeFormat);
+  bEnabled = regAutostart.value(APP_NAME).toString() ==
+             QDir::toNativeSeparators(QCoreApplication::applicationFilePath());
+#endif
+
+  return bEnabled;
+}
+
 // ----------------------------------------------------------------------------
-// Connection
+// ----------------------------------------------------------------------------
+// FritzBox
 
 auto Settings::getHostName() const -> QString {
   return m_settings
-      .value(GROUP_CONNECTION + "/" + QStringLiteral("HostName"),
+      .value(GROUP_FRITZBOX + "/" + QStringLiteral("HostName"),
              DEFAULT_HOST_NAME)
       .toString();
 }
 
 void Settings::setHostName(const QString &sHostName) {
-  m_settings.setValue(GROUP_CONNECTION + "/" + QStringLiteral("HostName"),
+  m_settings.setValue(GROUP_FRITZBOX + "/" + QStringLiteral("HostName"),
                       sHostName.trimmed());
 }
 
@@ -144,28 +229,27 @@ void Settings::setHostName(const QString &sHostName) {
 
 auto Settings::getCallMonitorPort() const -> uint {
   return m_settings
-      .value(GROUP_CONNECTION + "/" + QStringLiteral("CallMonitorPort"),
+      .value(GROUP_FRITZBOX + "/" + QStringLiteral("CallMonitorPort"),
              DEFAULT_CALL_MONITOR_PORT)
       .toUInt();
 }
 
 void Settings::setCallMonitorPort(const uint nCallMonitorPort) {
-  m_settings.setValue(
-      GROUP_CONNECTION + "/" + QStringLiteral("CallMonitorPort"),
-      nCallMonitorPort);
+  m_settings.setValue(GROUP_FRITZBOX + "/" + QStringLiteral("CallMonitorPort"),
+                      nCallMonitorPort);
 }
 
 // ----------------------------------------------------------------------------
 
 auto Settings::getTR064Port() const -> uint {
   return m_settings
-      .value(GROUP_CONNECTION + "/" + QStringLiteral("TR064Port"),
+      .value(GROUP_FRITZBOX + "/" + QStringLiteral("TR064Port"),
              DEFAULT_TR064_PORT)
       .toUInt();
 }
 
 void Settings::setTR064Port(const uint nTR064Port) {
-  m_settings.setValue(GROUP_CONNECTION + "/" + QStringLiteral("TR064Port"),
+  m_settings.setValue(GROUP_FRITZBOX + "/" + QStringLiteral("TR064Port"),
                       nTR064Port);
 }
 
@@ -173,12 +257,12 @@ void Settings::setTR064Port(const uint nTR064Port) {
 
 auto Settings::getFritzUser() const -> QString {
   return m_settings
-      .value(GROUP_CONNECTION + "/" + QStringLiteral("FritzUser"), "")
+      .value(GROUP_FRITZBOX + "/" + QStringLiteral("FritzUser"), "")
       .toString();
 }
 
 void Settings::setFritzUser(const QString &sUser) {
-  m_settings.setValue(GROUP_CONNECTION + "/" + QStringLiteral("FritzUser"),
+  m_settings.setValue(GROUP_FRITZBOX + "/" + QStringLiteral("FritzUser"),
                       sUser.trimmed());
 }
 
@@ -186,12 +270,12 @@ void Settings::setFritzUser(const QString &sUser) {
 
 auto Settings::getFritzPassword() const -> QString {
   return m_settings
-      .value(GROUP_CONNECTION + "/" + QStringLiteral("FritzPassword"), "")
+      .value(GROUP_FRITZBOX + "/" + QStringLiteral("FritzPassword"), "")
       .toString();
 }
 
 void Settings::setFritzPassword(const QString &sPassword) {
-  m_settings.setValue(GROUP_CONNECTION + "/" + QStringLiteral("FritzPassword"),
+  m_settings.setValue(GROUP_FRITZBOX + "/" + QStringLiteral("FritzPassword"),
                       sPassword.trimmed());
 }
 
@@ -199,13 +283,13 @@ void Settings::setFritzPassword(const QString &sPassword) {
 
 auto Settings::getRetryInterval() const -> uint {
   return m_settings
-      .value(GROUP_CONNECTION + "/" + QStringLiteral("RetryInterval"),
+      .value(GROUP_FRITZBOX + "/" + QStringLiteral("RetryInterval"),
              DEFAULT_RETRY_INTERVAL_SEC)
       .toUInt();
 }
 
 void Settings::setRetryInterval(const uint nRetryInterval) {
-  m_settings.setValue(GROUP_CONNECTION + "/" + QStringLiteral("RetryInterval"),
+  m_settings.setValue(GROUP_FRITZBOX + "/" + QStringLiteral("RetryInterval"),
                       nRetryInterval);
 }
 

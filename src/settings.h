@@ -46,8 +46,11 @@ class Settings : public QObject {
   void setMaxDaysOfOldCalls(const uint nMaxDays);
   auto getMaxEntriesCallHistory() const -> uint;
   void setMaxEntriesCallHistory(const uint nMaxEntries);
+  auto getAutostart() const -> bool;
+  void setAutostart(const bool bAutostart);
+  auto isAutostartEnabled() -> const bool;
 
-  // Connection
+  // FritzBox
   auto getHostName() const -> QString;
   void setHostName(const QString& sHostName);
   auto getCallMonitorPort() const -> uint;
@@ -84,7 +87,7 @@ class Settings : public QObject {
   QMap<QString, QString> m_OwnNumbers;
 
   // Ini groups
-  static const QString GROUP_CONNECTION;
+  static const QString GROUP_FRITZBOX;
   static const QString GROUP_NUMBER_RESOLVERS;
   static const QString GROUP_PHONE_NUMBERS;
   // General
@@ -92,7 +95,8 @@ class Settings : public QObject {
   static const uint DEFAULT_POPUP_TIMEOUT_SEC;
   static const uint DEFAULT_MAX_DAYS_OLD_CALLS;
   static const uint DEFAULT_MAX_CALL_HISTORY;
-  // Connection
+  static const bool DEFAULT_AUTOSTART;
+  // FritzBox
   static const QString DEFAULT_HOST_NAME;
   static const uint DEFAULT_CALL_MONITOR_PORT;
   static const uint DEFAULT_TR064_PORT;
