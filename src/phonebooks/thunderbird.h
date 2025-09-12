@@ -1,5 +1,5 @@
 /**
- * \file tbaddressbook.h
+ * \file thunderbird.h
  *
  * \section LICENSE
  *
@@ -24,22 +24,22 @@
  * Class definition for Thunderbird addressbook.
  */
 
-#ifndef TBADDRESSBOOK_H_
-#define TBADDRESSBOOK_H_
+#ifndef THUNDERBIRD_H_
+#define THUNDERBIRD_H_
 
 #include <QFileInfo>
 #include <QHash>
 #include <QObject>
 
-class TbAddressbook : public QObject {
+class Thunderbird : public QObject {
   Q_OBJECT
 
  public:
-  static TbAddressbook *instance();
+  static Thunderbird *instance();
   auto getContacts() -> QHash<QString, QString>;
 
  private:
-  explicit TbAddressbook(QObject *pParent = nullptr);
+  explicit Thunderbird(QObject *pParent = nullptr);
 
   void importVCards(const QFileInfo &fiDbFile);
   void extractNumber(const QString &sVCard, const QString &sLocalCountryCode);
@@ -47,4 +47,4 @@ class TbAddressbook : public QObject {
   QHash<QString, QString> m_PhoneNumbers;
 };
 
-#endif  // TBADDRESSBOOK_H_
+#endif  // THUNDERBIRD_H_

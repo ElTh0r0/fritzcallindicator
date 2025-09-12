@@ -172,17 +172,13 @@ void Settings::setAutostart(const bool bAutostart) {
     QString sAppPath =
         QDir::toNativeSeparators(QCoreApplication::applicationFilePath());
     regAutostart.setValue(APP_NAME, sAppPath);
-
-    // set application workdir
-    regWorkDir.beginGroup(APP_NAME + ".exe");
+    regWorkDir.beginGroup(QString(APP_NAME) + ".exe");
     regWorkDir.setValue("Path", QCoreApplication::applicationDirPath());
     regWorkDir.endGroup();
 
   } else {
     regAutostart.remove(APP_NAME);
-
-    // remove application workdir
-    regWorkDir.beginGroup(APP_NAME + ".exe");
+    regWorkDir.beginGroup(QString(APP_NAME) + ".exe");
     regWorkDir.remove("");
     regWorkDir.endGroup();
   }

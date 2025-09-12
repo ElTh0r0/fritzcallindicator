@@ -1,5 +1,5 @@
 /**
- * \file tbaddressbook.cpp
+ * \file thunderbird.cpp
  *
  * \section LICENSE
  *
@@ -24,7 +24,7 @@
  * Thunderbird addressbook extraction.
  */
 
-#include "tbaddressbook.h"
+#include "thunderbird.h"
 
 #include <QDebug>
 #include <QFile>
@@ -37,17 +37,17 @@
 
 #include "../settings.h"
 
-TbAddressbook::TbAddressbook(QObject *pParent) : QObject{pParent} {}
+Thunderbird::Thunderbird(QObject *pParent) : QObject{pParent} {}
 
-TbAddressbook *TbAddressbook::instance() {
-  static TbAddressbook _instance;
+Thunderbird *Thunderbird::instance() {
+  static Thunderbird _instance;
   return &_instance;
 }
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-auto TbAddressbook::getContacts() -> QHash<QString, QString> {
+auto Thunderbird::getContacts() -> QHash<QString, QString> {
   m_PhoneNumbers.clear();
 
   for (const auto &addressbook : Settings().getTbAddressbooks()) {
@@ -63,7 +63,7 @@ auto TbAddressbook::getContacts() -> QHash<QString, QString> {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-void TbAddressbook::importVCards(const QFileInfo &fiDbFile) {
+void Thunderbird::importVCards(const QFileInfo &fiDbFile) {
   if (fiDbFile.exists()) {
     static quint8 nDB = 1;
     QString sTmpDb(
@@ -124,8 +124,8 @@ void TbAddressbook::importVCards(const QFileInfo &fiDbFile) {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-void TbAddressbook::extractNumber(const QString &sVCard,
-                                  const QString &sLocalCountryCode) {
+void Thunderbird::extractNumber(const QString &sVCard,
+                                const QString &sLocalCountryCode) {
   static QRegularExpression rSplit(QStringLiteral("\n|\r\n|\r"));
   QStringList splitVCard;
   QStringList findName;

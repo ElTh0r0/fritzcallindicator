@@ -18,12 +18,12 @@ string(TOLOWER ${PROJECT_NAME} target_name)
 
 set(HEADERS
     fritzphonebook.h
-    tbaddressbook.h
+    thunderbird.h
 )
 
 set(SOURCES
     fritzphonebook.cpp
-    tbaddressbook.cpp
+    thunderbird.cpp
 )
 
 target_sources(${target_name} PRIVATE ${HEADERS} ${SOURCES})

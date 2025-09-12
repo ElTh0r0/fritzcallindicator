@@ -31,7 +31,7 @@
 #include <QMessageBox>
 
 #include "phonebooks/fritzphonebook.h"
-#include "phonebooks/tbaddressbook.h"
+#include "phonebooks/thunderbird.h"
 
 NumberResolver::NumberResolver(const QDir &sharePath,
                                const QString &sLocalCountryCode,
@@ -140,7 +140,7 @@ void NumberResolver::readPhonebooks() {
   m_KnownContacts.clear();
 
   // Merge external addressbooks into contacts list
-  m_KnownContacts.insert(TbAddressbook::instance()->getContacts());
+  m_KnownContacts.insert(Thunderbird::instance()->getContacts());
   m_KnownContacts.insert(FritzPhonebook::instance()->getContacts());
 }
 
