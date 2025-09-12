@@ -44,7 +44,7 @@ jobs:
       shell: cmd
       run: |
        mkdir FritzCallIndicator\data
-       copy build\FritzCallIndicator.exe FritzCallIndicator\FritzCallIndicator.exe
+       copy build\src\FritzCallIndicator.exe FritzCallIndicator\FritzCallIndicator.exe
        windeployqt --release --no-translations --no-opengl-sw FritzCallIndicator\FritzCallIndicator.exe
        copy COPYING FritzCallIndicator\
        copy data\country_codes.csv FritzCallIndicator\data\
