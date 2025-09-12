@@ -46,8 +46,8 @@
 #include <QUrl>
 #include <QXmlStreamReader>
 
-#include "fritzsoap.h"
-#include "settings.h"
+#include "../fritzsoap.h"
+#include "../settings.h"
 
 using namespace Qt::StringLiterals;
 

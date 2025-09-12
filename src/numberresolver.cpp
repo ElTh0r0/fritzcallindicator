@@ -30,8 +30,8 @@
 #include <QDirIterator>
 #include <QMessageBox>
 
-#include "fritzphonebook.h"
-#include "tbaddressbook.h"
+#include "phonebooks/fritzphonebook.h"
+#include "phonebooks/tbaddressbook.h"
 
 NumberResolver::NumberResolver(const QDir &sharePath,
                                const QString &sLocalCountryCode,

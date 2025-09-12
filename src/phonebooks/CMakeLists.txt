@@ -14,28 +14,16 @@
 #  You should have received a copy of the GNU General Public License
 #  along with FritzCallIndicator.  If not, see <https://www.gnu.org/licenses/>.
 
-cmake_minimum_required(VERSION 3.16)
-project(FritzCallIndicator
-    VERSION 0.7.0
-    DESCRIPTION "Fritz!Box call indicator"
-    LANGUAGES C CXX
-)
-set(PROJECT_COPYRIGHT "(C) 2024-present Thorsten Roth")
+string(TOLOWER ${PROJECT_NAME} target_name)
 
-option(GENERATE_TS "Regenerate translation source files" OFF)
-
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-set(QT_MAIN_VERSION Qt6)
-set(QT_MINIMUM_VERSION 6.2)
-
-find_package(${QT_MAIN_VERSION} ${QT_MINIMUM_VERSION}
-    REQUIRED Core Gui Widgets Network Sql LinguistTools Xml
+set(HEADERS
+    fritzphonebook.h
+    tbaddressbook.h
 )
 
-set(CMAKE_AUTOUIC ON)
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
+set(SOURCES
+    fritzphonebook.cpp
+    tbaddressbook.cpp
+)
 
-add_subdirectory(src)
+target_sources(${target_name} PRIVATE ${HEADERS} ${SOURCES})

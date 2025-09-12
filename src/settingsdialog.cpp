@@ -36,7 +36,7 @@
 #include <QStandardPaths>
 #include <QStringListModel>
 
-#include "fritzphonebook.h"
+#include "phonebooks/fritzphonebook.h"
 #include "settings.h"
 #include "ui_settingsdialog.h"
 
