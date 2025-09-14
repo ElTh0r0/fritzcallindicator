@@ -30,6 +30,7 @@
 #include <QDirIterator>
 #include <QMessageBox>
 
+#include "phonebooks/carddav.h"
 #include "phonebooks/fritzphonebook.h"
 #include "phonebooks/thunderbird.h"
 
@@ -142,6 +143,7 @@ void NumberResolver::readPhonebooks() {
   // Merge external addressbooks into contacts list
   m_KnownContacts.insert(Thunderbird::instance()->getContacts());
   m_KnownContacts.insert(FritzPhonebook::instance()->getContacts());
+  m_KnownContacts.insert(CardDAV::instance()->getContacts());
 }
 
 // ----------------------------------------------------------------------------

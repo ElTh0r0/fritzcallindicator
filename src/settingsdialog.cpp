@@ -52,6 +52,12 @@ SettingsDialog::SettingsDialog(const QDir sharePath, QObject *pParent)
 
   m_pUi->tableOwnNumbers->horizontalHeader()->setSectionResizeMode(
       QHeaderView::Stretch);
+  m_pUi->tableFritzPhonebooks->horizontalHeader()->setSectionResizeMode(
+      QHeaderView::Stretch);
+  m_pUi->tableCardDav->horizontalHeader()->setSectionResizeMode(
+      QHeaderView::Stretch);
+  m_pUi->tableOnlineResolvers->horizontalHeader()->setSectionResizeMode(
+      QHeaderView::Stretch);
 
   connect(m_pUi->buttonBox, &QDialogButtonBox::accepted, this,
           &SettingsDialog::accept);
@@ -73,7 +79,6 @@ SettingsDialog::SettingsDialog(const QDir sharePath, QObject *pParent)
       }
     }
   });
-
   connect(m_pUi->toolButton_RemoveTbAddressbook, &QToolButton::clicked, [=]() {
     QModelIndex index = m_pUi->listView_TbAddressbooks->currentIndex();
     if (index.isValid() &&
@@ -81,6 +86,23 @@ SettingsDialog::SettingsDialog(const QDir sharePath, QObject *pParent)
       m_sListModel_TbAddressbooks->removeRows(index.row(), 1);
     }
   });
+
+  connect(m_pUi->toolButton_AddCardDavAddressbook, &QToolButton::clicked,
+          [=]() {
+            int row = m_pUi->tableCardDav->rowCount();
+            m_pUi->tableCardDav->insertRow(row);
+            for (int col = 0; col < m_pUi->tableCardDav->columnCount(); ++col)
+              m_pUi->tableCardDav->setItem(row, col, new QTableWidgetItem(""));
+            m_pUi->tableCardDav->setCurrentCell(
+                row, 0);  // Focus first cell of new row
+          });
+  connect(
+      m_pUi->toolButton_RemoveCardDavAddressbook, &QToolButton::clicked, [=]() {
+        QModelIndex index = m_pUi->tableCardDav->currentIndex();
+        if (index.isValid() && index.row() < m_pUi->tableCardDav->rowCount()) {
+          m_pUi->tableCardDav->removeRow(index.row());
+        }
+      });
 
   this->readSettings();
   this->initOnlineResolvers(sharePath);  // After readSettings!
@@ -192,10 +214,6 @@ void SettingsDialog::readSettings() {
   m_pUi->lineEditUserName->setText(settings.getFritzUser());
   m_pUi->lineEditPassword->setText(settings.getFritzPassword());
   m_pUi->spinBoxRetryInterval->setValue(settings.getRetryInterval());
-
-  // NumberResolvers
-  m_sListModel_TbAddressbooks->setStringList(settings.getTbAddressbooks());
-
   m_sListEnabledFritzPhoneBooks = settings.getEnabledFritzPhonebooks();
   for (int row = 0; row < m_pUi->tableFritzPhonebooks->rowCount(); ++row) {
     if (m_sListEnabledFritzPhoneBooks.contains(
@@ -204,6 +222,27 @@ void SettingsDialog::readSettings() {
     } else {
       m_pUi->tableFritzPhonebooks->item(row, 0)->setCheckState(Qt::Unchecked);
     }
+  }
+
+  // NumberResolvers
+  m_sListModel_TbAddressbooks->setStringList(settings.getTbAddressbooks());
+
+  static const QStyle *style = QApplication::style();
+  static const QChar maskChar = static_cast<QChar>(
+      style->styleHint(QStyle::SH_LineEdit_PasswordCharacter));
+  const QList<QHash<QString, QString>> &carddav =
+      settings.getCardDavAddressbooks();
+  m_pUi->tableCardDav->setRowCount(0);
+  for (int i = 0; i < carddav.size(); ++i) {
+    m_pUi->tableCardDav->insertRow(i);
+    m_pUi->tableCardDav->setItem(
+        i, 0, new QTableWidgetItem(carddav[i].value(QStringLiteral("URL"))));
+    m_pUi->tableCardDav->setItem(
+        i, 1, new QTableWidgetItem(carddav[i].value(QStringLiteral("User"))));
+    QString sPassword = QString(maskChar).repeated(3);
+    QTableWidgetItem *pwItem = new QTableWidgetItem(sPassword);
+    pwItem->setData(Qt::UserRole, carddav[i].value(QStringLiteral("Password")));
+    m_pUi->tableCardDav->setItem(i, 2, pwItem);
   }
 
   m_sListEnabledOnlineResolvers = settings.getEnabledOnlineResolvers();
@@ -258,6 +297,7 @@ void SettingsDialog::accept() {
   qDebug() << Q_FUNC_INFO;
   Settings settings;
   bool bAddressbookChanged = false;
+  bool bFritzUserPasswordChanged = false;
 
   // General
   settings.setCountryCode(m_pUi->lineEditCountryCode->text().trimmed());
@@ -271,27 +311,17 @@ void SettingsDialog::accept() {
   settings.setHostName(m_pUi->lineEditHost->text().trimmed());
   settings.setCallMonitorPort(m_pUi->spinBoxCallMonitorPort->value());
   settings.setTR064Port(m_pUi->spinBoxTR064Port->value());
-  settings.setFritzUser(m_pUi->lineEditUserName->text().trimmed());
-  settings.setFritzPassword(m_pUi->lineEditPassword->text().trimmed());
+  QString sTmpUserPw = m_pUi->lineEditUserName->text().trimmed();
+  if (sTmpUserPw != settings.getFritzUser()) {
+    settings.setFritzUser(sTmpUserPw);
+    bFritzUserPasswordChanged = true;
+  }
+  sTmpUserPw = m_pUi->lineEditPassword->text().trimmed();
+  if (sTmpUserPw != settings.getFritzPassword()) {
+    settings.setFritzPassword(sTmpUserPw);
+    bFritzUserPasswordChanged = true;
+  }
   settings.setRetryInterval(m_pUi->spinBoxRetryInterval->value());
-
-  // NumberResolvers
-  if (settings.getTbAddressbooks() !=
-      m_sListModel_TbAddressbooks->stringList()) {
-    settings.setTbAddressbooks(m_sListModel_TbAddressbooks->stringList());
-    bAddressbookChanged = true;
-  }
-
-  m_sListEnabledOnlineResolvers.clear();
-  for (int row = 0; row < m_pUi->tableOnlineResolvers->rowCount(); ++row) {
-    if (Qt::Checked ==
-        m_pUi->tableOnlineResolvers->item(row, 0)->checkState()) {
-      m_sListEnabledOnlineResolvers << m_OnlineResolvers.value(
-          m_pUi->tableOnlineResolvers->item(row, 1)->text());
-    }
-  }
-  settings.setEnabledOnlineResolvers(m_sListEnabledOnlineResolvers);
-
   m_sListEnabledFritzPhoneBooks.clear();
   for (int row = 0; row < m_pUi->tableFritzPhonebooks->rowCount(); ++row) {
     if (Qt::Checked ==
@@ -304,6 +334,53 @@ void SettingsDialog::accept() {
     settings.setEnabledFritzPhonebooks(m_sListEnabledFritzPhoneBooks);
     bAddressbookChanged = true;
   }
+
+  // NumberResolvers
+  if (settings.getTbAddressbooks() !=
+      m_sListModel_TbAddressbooks->stringList()) {
+    settings.setTbAddressbooks(m_sListModel_TbAddressbooks->stringList());
+    bAddressbookChanged = true;
+  }
+
+  static const QStyle *style = QApplication::style();
+  static const QChar maskChar = static_cast<QChar>(
+      style->styleHint(QStyle::SH_LineEdit_PasswordCharacter));
+  QList<QHash<QString, QString>> carddav;
+  for (int r = 0; r < m_pUi->tableCardDav->rowCount(); ++r) {
+    QHash<QString, QString> entry;
+    entry[QStringLiteral("URL")] = m_pUi->tableCardDav->item(r, 0)
+                                       ? m_pUi->tableCardDav->item(r, 0)->text()
+                                       : "";
+    entry[QStringLiteral("User")] =
+        m_pUi->tableCardDav->item(r, 1)
+            ? m_pUi->tableCardDav->item(r, 1)->text()
+            : "";
+    QString sPassword = m_pUi->tableCardDav->item(r, 2)
+                            ? m_pUi->tableCardDav->item(r, 2)->text()
+                            : "";
+    if (sPassword.contains(maskChar)) {
+      sPassword =
+          m_pUi->tableCardDav->item(r, 2)
+              ? m_pUi->tableCardDav->item(r, 2)->data(Qt::UserRole).toString()
+              : "";
+    }
+    entry[QStringLiteral("Password")] = sPassword;
+    carddav.append(entry);
+  }
+  if (carddav != settings.getCardDavAddressbooks()) {
+    settings.setCardDavAddressbooks(carddav);
+    bAddressbookChanged = true;
+  }
+
+  m_sListEnabledOnlineResolvers.clear();
+  for (int row = 0; row < m_pUi->tableOnlineResolvers->rowCount(); ++row) {
+    if (Qt::Checked ==
+        m_pUi->tableOnlineResolvers->item(row, 0)->checkState()) {
+      m_sListEnabledOnlineResolvers << m_OnlineResolvers.value(
+          m_pUi->tableOnlineResolvers->item(row, 1)->text());
+    }
+  }
+  settings.setEnabledOnlineResolvers(m_sListEnabledOnlineResolvers);
 
   // PhoneNumbers
   settings.setMaxOwnNumbers(
@@ -324,6 +401,12 @@ void SettingsDialog::accept() {
 
   if (bAddressbookChanged) {
     emit changedPhonebooks();
+  }
+
+  if (bFritzUserPasswordChanged) {
+    QMessageBox::information(
+        this, QCoreApplication::applicationName(),
+        tr("Please restart the application to apply the changes."));
   }
 
   QDialog::accept();

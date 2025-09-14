@@ -63,14 +63,17 @@ class Settings : public QObject {
   void setFritzPassword(const QString& sPassword);
   auto getRetryInterval() const -> uint;
   void setRetryInterval(const uint nRetryInterval);
+  auto getEnabledFritzPhonebooks() -> const QStringList;
+  void setEnabledFritzPhonebooks(const QStringList& sListFritzPhonebooks);
 
   // NumberResolvers
   auto getTbAddressbooks() -> const QStringList;
   void setTbAddressbooks(const QStringList& sListTbAddressbooks);
+  auto getCardDavAddressbooks() -> QList<QHash<QString, QString>>;
+  void setCardDavAddressbooks(
+      const QList<QHash<QString, QString>>& addressbooks);
   auto getEnabledOnlineResolvers() const -> QStringList;
   void setEnabledOnlineResolvers(const QStringList& sListOnlineResolvers);
-  auto getEnabledFritzPhonebooks() -> const QStringList;
-  void setEnabledFritzPhonebooks(const QStringList& sListFritzPhonebooks);
 
   // PhoneNumbers
   auto getMaxOwnNumbers() const -> uint;

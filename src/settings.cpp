@@ -290,6 +290,20 @@ void Settings::setRetryInterval(const uint nRetryInterval) {
 }
 
 // ----------------------------------------------------------------------------
+
+auto Settings::getEnabledFritzPhonebooks() -> const QStringList {
+  return m_settings
+      .value(GROUP_FRITZBOX + "/" + QStringLiteral("PhoneBooks"), QStringList())
+      .toStringList();
+}
+
+void Settings::setEnabledFritzPhonebooks(
+    const QStringList &sListFritzPhonebooks) {
+  m_settings.setValue(GROUP_FRITZBOX + "/" + QStringLiteral("PhoneBooks"),
+                      sListFritzPhonebooks);
+}
+
+// ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 // NumberResolvers
 
@@ -308,6 +322,46 @@ void Settings::setTbAddressbooks(const QStringList &sListTbAddressbooks) {
 
 // ----------------------------------------------------------------------------
 
+auto Settings::getCardDavAddressbooks() -> QList<QHash<QString, QString>> {
+  QList<QHash<QString, QString>> addressbooks;
+  int size = m_settings.beginReadArray(QStringLiteral("CardDAV"));
+  for (int row = 0; row < size; ++row) {
+    m_settings.setArrayIndex(row);
+    QHash<QString, QString> entry;
+    entry[QStringLiteral("URL")] =
+        m_settings.value(QStringLiteral("URL"), "").toString();
+    entry[QStringLiteral("User")] =
+        m_settings.value(QStringLiteral("User"), "").toString();
+    entry[QStringLiteral("Password")] =
+        m_settings.value(QStringLiteral("Password"), "").toString();
+    addressbooks.append(entry);
+  }
+  m_settings.endArray();
+  return addressbooks;
+}
+
+void Settings::setCardDavAddressbooks(
+    const QList<QHash<QString, QString>> &addressbooks) {
+  m_settings.beginGroup(QStringLiteral("CardDAV"));
+  m_settings.remove("");  // Delete existing entries
+  m_settings.endGroup();
+
+  m_settings.beginWriteArray(QStringLiteral("CardDAV"));
+  for (int row = 0; row < addressbooks.size(); ++row) {
+    m_settings.setArrayIndex(row);
+    const QHash<QString, QString> &entry = addressbooks[row];
+    m_settings.setValue(QStringLiteral("URL"),
+                        entry.value(QStringLiteral("URL"), ""));
+    m_settings.setValue(QStringLiteral("User"),
+                        entry.value(QStringLiteral("User"), ""));
+    m_settings.setValue(QStringLiteral("Password"),
+                        entry.value(QStringLiteral("Password"), ""));
+  }
+  m_settings.endArray();
+}
+
+// ----------------------------------------------------------------------------
+
 auto Settings::getEnabledOnlineResolvers() const -> QStringList {
   return m_settings
       .value(GROUP_NUMBER_RESOLVERS + "/" + QStringLiteral("OnlineResolvers"),
@@ -320,22 +374,6 @@ void Settings::setEnabledOnlineResolvers(
   m_settings.setValue(
       GROUP_NUMBER_RESOLVERS + "/" + QStringLiteral("OnlineResolvers"),
       sListOnlineResolvers);
-}
-
-// ----------------------------------------------------------------------------
-
-auto Settings::getEnabledFritzPhonebooks() -> const QStringList {
-  return m_settings
-      .value(GROUP_NUMBER_RESOLVERS + "/" + QStringLiteral("FritzPhoneBooks"),
-             QStringList())
-      .toStringList();
-}
-
-void Settings::setEnabledFritzPhonebooks(
-    const QStringList &sListFritzPhonebooks) {
-  m_settings.setValue(
-      GROUP_NUMBER_RESOLVERS + "/" + QStringLiteral("FritzPhoneBooks"),
-      sListFritzPhonebooks);
 }
 
 // ----------------------------------------------------------------------------

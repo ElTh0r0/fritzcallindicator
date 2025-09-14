@@ -210,7 +210,7 @@ QStringList FritzPhonebook::getPhonebookUrlAndName(int phonebookId) {
   QStringList sListInfo;
   QString sUrl;
   QString sName;
-  qDebug() << response;
+  // qDebug() << response;
   while (!xml.atEnd()) {
     xml.readNext();
     if (xml.isStartElement() && xml.name() == u"NewPhonebookURL") {

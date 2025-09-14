@@ -17,11 +17,13 @@
 string(TOLOWER ${PROJECT_NAME} target_name)
 
 set(HEADERS
+    carddav.h
     fritzphonebook.h
     thunderbird.h
 )
 
 set(SOURCES
+    carddav.cpp
     fritzphonebook.cpp
     thunderbird.cpp
 )

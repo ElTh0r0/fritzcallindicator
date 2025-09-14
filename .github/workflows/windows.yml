@@ -18,7 +18,7 @@ jobs:
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
       with:
-        version: '6.9.*'
+        version: '6.9.2'
         cache: 'true'
         cache-key-prefix: install-qt-action
         dir: 'C:\'
