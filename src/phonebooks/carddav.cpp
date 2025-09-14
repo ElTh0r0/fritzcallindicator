@@ -128,7 +128,7 @@ void CardDAV::extractNumber(const QByteArray &xmlData,
     xml.readNext();
 
     // Search for <card:address-data>
-    if (xml.isStartElement() && xml.name() == "address-data") {
+    if (xml.isStartElement() && xml.name() == QStringLiteral("address-data")) {
       QString vcardData =
           xml.readElementText(QXmlStreamReader::IncludeChildElements);
       QStringList lines = vcardData.split("\n", Qt::SkipEmptyParts);
@@ -138,9 +138,9 @@ void CardDAV::extractNumber(const QByteArray &xmlData,
 
       for (const QString &lineRaw : lines) {
         QString line = lineRaw.trimmed();
-        if (line.startsWith("FN:")) {
+        if (line.startsWith(QStringLiteral("FN:"))) {
           sName = line.mid(3);  // everything after "FN:"
-        } else if (line.startsWith("TEL")) {
+        } else if (line.startsWith(QStringLiteral("TEL"))) {
           telLines << line;
         }
       }
@@ -157,7 +157,7 @@ void CardDAV::extractNumber(const QByteArray &xmlData,
 
           if (!sNumber.isEmpty()) {
             // Type info
-            int typePos = sType.indexOf("TYPE=");
+            int typePos = sType.indexOf(QStringLiteral("TYPE="));
             if (typePos != -1) {
               sType = sType.mid(typePos + 5);  // everything after "TYPE="
             }
