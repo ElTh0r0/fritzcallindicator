@@ -77,19 +77,20 @@ SettingsDialog::SettingsDialog(const QDir sharePath, QObject *pParent)
       format.supportedFileFormats(QMediaFormat::Decode);
   for (const auto fileFormat : supportedFormats) {
     if (fileFormat == QMediaFormat::FileFormat::MP3)
-      m_sListSupportedAudioFormats << "*.mp3";
+      m_sListSupportedAudioFormats << QStringLiteral("*.mp3");
     else if (fileFormat == QMediaFormat::FileFormat::Wave)
-      m_sListSupportedAudioFormats << "*.wav";
+      m_sListSupportedAudioFormats << QStringLiteral("*.wav");
     else if (fileFormat == QMediaFormat::FileFormat::Ogg)
-      m_sListSupportedAudioFormats << "*.ogg" << "*.oga";
+      m_sListSupportedAudioFormats << QStringLiteral("*.ogg")
+                                   << QStringLiteral("*.oga");
     else if (fileFormat == QMediaFormat::FileFormat::AAC)
-      m_sListSupportedAudioFormats << "*.aac";
+      m_sListSupportedAudioFormats << QStringLiteral("*.aac");
     else if (fileFormat == QMediaFormat::FileFormat::FLAC)
-      m_sListSupportedAudioFormats << "*.flac";
+      m_sListSupportedAudioFormats << QStringLiteral("*.flac");
     else if (fileFormat == QMediaFormat::FileFormat::Mpeg4Audio)
-      m_sListSupportedAudioFormats << "*.m4a";
+      m_sListSupportedAudioFormats << QStringLiteral("*.m4a");
     else if (fileFormat == QMediaFormat::FileFormat::WMA)
-      m_sListSupportedAudioFormats << "*.wma";
+      m_sListSupportedAudioFormats << QStringLiteral("*.wma");
   }
 
 #else
@@ -205,9 +206,9 @@ bool SettingsDialog::eventFilter(QObject *pObj, QEvent *pEvent) {
     }
     sFilepath = QFileDialog::getOpenFileName(
         this, tr("Select notification sound for incoming calls"), sFilepath,
-        tr("Supported audio formats") + " (" +
-            m_sListSupportedAudioFormats.join(' ') + ");;" + tr("All files") +
-            " (*.*)");
+        tr("Supported audio formats") + QStringLiteral(" (") +
+            m_sListSupportedAudioFormats.join(' ') + QStringLiteral(");;") +
+            tr("All files") + QStringLiteral(" (*.*)"));
     if (!sFilepath.isEmpty()) {
       m_pUi->lineEditNotification->setText(sFilepath);
     }
