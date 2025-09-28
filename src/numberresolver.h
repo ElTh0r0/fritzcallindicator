@@ -32,7 +32,9 @@
 #include <QMultiHash>
 #include <QObject>
 
+#ifdef FRITZ_USE_ONLINE_RESOLVERS
 #include "onlineresolvers.h"
+#endif
 
 class NumberResolver : public QObject {
   Q_OBJECT
@@ -55,7 +57,10 @@ class NumberResolver : public QObject {
   QHash<QString, QHash<QString, QString>> m_AreaCodes;
   QHash<QString, QString> m_KnownContacts;
   const QChar CSV_SEPARATOR;
+
+#ifdef FRITZ_USE_ONLINE_RESOLVERS
   OnlineResolvers *m_pOnlineResolvers;
+#endif
 };
 
 #endif  // NUMBERRESOLVER_H_

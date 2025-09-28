@@ -374,7 +374,7 @@
         </layout>
        </item>
        <item row="3" column="0" colspan="2">
-        <widget class="Line" name="line_3">
+        <widget class="Line" name="lineCarddav">
          <property name="orientation">
           <enum>Qt::Orientation::Horizontal</enum>
          </property>
@@ -458,7 +458,7 @@
         </layout>
        </item>
        <item row="7" column="0" colspan="2">
-        <widget class="Line" name="line_5">
+        <widget class="Line" name="lineOnlineResolvers">
          <property name="orientation">
           <enum>Qt::Orientation::Horizontal</enum>
          </property>

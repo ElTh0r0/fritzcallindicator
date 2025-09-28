@@ -61,20 +61,24 @@ set(SOURCES
     fritzcallindicator.cpp
     fritzsoap.cpp
     numberresolver.cpp
-    onlineresolvers.cpp
     settings.cpp
     settingsdialog.cpp
 )
+if(FRITZ_USE_ONLINE_RESOLVERS)
+    list(APPEND SOURCES onlineresolvers.cpp)
+endif()
 
 set(HEADERS
     callmonitor.h
     fritzcallindicator.h
     fritzsoap.h
     numberresolver.h
-    onlineresolvers.h
     settings.h
     settingsdialog.h
 )
+if(FRITZ_USE_ONLINE_RESOLVERS)
+    list(APPEND HEADERS onlineresolvers.h)
+endif()
 
 set(FORMS
     settingsdialog.ui
@@ -115,7 +119,9 @@ if(LINUX)
     install(FILES ${CMAKE_SOURCE_DIR}/data/unix/com.github.elth0r0.fritzcallindicator.desktop DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
     install(FILES ${CMAKE_SOURCE_DIR}/data/unix/com.github.elth0r0.fritzcallindicator.metainfo.xml DESTINATION ${CMAKE_INSTALL_DATADIR}/metainfo)
     install(DIRECTORY ${CMAKE_SOURCE_DIR}/data/area_codes DESTINATION ${CMAKE_INSTALL_DATADIR}/fritzcallindicator)
-    install(DIRECTORY ${CMAKE_SOURCE_DIR}/data/online_resolvers DESTINATION ${CMAKE_INSTALL_DATADIR}/fritzcallindicator)
+    if(FRITZ_USE_ONLINE_RESOLVERS)
+        install(DIRECTORY ${CMAKE_SOURCE_DIR}/data/online_resolvers DESTINATION ${CMAKE_INSTALL_DATADIR}/fritzcallindicator)
+    endif()
     install(FILES ${CMAKE_SOURCE_DIR}/data/country_codes.csv DESTINATION ${CMAKE_INSTALL_DATADIR}/fritzcallindicator)
     install(DIRECTORY ${CMAKE_SOURCE_DIR}/icons/hicolor DESTINATION ${CMAKE_INSTALL_DATADIR}/icons)
 #   add_subdirectory(man)

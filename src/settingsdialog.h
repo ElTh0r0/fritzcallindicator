@@ -64,7 +64,9 @@ class SettingsDialog : public QDialog {
   void closeEvent(QCloseEvent *event) override;
 
  private:
+#ifdef FRITZ_USE_ONLINE_RESOLVERS
   void initOnlineResolvers(QDir sharePath);
+#endif
   void initFritzPhonebooks();
   void readSettings();
   auto getThunderbirdProfilePath() -> const QString;
@@ -72,8 +74,10 @@ class SettingsDialog : public QDialog {
   Ui::SettingsDialog *m_pUi;
   QStringListModel *m_sListModel_TbAddressbooks;
   QStringList m_sListEnabledFritzPhoneBooks;
+#ifdef FRITZ_USE_ONLINE_RESOLVERS
   QHash<QString, QString> m_OnlineResolvers;
   QStringList m_sListEnabledOnlineResolvers;
+#endif
 };
 
 #endif  // SETTINGSDIALOG_H_

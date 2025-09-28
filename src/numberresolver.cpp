@@ -44,7 +44,9 @@ NumberResolver::NumberResolver(const QDir &sharePath,
   this->initCountryCodes(sharePath);
   this->initAreaCodes(sharePath);
 
+#ifdef FRITZ_USE_ONLINE_RESOLVERS
   m_pOnlineResolvers = new OnlineResolvers(sharePath);
+#endif
 }
 
 // ----------------------------------------------------------------------------
@@ -197,11 +199,13 @@ auto NumberResolver::resolveNumber(
   }
 
   // Search online
+#ifdef FRITZ_USE_ONLINE_RESOLVERS
   sKnownCaller = m_pOnlineResolvers->searchOnline(
       "0" + sPhoneNumber, sCountryCode, sListEnabledResolvers);
   if (!sKnownCaller.isEmpty()) {
     return sKnownCaller;
   }
+#endif
 
   // Resolve city code
   for (const auto &sCode : m_AreaCodes.value(sCountryCode).keys()) {

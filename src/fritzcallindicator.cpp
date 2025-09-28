@@ -194,8 +194,13 @@ void FritzCallIndicator::onStateChanged(QTcpSocket::SocketState state) {
 void FritzCallIndicator::onIncomingCall(unsigned /* connectionId */,
                                         const QString &sCaller,
                                         const QString &sCallee) {
+#ifdef FRITZ_USE_ONLINE_RESOLVERS
   QString sResolvedCaller = m_pNumberResolver->resolveNumber(
       sCaller.trimmed(), m_settings.getEnabledOnlineResolvers());
+#else
+  QString sResolvedCaller =
+      m_pNumberResolver->resolveNumber(sCaller.trimmed(), QStringList());
+#endif
   QString sResolvedCallee = m_settings.resolveOwnNumber(sCallee.trimmed());
   QString sTitle(tr("Incoming call"));
   if (!sResolvedCallee.isEmpty()) {
@@ -321,7 +326,7 @@ QStringList FritzCallIndicator::getCallHistory() {
     } else if (xml.isEndElement() && xml.name() == QStringLiteral("Call")) {
       if (typeIsOne) {
         if (sName.isEmpty()) {
-#ifdef QT_DEBUG
+#if defined(QT_DEBUG) || !defined(FRITZ_USE_ONLINE_RESOLVERS)
           // Don't use online resolvers during debugging to prevent rate limits
           sName = m_pNumberResolver->resolveNumber(sNumber, QStringList());
 #else

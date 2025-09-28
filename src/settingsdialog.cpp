@@ -56,8 +56,10 @@ SettingsDialog::SettingsDialog(const QDir sharePath, QObject *pParent)
       QHeaderView::Stretch);
   m_pUi->tableCardDav->horizontalHeader()->setSectionResizeMode(
       QHeaderView::Stretch);
+#ifdef FRITZ_USE_ONLINE_RESOLVERS
   m_pUi->tableOnlineResolvers->horizontalHeader()->setSectionResizeMode(
       QHeaderView::Stretch);
+#endif
 
   connect(m_pUi->buttonBox, &QDialogButtonBox::accepted, this,
           &SettingsDialog::accept);
@@ -105,7 +107,13 @@ SettingsDialog::SettingsDialog(const QDir sharePath, QObject *pParent)
       });
 
   this->readSettings();
+#ifdef FRITZ_USE_ONLINE_RESOLVERS
   this->initOnlineResolvers(sharePath);  // After readSettings!
+#else
+  m_pUi->lineOnlineResolvers->hide();
+  m_pUi->lblOnlineResolvers->hide();
+  m_pUi->tableOnlineResolvers->hide();
+#endif
   this->initFritzPhonebooks();
 
   bool bAutostart = Settings().getAutostart();
@@ -130,6 +138,7 @@ void SettingsDialog::showEvent(QShowEvent *pEvent) {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
+#ifdef FRITZ_USE_ONLINE_RESOLVERS
 void SettingsDialog::initOnlineResolvers(QDir sharePath) {
   qDebug() << Q_FUNC_INFO;
 
@@ -167,6 +176,7 @@ void SettingsDialog::initOnlineResolvers(QDir sharePath) {
             confFile.chopped(5);
   }
 }
+#endif
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
@@ -174,7 +184,8 @@ void SettingsDialog::initOnlineResolvers(QDir sharePath) {
 void SettingsDialog::initFritzPhonebooks() {
   qDebug() << Q_FUNC_INFO;
 
-  for (auto sPhonebook : FritzPhonebook::instance()->getPhonebookList()) {
+  for (const auto &sPhonebook :
+       FritzPhonebook::instance()->getPhonebookList()) {
     int row = m_pUi->tableFritzPhonebooks->rowCount();
     m_pUi->tableFritzPhonebooks->insertRow(row);
 
@@ -245,6 +256,7 @@ void SettingsDialog::readSettings() {
     m_pUi->tableCardDav->setItem(i, 2, pwItem);
   }
 
+#ifdef FRITZ_USE_ONLINE_RESOLVERS
   m_sListEnabledOnlineResolvers = settings.getEnabledOnlineResolvers();
   for (int row = 0; row < m_pUi->tableOnlineResolvers->rowCount(); ++row) {
     if (m_sListEnabledOnlineResolvers.contains(m_OnlineResolvers.value(
@@ -254,6 +266,7 @@ void SettingsDialog::readSettings() {
       m_pUi->tableOnlineResolvers->item(row, 0)->setCheckState(Qt::Unchecked);
     }
   }
+#endif
 
   // PhoneNumbers
   uint nMaxOwnNumbers = settings.getMaxOwnNumbers();
@@ -372,6 +385,7 @@ void SettingsDialog::accept() {
     bAddressbookChanged = true;
   }
 
+#ifdef FRITZ_USE_ONLINE_RESOLVERS
   m_sListEnabledOnlineResolvers.clear();
   for (int row = 0; row < m_pUi->tableOnlineResolvers->rowCount(); ++row) {
     if (Qt::Checked ==
@@ -381,6 +395,7 @@ void SettingsDialog::accept() {
     }
   }
   settings.setEnabledOnlineResolvers(m_sListEnabledOnlineResolvers);
+#endif
 
   // PhoneNumbers
   settings.setMaxOwnNumbers(

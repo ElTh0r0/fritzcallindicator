@@ -22,7 +22,12 @@ project(FritzCallIndicator
 )
 set(PROJECT_COPYRIGHT "(C) 2024-present Thorsten Roth")
 
+option(FRITZ_USE_ONLINE_RESOLVERS "Enable online resolvers" ON)
 option(GENERATE_TS "Regenerate translation source files" OFF)
+
+if (FRITZ_USE_ONLINE_RESOLVERS)
+  add_compile_definitions(FRITZ_USE_ONLINE_RESOLVERS)
+endif()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
