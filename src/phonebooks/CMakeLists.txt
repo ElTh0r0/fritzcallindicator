@@ -17,17 +17,21 @@
 string(TOLOWER ${PROJECT_NAME} target_name)
 
 set(HEADERS
-    carddav.h
     fritzphonebook.h
 )
+if(FRITZ_USE_CARDDAV_ADDRESSBOOK)
+    list(APPEND HEADERS carddav.h)
+endif()
 if(FRITZ_USE_THUNDERBIRD_ADDRESSBOOK)
     list(APPEND HEADERS thunderbird.h)
 endif()
 
 set(SOURCES
-    carddav.cpp
     fritzphonebook.cpp
 )
+if(FRITZ_USE_CARDDAV_ADDRESSBOOK)
+    list(APPEND HEADERS carddav.cpp)
+endif()
 if(FRITZ_USE_THUNDERBIRD_ADDRESSBOOK)
     list(APPEND HEADERS thunderbird.cpp)
 endif()

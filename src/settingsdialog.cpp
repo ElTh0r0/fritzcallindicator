@@ -47,21 +47,15 @@ SettingsDialog::SettingsDialog(const QDir sharePath, QObject *pParent)
   m_pUi->setupUi(this);
   m_pUi->tabWidget->setCurrentIndex(0);
 
-  m_pUi->tableOwnNumbers->horizontalHeader()->setSectionResizeMode(
-      QHeaderView::Stretch);
-  m_pUi->tableFritzPhonebooks->horizontalHeader()->setSectionResizeMode(
-      QHeaderView::Stretch);
-  m_pUi->tableCardDav->horizontalHeader()->setSectionResizeMode(
-      QHeaderView::Stretch);
-#ifdef FRITZ_USE_ONLINE_RESOLVERS
-  m_pUi->tableOnlineResolvers->horizontalHeader()->setSectionResizeMode(
-      QHeaderView::Stretch);
-#endif
-
   connect(m_pUi->buttonBox, &QDialogButtonBox::accepted, this,
           &SettingsDialog::accept);
   connect(m_pUi->buttonBox, &QDialogButtonBox::rejected, this,
           &QDialog::reject);
+
+  m_pUi->tableOwnNumbers->horizontalHeader()->setSectionResizeMode(
+      QHeaderView::Stretch);
+  m_pUi->tableFritzPhonebooks->horizontalHeader()->setSectionResizeMode(
+      QHeaderView::Stretch);
 
 #ifdef FRITZ_USE_THUNDERBIRD_ADDRESSBOOK
   m_sListModel_TbAddressbooks = new QStringListModel(this);
@@ -92,10 +86,15 @@ SettingsDialog::SettingsDialog(const QDir sharePath, QObject *pParent)
 #else
   m_pUi->lblTbAddressbooks->hide();
   m_pUi->listView_TbAddressbooks->hide();
+  m_pUi->toolButton_AddTbAddressbook->hide();
+  m_pUi->toolButton_RemoveTbAddressbook->hide();
   delete m_pUi->horizontalLayoutThunderbird;
   m_pUi->lineCarddav->hide();
 #endif
 
+#ifdef FRITZ_USE_CARDDAV_ADDRESSBOOK
+  m_pUi->tableCardDav->horizontalHeader()->setSectionResizeMode(
+      QHeaderView::Stretch);
   connect(m_pUi->toolButton_AddCardDavAddressbook, &QToolButton::clicked,
           [=]() {
             int row = m_pUi->tableCardDav->rowCount();
@@ -112,16 +111,33 @@ SettingsDialog::SettingsDialog(const QDir sharePath, QObject *pParent)
           m_pUi->tableCardDav->removeRow(index.row());
         }
       });
+#else
+  m_pUi->lineCarddav->hide();
+  m_pUi->lblCarddav->hide();
+  m_pUi->tableCardDav->hide();
+  m_pUi->toolButton_AddCardDavAddressbook->hide();
+  m_pUi->toolButton_RemoveCardDavAddressbook->hide();
+  delete m_pUi->horizontalLayoutCardDav;
+  m_pUi->lineOnlineResolvers->hide();
+#endif
 
   this->readSettings();
+  this->initFritzPhonebooks();  // After readSettings!
 #ifdef FRITZ_USE_ONLINE_RESOLVERS
+  m_pUi->tableOnlineResolvers->horizontalHeader()->setSectionResizeMode(
+      QHeaderView::Stretch);
   this->initOnlineResolvers(sharePath);  // After readSettings!
 #else
   m_pUi->lineOnlineResolvers->hide();
   m_pUi->lblOnlineResolvers->hide();
   m_pUi->tableOnlineResolvers->hide();
 #endif
-  this->initFritzPhonebooks();
+
+#if !defined(FRITZ_USE_ONLINE_RESOLVERS) &&        \
+    !defined(FRITZ_USE_THUNDERBIRD_ADDRESSBOOK) && \
+    !defined(FRITZ_USE_CARDDAV_ADDRESSBOOK)
+  m_pUi->tabWidget->removeTab(m_pUi->tabWidget->indexOf(m_pUi->tab_resolver));
+#endif
 
   bool bAutostart = Settings().getAutostart();
   if (bAutostart != Settings().isAutostartEnabled()) {
@@ -247,6 +263,7 @@ void SettingsDialog::readSettings() {
   m_sListModel_TbAddressbooks->setStringList(settings.getTbAddressbooks());
 #endif
 
+#ifdef FRITZ_USE_CARDDAV_ADDRESSBOOK
   static const QStyle *style = QApplication::style();
   static const QChar maskChar = static_cast<QChar>(
       style->styleHint(QStyle::SH_LineEdit_PasswordCharacter));
@@ -264,6 +281,7 @@ void SettingsDialog::readSettings() {
     pwItem->setData(Qt::UserRole, carddav[i].value(QStringLiteral("Password")));
     m_pUi->tableCardDav->setItem(i, 2, pwItem);
   }
+#endif
 
 #ifdef FRITZ_USE_ONLINE_RESOLVERS
   m_sListEnabledOnlineResolvers = settings.getEnabledOnlineResolvers();
@@ -366,6 +384,7 @@ void SettingsDialog::accept() {
   }
 #endif
 
+#ifdef FRITZ_USE_CARDDAV_ADDRESSBOOK
   static const QStyle *style = QApplication::style();
   static const QChar maskChar = static_cast<QChar>(
       style->styleHint(QStyle::SH_LineEdit_PasswordCharacter));
@@ -395,6 +414,7 @@ void SettingsDialog::accept() {
     settings.setCardDavAddressbooks(carddav);
     bAddressbookChanged = true;
   }
+#endif
 
 #ifdef FRITZ_USE_ONLINE_RESOLVERS
   m_sListEnabledOnlineResolvers.clear();

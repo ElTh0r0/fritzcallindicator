@@ -30,8 +30,10 @@
 #include <QDirIterator>
 #include <QMessageBox>
 
-#include "phonebooks/carddav.h"
 #include "phonebooks/fritzphonebook.h"
+#ifdef FRITZ_USE_CARDDAV_ADDRESSBOOK
+#include "phonebooks/carddav.h"
+#endif
 #ifdef FRITZ_USE_THUNDERBIRD_ADDRESSBOOK
 #include "phonebooks/thunderbird.h"
 #endif
@@ -146,10 +148,12 @@ void NumberResolver::readPhonebooks() {
 
   // Merge external addressbooks into contacts list
   m_KnownContacts.insert(FritzPhonebook::instance()->getContacts());
+#ifdef FRITZ_USE_CARDDAV_ADDRESSBOOK
+  m_KnownContacts.insert(CardDAV::instance()->getContacts());
+#endif
 #ifdef FRITZ_USE_THUNDERBIRD_ADDRESSBOOK
   m_KnownContacts.insert(Thunderbird::instance()->getContacts());
 #endif
-  m_KnownContacts.insert(CardDAV::instance()->getContacts());
 }
 
 // ----------------------------------------------------------------------------
