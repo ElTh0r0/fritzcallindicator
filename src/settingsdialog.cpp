@@ -35,6 +35,9 @@
 #include <QSettings>
 #include <QStandardPaths>
 #include <QStringListModel>
+#ifdef FRITZ_USE_NOTIFICATION_SOUND
+#include <QMediaFormat>
+#endif
 
 #include "phonebooks/fritzphonebook.h"
 #include "settings.h"
@@ -56,6 +59,44 @@ SettingsDialog::SettingsDialog(const QDir sharePath, QObject *pParent)
       QHeaderView::Stretch);
   m_pUi->tableFritzPhonebooks->horizontalHeader()->setSectionResizeMode(
       QHeaderView::Stretch);
+
+#ifdef FRITZ_USE_NOTIFICATION_SOUND
+  connect(m_pUi->cbNotificationSound, &QCheckBox::checkStateChanged, [=]() {
+    if (m_pUi->cbNotificationSound->isChecked()) {
+      m_pUi->lineEditNotification->setEnabled(true);
+    } else {
+      m_pUi->lineEditNotification->clear();
+      m_pUi->lineEditNotification->setEnabled(false);
+    }
+  });
+  m_pUi->lineEditNotification->installEventFilter(this);
+
+  // Supported audio formats
+  QMediaFormat format;
+  const QList<QMediaFormat::FileFormat> supportedFormats =
+      format.supportedFileFormats(QMediaFormat::Decode);
+  for (const auto fileFormat : supportedFormats) {
+    if (fileFormat == QMediaFormat::FileFormat::MP3)
+      m_sListSupportedAudioFormats << "*.mp3";
+    else if (fileFormat == QMediaFormat::FileFormat::Wave)
+      m_sListSupportedAudioFormats << "*.wav";
+    else if (fileFormat == QMediaFormat::FileFormat::Ogg)
+      m_sListSupportedAudioFormats << "*.ogg" << "*.oga";
+    else if (fileFormat == QMediaFormat::FileFormat::AAC)
+      m_sListSupportedAudioFormats << "*.aac";
+    else if (fileFormat == QMediaFormat::FileFormat::FLAC)
+      m_sListSupportedAudioFormats << "*.flac";
+    else if (fileFormat == QMediaFormat::FileFormat::Mpeg4Audio)
+      m_sListSupportedAudioFormats << "*.m4a";
+    else if (fileFormat == QMediaFormat::FileFormat::WMA)
+      m_sListSupportedAudioFormats << "*.wma";
+  }
+
+#else
+  m_pUi->lblNotificationSound->hide();
+  m_pUi->cbNotificationSound->hide();
+  m_pUi->lineEditNotification->hide();
+#endif
 
 #ifdef FRITZ_USE_THUNDERBIRD_ADDRESSBOOK
   m_sListModel_TbAddressbooks = new QStringListModel(this);
@@ -153,6 +194,32 @@ SettingsDialog::~SettingsDialog() {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
+#ifdef FRITZ_USE_NOTIFICATION_SOUND
+bool SettingsDialog::eventFilter(QObject *pObj, QEvent *pEvent) {
+  if (m_pUi->cbNotificationSound->isChecked() &&
+      pObj == m_pUi->lineEditNotification &&
+      pEvent->type() == QEvent::MouseButtonPress) {
+    QString sFilepath = m_pUi->lineEditNotification->text().trimmed();
+    if (!sFilepath.isEmpty() && QFileInfo::exists(sFilepath)) {
+      sFilepath = QFileInfo(sFilepath).absolutePath();
+    }
+    sFilepath = QFileDialog::getOpenFileName(
+        this, tr("Select notification sound for incoming calls"), sFilepath,
+        tr("Supported audio formats") + " (" +
+            m_sListSupportedAudioFormats.join(' ') + ");;" + tr("All files") +
+            " (*.*)");
+    if (!sFilepath.isEmpty()) {
+      m_pUi->lineEditNotification->setText(sFilepath);
+    }
+    return true;  // Event was processed
+  }
+  return QObject::eventFilter(pObj, pEvent);
+}
+#endif
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
 void SettingsDialog::showEvent(QShowEvent *pEvent) {
   this->readSettings();
   QDialog::showEvent(pEvent);
@@ -240,6 +307,18 @@ void SettingsDialog::readSettings() {
       settings.getMaxEntriesCallHistory());
   m_pUi->spinBoxMaxDaysOfOldCalls->setValue(settings.getMaxDaysOfOldCalls());
   m_pUi->spinBoxTimeout->setValue(settings.getPopupTimeout());
+#ifdef FRITZ_USE_NOTIFICATION_SOUND
+  QString sSound(settings.getNotificationSound());
+  if (sSound.isEmpty()) {
+    m_pUi->cbNotificationSound->setChecked(false);
+    m_pUi->lineEditNotification->clear();
+    m_pUi->lineEditNotification->setEnabled(false);
+  } else {
+    m_pUi->cbNotificationSound->setChecked(true);
+    m_pUi->lineEditNotification->setText(sSound);
+    m_pUi->lineEditNotification->setEnabled(true);
+  }
+#endif
 
   // FritzBox
   m_pUi->lineEditHost->setText(settings.getHostName());
@@ -346,6 +425,14 @@ void SettingsDialog::accept() {
       m_pUi->spinBoxMaxEntriesCallHistory->value());
   settings.setMaxDaysOfOldCalls(m_pUi->spinBoxMaxDaysOfOldCalls->value());
   settings.setAutostart(m_pUi->cbAutostart->isChecked());
+#ifdef FRITZ_USE_NOTIFICATION_SOUND
+  QString sSound(m_pUi->lineEditNotification->text().trimmed());
+  if (m_pUi->cbNotificationSound->isChecked() && !sSound.isEmpty()) {
+    settings.setNotificationSound(sSound);
+  } else {
+    settings.setNotificationSound("");
+  }
+#endif
 
   // FritzBox
   settings.setHostName(m_pUi->lineEditHost->text().trimmed());

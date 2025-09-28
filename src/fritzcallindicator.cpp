@@ -73,6 +73,13 @@ FritzCallIndicator::FritzCallIndicator(const QDir &sharePath)
 
   m_sListCallHistory = this->getCallHistory();
 
+#ifdef FRITZ_USE_NOTIFICATION_SOUND
+  m_pNotificationSound = new QMediaPlayer;
+  m_pNotificationAudioOutput = new QAudioOutput;
+  m_pNotificationSound->setAudioOutput(m_pNotificationAudioOutput);
+  m_pNotificationAudioOutput->setVolume(100);
+#endif
+
   // 03.11.16 13:17:08;RING;0;03023125222;06990009111;SIP0;
   // m_pCallMonitor->parseAndSignal(
   //    "03.11.16 13:17:08;RING;0;03023125222;06990009111;SIP0;");
@@ -217,6 +224,13 @@ void FritzCallIndicator::onIncomingCall(unsigned /* connectionId */,
         m_sListCallHistory.mid(0, m_settings.getMaxEntriesCallHistory());
   }
 
+#ifdef FRITZ_USE_NOTIFICATION_SOUND
+  QString sSound(m_settings.getNotificationSound());
+  if (!sSound.isEmpty()) {
+    m_pNotificationSound->setSource(sSound);
+    m_pNotificationSound->play();
+  }
+#endif
   this->showMessage(sTitle, tr("Caller: '%1'").arg(sResolvedCaller));
 }
 

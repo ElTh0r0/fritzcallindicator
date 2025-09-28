@@ -29,6 +29,10 @@
 
 #include <QSystemTrayIcon>
 #include <QTranslator>
+#ifdef FRITZ_USE_NOTIFICATION_SOUND
+#include <QAudioOutput>
+#include <QMediaPlayer>
+#endif
 
 #include "settings.h"
 #include "settingsdialog.h"
@@ -89,6 +93,10 @@ class FritzCallIndicator : public QObject {
 
   const QString m_sSharePath;
   QStringList m_sListCallHistory;
+#ifdef FRITZ_USE_NOTIFICATION_SOUND
+  QMediaPlayer *m_pNotificationSound;
+  QAudioOutput *m_pNotificationAudioOutput;
+#endif
 };
 
 #endif  // QT_NO_SYSTEMTRAYICON

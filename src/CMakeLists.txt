@@ -48,10 +48,14 @@ target_link_libraries(fritzcallindicator PRIVATE
     ${QT_MAIN_VERSION}::Core
     ${QT_MAIN_VERSION}::Gui
     ${QT_MAIN_VERSION}::Network
-    ${QT_MAIN_VERSION}::Sql
     ${QT_MAIN_VERSION}::Widgets
     ${QT_MAIN_VERSION}::Xml
 )
+if(FRITZ_USE_NOTIFICATION_SOUND)
+    target_link_libraries(fritzcallindicator PRIVATE
+        ${QT_MAIN_VERSION}::Multimedia
+    )
+endif()
 
 add_subdirectory(phonebooks)
 

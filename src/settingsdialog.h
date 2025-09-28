@@ -60,6 +60,9 @@ class SettingsDialog : public QDialog {
   void changedPhonebooks();
 
  protected:
+#ifdef FRITZ_USE_NOTIFICATION_SOUND
+  bool eventFilter(QObject *pObj, QEvent *pEvent) override;
+#endif
   void showEvent(QShowEvent *pEvent) override;
   void closeEvent(QCloseEvent *event) override;
 
@@ -79,6 +82,9 @@ class SettingsDialog : public QDialog {
 #ifdef FRITZ_USE_ONLINE_RESOLVERS
   QHash<QString, QString> m_OnlineResolvers;
   QStringList m_sListEnabledOnlineResolvers;
+#endif
+#ifdef FRITZ_USE_NOTIFICATION_SOUND
+  QStringList m_sListSupportedAudioFormats;
 #endif
 };
 

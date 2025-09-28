@@ -206,6 +206,26 @@ auto Settings::isAutostartEnabled() -> const bool {
 }
 
 // ----------------------------------------------------------------------------
+
+auto Settings::getNotificationSound() const -> QString {
+  QString sFile(
+      m_settings.value(QStringLiteral("NotificationSound"), "").toString());
+  if (!QFile::exists(sFile)) {
+    sFile.clear();
+  }
+  return sFile;
+}
+
+void Settings::setNotificationSound(const QString &sNotificationSound) {
+  if (QFile::exists(sNotificationSound)) {
+    m_settings.setValue(QStringLiteral("NotificationSound"),
+                        sNotificationSound.trimmed());
+  } else {
+    m_settings.setValue(QStringLiteral("NotificationSound"), "");
+  }
+}
+
+// ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 // FritzBox
 

@@ -24,6 +24,9 @@ if(FRITZ_USE_CARDDAV_ADDRESSBOOK)
 endif()
 if(FRITZ_USE_THUNDERBIRD_ADDRESSBOOK)
     list(APPEND HEADERS thunderbird.h)
+    target_link_libraries(fritzcallindicator PRIVATE
+        ${QT_MAIN_VERSION}::Sql
+    )
 endif()
 
 set(SOURCES

@@ -49,6 +49,8 @@ class Settings : public QObject {
   auto getAutostart() const -> bool;
   void setAutostart(const bool bAutostart);
   auto isAutostartEnabled() -> const bool;
+  auto getNotificationSound() const -> QString;
+  void setNotificationSound(const QString& sNotificationSound);
 
   // FritzBox
   auto getHostName() const -> QString;

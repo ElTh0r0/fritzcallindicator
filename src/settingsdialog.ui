@@ -152,13 +152,30 @@
         </widget>
        </item>
        <item row="9" column="0">
+        <widget class="QLabel" name="lblNotificationSound">
+         <property name="text">
+          <string>Notification sound:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="1">
+        <widget class="QCheckBox" name="cbNotificationSound">
+         <property name="text">
+          <string notr="true"/>
+         </property>
+        </widget>
+       </item>
+       <item row="10" column="0" colspan="2">
+        <widget class="QLineEdit" name="lineEditNotification"/>
+       </item>
+       <item row="11" column="0">
         <widget class="QLabel" name="lblTimeout">
          <property name="text">
           <string>Popup timeout (sec):</string>
          </property>
         </widget>
        </item>
-       <item row="9" column="1">
+       <item row="11" column="1">
         <widget class="QSpinBox" name="spinBoxTimeout">
          <property name="minimum">
           <number>1</number>
@@ -167,7 +184,7 @@
           <number>20</number>
          </property>
          <property name="value">
-          <number>1</number>
+          <number>10</number>
          </property>
         </widget>
        </item>
