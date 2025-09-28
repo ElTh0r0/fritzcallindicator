@@ -344,7 +344,7 @@
         <widget class="QListView" name="listView_TbAddressbooks"/>
        </item>
        <item row="2" column="0" colspan="2">
-        <layout class="QHBoxLayout" name="horizontalLayout">
+        <layout class="QHBoxLayout" name="horizontalLayoutThunderbird">
          <item>
           <widget class="QToolButton" name="toolButton_AddTbAddressbook">
            <property name="toolTip">

@@ -19,13 +19,17 @@ string(TOLOWER ${PROJECT_NAME} target_name)
 set(HEADERS
     carddav.h
     fritzphonebook.h
-    thunderbird.h
 )
+if(FRITZ_USE_THUNDERBIRD_ADDRESSBOOK)
+    list(APPEND HEADERS thunderbird.h)
+endif()
 
 set(SOURCES
     carddav.cpp
     fritzphonebook.cpp
-    thunderbird.cpp
 )
+if(FRITZ_USE_THUNDERBIRD_ADDRESSBOOK)
+    list(APPEND HEADERS thunderbird.cpp)
+endif()
 
 target_sources(${target_name} PRIVATE ${HEADERS} ${SOURCES})

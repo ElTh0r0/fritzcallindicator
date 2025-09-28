@@ -72,8 +72,10 @@ class SettingsDialog : public QDialog {
   auto getThunderbirdProfilePath() -> const QString;
 
   Ui::SettingsDialog *m_pUi;
-  QStringListModel *m_sListModel_TbAddressbooks;
   QStringList m_sListEnabledFritzPhoneBooks;
+#ifdef FRITZ_USE_THUNDERBIRD_ADDRESSBOOK
+  QStringListModel *m_sListModel_TbAddressbooks;
+#endif
 #ifdef FRITZ_USE_ONLINE_RESOLVERS
   QHash<QString, QString> m_OnlineResolvers;
   QStringList m_sListEnabledOnlineResolvers;

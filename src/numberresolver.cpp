@@ -32,7 +32,9 @@
 
 #include "phonebooks/carddav.h"
 #include "phonebooks/fritzphonebook.h"
+#ifdef FRITZ_USE_THUNDERBIRD_ADDRESSBOOK
 #include "phonebooks/thunderbird.h"
+#endif
 
 NumberResolver::NumberResolver(const QDir &sharePath,
                                const QString &sLocalCountryCode,
@@ -143,8 +145,10 @@ void NumberResolver::readPhonebooks() {
   m_KnownContacts.clear();
 
   // Merge external addressbooks into contacts list
-  m_KnownContacts.insert(Thunderbird::instance()->getContacts());
   m_KnownContacts.insert(FritzPhonebook::instance()->getContacts());
+#ifdef FRITZ_USE_THUNDERBIRD_ADDRESSBOOK
+  m_KnownContacts.insert(Thunderbird::instance()->getContacts());
+#endif
   m_KnownContacts.insert(CardDAV::instance()->getContacts());
 }
 

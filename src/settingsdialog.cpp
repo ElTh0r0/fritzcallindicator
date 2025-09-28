@@ -47,9 +47,6 @@ SettingsDialog::SettingsDialog(const QDir sharePath, QObject *pParent)
   m_pUi->setupUi(this);
   m_pUi->tabWidget->setCurrentIndex(0);
 
-  m_sListModel_TbAddressbooks = new QStringListModel(this);
-  m_pUi->listView_TbAddressbooks->setModel(m_sListModel_TbAddressbooks);
-
   m_pUi->tableOwnNumbers->horizontalHeader()->setSectionResizeMode(
       QHeaderView::Stretch);
   m_pUi->tableFritzPhonebooks->horizontalHeader()->setSectionResizeMode(
@@ -65,6 +62,10 @@ SettingsDialog::SettingsDialog(const QDir sharePath, QObject *pParent)
           &SettingsDialog::accept);
   connect(m_pUi->buttonBox, &QDialogButtonBox::rejected, this,
           &QDialog::reject);
+
+#ifdef FRITZ_USE_THUNDERBIRD_ADDRESSBOOK
+  m_sListModel_TbAddressbooks = new QStringListModel(this);
+  m_pUi->listView_TbAddressbooks->setModel(m_sListModel_TbAddressbooks);
 
   connect(m_pUi->toolButton_AddTbAddressbook, &QToolButton::clicked, [=]() {
     QString sFile =
@@ -88,6 +89,12 @@ SettingsDialog::SettingsDialog(const QDir sharePath, QObject *pParent)
       m_sListModel_TbAddressbooks->removeRows(index.row(), 1);
     }
   });
+#else
+  m_pUi->lblTbAddressbooks->hide();
+  m_pUi->listView_TbAddressbooks->hide();
+  delete m_pUi->horizontalLayoutThunderbird;
+  m_pUi->lineCarddav->hide();
+#endif
 
   connect(m_pUi->toolButton_AddCardDavAddressbook, &QToolButton::clicked,
           [=]() {
@@ -235,8 +242,10 @@ void SettingsDialog::readSettings() {
     }
   }
 
-  // NumberResolvers
+// NumberResolvers
+#ifdef FRITZ_USE_THUNDERBIRD_ADDRESSBOOK
   m_sListModel_TbAddressbooks->setStringList(settings.getTbAddressbooks());
+#endif
 
   static const QStyle *style = QApplication::style();
   static const QChar maskChar = static_cast<QChar>(
@@ -348,12 +357,14 @@ void SettingsDialog::accept() {
     bAddressbookChanged = true;
   }
 
-  // NumberResolvers
+// NumberResolvers
+#ifdef FRITZ_USE_THUNDERBIRD_ADDRESSBOOK
   if (settings.getTbAddressbooks() !=
       m_sListModel_TbAddressbooks->stringList()) {
     settings.setTbAddressbooks(m_sListModel_TbAddressbooks->stringList());
     bAddressbookChanged = true;
   }
+#endif
 
   static const QStyle *style = QApplication::style();
   static const QChar maskChar = static_cast<QChar>(

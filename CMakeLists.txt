@@ -23,10 +23,14 @@ project(FritzCallIndicator
 set(PROJECT_COPYRIGHT "(C) 2024-present Thorsten Roth")
 
 option(FRITZ_USE_ONLINE_RESOLVERS "Enable online resolvers" ON)
+option(FRITZ_USE_THUNDERBIRD_ADDRESSBOOK "Enable Thunderbird addressbook" ON)
 option(GENERATE_TS "Regenerate translation source files" OFF)
 
 if (FRITZ_USE_ONLINE_RESOLVERS)
   add_compile_definitions(FRITZ_USE_ONLINE_RESOLVERS)
+endif()
+if (FRITZ_USE_THUNDERBIRD_ADDRESSBOOK)
+  add_compile_definitions(FRITZ_USE_THUNDERBIRD_ADDRESSBOOK)
 endif()
 
 set(CMAKE_CXX_STANDARD 17)
