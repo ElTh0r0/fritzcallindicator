@@ -61,7 +61,12 @@ SettingsDialog::SettingsDialog(const QDir sharePath, QObject *pParent)
       QHeaderView::Stretch);
 
 #ifdef FRITZ_USE_NOTIFICATION_SOUND
+#if QT_VERSION <= QT_VERSION_CHECK(6, 6, 0)
+  connect(m_pUi->cbNotificationSound, &QCheckBox::stateChanged, [=](int state) {
+    Q_UNUSED(state);
+#else
   connect(m_pUi->cbNotificationSound, &QCheckBox::checkStateChanged, [=]() {
+#endif
     if (m_pUi->cbNotificationSound->isChecked()) {
       m_pUi->lineEditNotification->setEnabled(true);
     } else {
