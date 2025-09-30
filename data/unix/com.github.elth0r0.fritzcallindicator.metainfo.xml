@@ -16,8 +16,8 @@
   
   <launchable type="desktop-id">com.github.elth0r0.fritzcallindicator.desktop</launchable>
   
+  <url type="homepage">https://github.com/ElTh0r0/fritzcallindicator</url>
   <url type="bugtracker">https://github.com/ElTh0r0/fritzcallindicator/issues</url>
-  <url type="vcs-browser">https://github.com/ElTh0r0/fritzcallindicator</url>
   
   <developer_name>Thorsten Roth</developer_name>
   
@@ -33,8 +33,29 @@
   </languages>
   
   <releases>
+    <release version="0.8.0" date="2025-10-03">
+      <description>
+        <p>Main changes:</p>
+        <ul>
+          <li>Add option to play a notification sound for incoming calls.</li>
+          <li>Add optional build flags.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="0.7.0" date="2025-09-14">
+      <description>
+        <p>Main changes:</p>
+        <ul>
+          <li>Add CardDAV address book support (e.g. Nextcloud).</li>
+          <li>Add autostart option.</li>
+          <li>Try to resolve numbers from call history.</li>
+          <li>Reorganize code structure.</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.6.0" date="2025-07-26">
       <description>
+        <p>Main changes:</p>
         <ul>
           <li>Add FritzBox call history.</li>
         </ul>
@@ -42,6 +63,7 @@
     </release>
     <release version="0.5.0" date="2025-07-13">
       <description>
+        <p>Main changes:</p>
         <ul>
           <li>Add support for FritzBox phonebooks.</li>
         </ul>
@@ -49,6 +71,7 @@
     </release>
     <release version="0.4.0" date="2025-03-16">
       <description>
+        <p>Main changes:</p>
         <ul>
           <li>Store and show call history.</li>
         </ul>
@@ -56,6 +79,7 @@
     </release>
     <release version="0.3.3" date="2025-03-09">
       <description>
+        <p>Main changes:</p>
         <ul>
           <li>Automatically select Thunderbird profile sub folder at addressbook selection.</li>
         </ul>
@@ -63,6 +87,7 @@
     </release>
     <release version="0.3.2" date="2025-01-13">
       <description>
+        <p>Main changes:</p>
         <ul>
           <li>Improve Thunderbird addressbook add/remove</li>
         </ul>
@@ -70,6 +95,7 @@
     </release>
     <release version="0.3.1" date="2024-11-17">
       <description>
+        <p>Main changes:</p>
         <ul>
           <li>Cppcheck code fixes</li>
         </ul>
@@ -77,6 +103,7 @@
     </release>
     <release version="0.3.0" date="2024-09-06">
       <description>
+        <p>Main changes:</p>
         <ul>
           <li>Add support for online phone number resolvers</li>
         </ul>
@@ -84,6 +111,7 @@
     </release>
     <release version="0.2.0" date="2024-08-03">
       <description>
+        <p>Main changes:</p>
         <ul>
           <li>Add support for Thunderbird phonebooks</li>
         </ul>
