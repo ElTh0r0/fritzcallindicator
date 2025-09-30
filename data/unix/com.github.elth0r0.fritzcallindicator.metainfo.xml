@@ -6,8 +6,8 @@
   <project_license>GPL-3.0-or-later</project_license>
   <name>FritzCallIndicator</name>
   <name xml:lang="de">FritzCallIndicator</name>
-  <summary>FritzBox! call indicator</summary>
-  <summary xml:lang="de">FritzBox! call indicator</summary>
+  <summary>Fritz!Box call indicator</summary>
+  <summary xml:lang="de">Fritz!Box call indicator</summary>
   
   <description>
     <p>Simple call indication through system tray notifocation.</p>
@@ -57,7 +57,7 @@
       <description>
         <p>Main changes:</p>
         <ul>
-          <li>Add FritzBox call history.</li>
+          <li>Add Fritz!Box call history.</li>
         </ul>
       </description>
     </release>
@@ -65,7 +65,7 @@
       <description>
         <p>Main changes:</p>
         <ul>
-          <li>Add support for FritzBox phonebooks.</li>
+          <li>Add support for Fritz!Box phone books.</li>
         </ul>
       </description>
     </release>

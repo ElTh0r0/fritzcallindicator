@@ -48,6 +48,7 @@ jobs:
        copy build\src\FritzCallIndicator.exe FritzCallIndicator\FritzCallIndicator.exe
        windeployqt --release --no-translations --no-opengl-sw FritzCallIndicator\FritzCallIndicator.exe
        copy COPYING FritzCallIndicator\
+       copy packaging\windows\ReadMe.txt FritzCallIndicator\
        copy data\country_codes.csv FritzCallIndicator\data\
        xcopy /i /e /s data\area_codes FritzCallIndicator\data\area_codes\
        xcopy /i /e /s data\online_resolvers FritzCallIndicator\data\online_resolvers\
@@ -56,6 +57,11 @@ jobs:
        del buildnr.txt
        set output_zip=FritzCallIndicator-Windows_%buildnr%.zip
        7z a %output_zip% .\FritzCallIndicator\
+       copy packaging\windows\fritzcallindicator.nsi .
+       copy packaging\windows\removeprevious.nsh .
+       copy icons\fritzcallindicator.ico .
+       makensis fritzcallindicator.nsi
+       ren FritzCallIndicator_Installer.exe FritzCallIndicator-Windows_%buildnr%.exe
 
     - uses: actions/upload-artifact@v4
       with:
