@@ -10,6 +10,7 @@ Build-Depends:
    qt6-tools-dev,
    qt6-tools-dev-tools,
    qt6-l10n-tools,
+   libgl-dev,
    pkg-config,
    dpkg-dev (>= 1.16.1.1)
 Standards-Version: 4.1.4
