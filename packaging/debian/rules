@@ -1,7 +1,5 @@
 #!/usr/bin/make -f
 
-export DEB_DH_DIR=packaging/debian
-
 %:
 	dh $@ --parallel
 
