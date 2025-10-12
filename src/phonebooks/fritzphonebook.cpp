@@ -49,8 +49,6 @@
 #include "../fritzsoap.h"
 #include "../settings.h"
 
-using namespace Qt::StringLiterals;
-
 QString FritzPhonebook::m_sSavepath;
 
 FritzPhonebook::FritzPhonebook(QObject *pParent) : QObject(pParent) {}
