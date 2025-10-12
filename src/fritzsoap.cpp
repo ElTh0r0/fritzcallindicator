@@ -60,14 +60,15 @@ FritzSOAP *FritzSOAP::instance() {
 QString FritzSOAP::sendRequest(const QString &service, const QString &action,
                                const QString &body, const QString &controlUrl) {
   Settings settings;
-  const QUrl url = QUrl(u"http://"_s + settings.getHostName() + u":"_s +
-                        QString::number(settings.getTR064Port()) + controlUrl);
+  const QUrl url =
+      QUrl(QStringLiteral("http://") + settings.getHostName() + ":" +
+           QString::number(settings.getTR064Port()) + controlUrl);
 
   QNetworkRequest request(url);
 
   // 🔐 Authorization
   QString credentials =
-      settings.getFritzUser() + u":"_s + settings.getFritzPassword();
+      settings.getFritzUser() + ":" + settings.getFritzPassword();
   QByteArray auth = "Basic " + credentials.toUtf8().toBase64();
 
   request.setRawHeader("Authorization", auth);
@@ -79,12 +80,11 @@ QString FritzSOAP::sendRequest(const QString &service, const QString &action,
   request.setRawHeader("SOAPACTION",
                        "\"" + service.toUtf8() + "#" + action.toUtf8() + "\"");
 
-  const QString envelope =
-      uR"(<?xml version="1.0" encoding="utf-8"?>
+  const QString envelope = QStringLiteral(
+                               R"(<?xml version="1.0" encoding="utf-8"?>
 <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"
             s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
-  <s:Body>)"_s +
-      body + u"</s:Body></s:Envelope>"_s;
+  <s:Body>)") + body + QStringLiteral("</s:Body></s:Envelope>");
 
   QNetworkAccessManager nam;
 

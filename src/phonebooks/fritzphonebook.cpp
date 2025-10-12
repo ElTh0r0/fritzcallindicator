@@ -78,7 +78,8 @@ auto FritzPhonebook::getContacts() -> QHash<QString, QString> {
 
     if (Settings().getEnabledFritzPhonebooks().contains(i.value())) {
       qDebug() << "Reading FritzBox phonebook:" << i.key() << i.value();
-      QString path = m_sSavepath + u"/phonebook_"_s + i.key() + u".xml"_s;
+      QString path = m_sSavepath + QStringLiteral("/phonebook_") + i.key() +
+                     QStringLiteral(".xml");
       tmpContacts = this->loadFromFile(path, Settings().getCountryCode());
 
       // Merge into contacts list
@@ -95,20 +96,24 @@ auto FritzPhonebook::getContacts() -> QHash<QString, QString> {
 QStringList FritzPhonebook::getPhonebookList() {
   m_Phonebooks.clear();
 
-  const QString body =
-      u"<u:GetPhonebookList xmlns:u=\"urn:dslforum-org:service:X_AVM-DE_OnTel:1\"/>"_s;
+  const QString body = QStringLiteral(
+      "<u:GetPhonebookList "
+      "xmlns:u=\"urn:dslforum-org:service:X_AVM-DE_OnTel:1\"/>");
 
   const QString response = FritzSOAP::instance()->sendRequest(
-      u"urn:dslforum-org:service:X_AVM-DE_OnTel:1"_s, u"GetPhonebookList"_s,
-      body, u"/upnp/control/x_contact"_s);
+      QStringLiteral("urn:dslforum-org:service:X_AVM-DE_OnTel:1"),
+      QStringLiteral("GetPhonebookList"), body,
+      QStringLiteral("/upnp/control/x_contact"));
 
   QStringList phonebookIDs;
   QXmlStreamReader xml(response);
   while (!xml.atEnd()) {
     xml.readNext();
-    if (xml.isStartElement() && xml.name() == u"NewPhonebookList"_s) {
+    if (xml.isStartElement() &&
+        xml.name() == QStringLiteral("NewPhonebookList")) {
       phonebookIDs =
           xml.readElementText().split(QStringLiteral(","), Qt::SkipEmptyParts);
+      break;
     }
   }
 
@@ -164,14 +169,15 @@ bool FritzPhonebook::downloadPhonebook(int id, const QUrl &url) {
   /*
   QString baseDir =
       QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) +
-      u"/phonebooks"_s;
+      QStringLiteral("/phonebooks");
   QDir().mkpath(baseDir);
   QString filePath =
-      baseDir + u"/phonebook_"_s + QString::number(id) + u".xml"_s;
+      baseDir + QStringLiteral("/phonebook_") + QString::number(id) +
+  QStringLiteral(".xml");
   */
   QDir().mkpath(m_sSavepath);
-  QString filePath =
-      m_sSavepath + u"/phonebook_"_s + QString::number(id) + u".xml"_s;
+  QString filePath = m_sSavepath + QStringLiteral("/phonebook_") +
+                     QString::number(id) + QStringLiteral(".xml");
 
   QFile file(filePath);
   if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
@@ -191,15 +197,19 @@ bool FritzPhonebook::downloadPhonebook(int id, const QUrl &url) {
 
 QStringList FritzPhonebook::getPhonebookUrlAndName(int phonebookId) {
   const QString body =
-      u"<u:GetPhonebook xmlns:u=\"urn:dslforum-org:service:X_AVM-DE_OnTel:1\">"
-      u"<NewPhonebookID>"_s +
+      QStringLiteral(
+          "<u:GetPhonebook "
+          "xmlns:u=\"urn:dslforum-org:service:X_AVM-DE_OnTel:1\">"
+          "<NewPhonebookID>") +
       QString::number(phonebookId) +
-      u"</NewPhonebookID>"
-      u"</u:GetPhonebook>"_s;
+      QStringLiteral(
+          "</NewPhonebookID>"
+          "</u:GetPhonebook>");
 
   const QString response = FritzSOAP::instance()->sendRequest(
-      u"urn:dslforum-org:service:X_AVM-DE_OnTel:1"_s, u"GetPhonebook"_s, body,
-      u"/upnp/control/x_contact"_s);
+      QStringLiteral("urn:dslforum-org:service:X_AVM-DE_OnTel:1"),
+      QStringLiteral("GetPhonebook"), body,
+      QStringLiteral("/upnp/control/x_contact"));
 
   if (response.isEmpty()) {
     qWarning() << "Empty SOAP response for GetPhonebook";
@@ -213,10 +223,12 @@ QStringList FritzPhonebook::getPhonebookUrlAndName(int phonebookId) {
   // qDebug() << response;
   while (!xml.atEnd()) {
     xml.readNext();
-    if (xml.isStartElement() && xml.name() == u"NewPhonebookURL") {
+    if (xml.isStartElement() &&
+        xml.name() == QStringLiteral("NewPhonebookURL")) {
       sUrl = xml.readElementText().trimmed();
     }
-    if (xml.isStartElement() && xml.name() == u"NewPhonebookName") {
+    if (xml.isStartElement() &&
+        xml.name() == QStringLiteral("NewPhonebookName")) {
       sName = xml.readElementText().trimmed();
     }
   }
@@ -253,49 +265,52 @@ QHash<QString, QString> FritzPhonebook::loadFromFile(
 
   file.close();
 
-  QDomNodeList contacts = doc.elementsByTagName(u"contact"_s);
+  QDomNodeList contacts = doc.elementsByTagName(QStringLiteral("contact"));
   for (int i = 0; i < contacts.count(); ++i) {
     QDomElement contact = contacts.at(i).toElement();
     QString name;
 
-    QDomElement person = contact.firstChildElement(u"person"_s);
+    QDomElement person = contact.firstChildElement(QStringLiteral("person"));
     if (!person.isNull()) {
-      QDomElement realNameElement = person.firstChildElement(u"realName"_s);
+      QDomElement realNameElement =
+          person.firstChildElement(QStringLiteral("realName"));
       if (!realNameElement.isNull()) {
         name = realNameElement.text().trimmed();
       }
     }
 
-    QDomNodeList telList = contact.elementsByTagName(u"number"_s);
+    QDomNodeList telList = contact.elementsByTagName(QStringLiteral("number"));
     for (int j = 0; j < telList.count(); ++j) {
       QDomElement numberElement = telList.at(j).toElement();
       QString raw = numberElement.text().trimmed();
       QString normalized = normalizeNumber(raw, countryCode);
-      QString type = numberElement.attribute(u"type"_s, "").trimmed().toLower();
+      QString type = numberElement.attribute(QStringLiteral("type"), "")
+                         .trimmed()
+                         .toLower();
 
-      if (name.startsWith(u"SPAM"_s)) {
+      if (name.startsWith(QStringLiteral("SPAM"))) {
         name = tr("SPAM CALL") + " (" + normalized + ")";
         type.clear();
       } else {
-        if (type == u"home"_s) {
+        if (type == QStringLiteral("home")) {
           type = " (" + tr("Home") + ")";
         }
-        if (type == u"work"_s) {
+        if (type == QStringLiteral("work")) {
           type = " (" + tr("Work") + ")";
         }
-        if (type == u"mobile"_s) {
+        if (type == QStringLiteral("mobile")) {
           type = " (" + tr("Cell") + ")";
         }
-        if (type == u"fax"_s) {
+        if (type == QStringLiteral("fax")) {
           type = " (" + tr("Fax") + ")";
         }
-        if (type == u"fax_work"_s) {
+        if (type == QStringLiteral("fax_work")) {
           type = " (" + tr("Fax") + ")";
         }
-        if (type == u"other"_s) {
+        if (type == QStringLiteral("other")) {
           type = " (" + tr("Other") + ")";
         }
-        if (type == u"intern"_s) {
+        if (type == QStringLiteral("intern")) {
           type = " (" + tr("Intern") + ")";
         }
       }
@@ -323,7 +338,7 @@ QString FritzPhonebook::normalizeNumber(QString number,
   }
 
   // Cleanup number (remove spaces, '-', '(', ')', '/')
-  number.remove(QRegularExpression(u"[\\s\\-\\(\\)/]"_s));
+  number.remove(QRegularExpression(QStringLiteral("[\\s\\-\\(\\)/]")));
 
   return number;
 }

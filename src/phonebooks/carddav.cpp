@@ -131,7 +131,7 @@ void CardDAV::extractNumber(const QByteArray &xmlData,
     if (xml.isStartElement() && xml.name() == QStringLiteral("address-data")) {
       QString vcardData =
           xml.readElementText(QXmlStreamReader::IncludeChildElements);
-      QStringList lines = vcardData.split("\n", Qt::SkipEmptyParts);
+      const QStringList lines = vcardData.split("\n", Qt::SkipEmptyParts);
 
       QString sName;
       QStringList telLines;
