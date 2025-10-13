@@ -31,8 +31,9 @@ In addition, FritzCallIndicator has the following features:
   * TR-064 communicates over TCP ports 49000 and 49443, which both should be allowed
 
 ## Installation
+* [Builds for Debian, Fedora, openSUSE](http://software.opensuse.org/download.html?project=home%3AElThoro&package=fritzcallindicator)
 * [Arch AUR](https://aur.archlinux.org/packages/fritzcallindicator/)
-* Further options coming soon!
+* Ubuntu PPA and Windows builds coming soon!
 
 ## Build instructions
 * FritzCallIndicator can be compiled with Qt >= 6.2

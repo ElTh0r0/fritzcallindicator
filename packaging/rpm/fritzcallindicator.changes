@@ -1,0 +1,57 @@
+-------------------------------------------------------------------
+Sun Sep 14 16:55:00 UTC 2025 - elthoro@gmx.de 0.7.0
+
+- Add CardDAV address book support (e.g. Nextcloud)
+- Add autostart option
+- Try to resolve numbers from call history
+- Reorganize code structure
+
+-------------------------------------------------------------------
+Sat Jul 26 15:19:00 UTC 2025 - elthoro@gmx.de 0.6.0
+
+- Add Fritz!Box call history
+
+-------------------------------------------------------------------
+Sun Jul 13 16:04:00 UTC 2025 - elthoro@gmx.de 0.5.0
+
+- Add support for Fritz!Box phone books
+- Handle suppressed number
+
+-------------------------------------------------------------------
+Sun Mar 16 16:54:00 UTC 2025 - elthoro@gmx.de 0.4.0
+
+- Store and show call history
+- Switch to cmake
+
+-------------------------------------------------------------------
+Sun Mar 09 17:47:00 UTC 2025 - elthoro@gmx.de 0.3.3
+
+- Automatically select Thunderbird profile folder at address book selection
+
+-------------------------------------------------------------------
+Mon Jan 13 17:26:00 UTC 2025 - elthoro@gmx.de 0.3.2
+
+- Improve Thunderbird address book add/remove
+
+-------------------------------------------------------------------
+Sun Nov 17 17:12:00 UTC 2024 - elthoro@gmx.de 0.3.1
+
+- Cppcheck fixes
+
+-------------------------------------------------------------------
+Fri Sep 06 14:33:00 UTC 2024 - elthoro@gmx.de 0.3.0
+
+- Add support for online phone number resolvers
+- Add Thunderbird address books to settings dialog
+
+-------------------------------------------------------------------
+Sat Aug 03 13:59:00 UTC 2024 - elthoro@gmx.de 0.2.0
+
+- Add support for Thunderbird address books
+- Initial number resolver based on country/area codes
+- Possibility to distinguish different own numbers
+
+-------------------------------------------------------------------
+Sun Apr 14 12:44:00 UTC 2024 - elthoro@gmx.de 0.1.0
+
+- Initial pre-release
