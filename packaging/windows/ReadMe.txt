@@ -10,7 +10,7 @@ Show taskbar notifications for incoming calls from the Fritz!Box
 Prepare your Fritz!Box
 ----------------------
 
-* Enable TR-064 protocol (required for phonebook and call histroy access):
+* Enable TR-064 protocol (required for phone book and call history access):
   * Log into the Fritz!Box web interface (usually at http://fritz.box)
   * Go to Home Network -> Network -> Network Settings, on the bottom of the page go to 'Advanced network settings'
   * On tab 'Home network shares' enable the option 'Allow access for applications' (this activates TR-064)
@@ -21,14 +21,19 @@ Prepare your Fritz!Box
 * Enable real-time call monitoring:
   * Call the code #96*5* from a telephone connected to the Fritz!Box (either directly or via DECT base)
   * A confirmation tone should signal successful activation of call monitoring
-  * Alternatively, enable the callmonitor via Fritz!Box internal phonebook by creating entries with the numbers #96*5*
+  * Alternatively, enable the callmonitor via Fritz!Box internal phone book by creating entries with the numbers #96*5*
   * (If it shall be deactivated later again, dial #96*4*)
 * After enabling the above, restart the Fritz!Box under System -> Backup -> Restart to activate changes
 * Firewall or security software
   * Ensure the TCP port 1012 (used by call monitor) is allowed
   * TR-064 communicates over TCP ports 49000 and 49443, which both should be allowed
 
-  
+
+Settings
+--------
+See Wiki on GitHub: https://github.com/ElTh0r0/fritzcallindicator/wiki
+
+
 Translations
 ------------
 
