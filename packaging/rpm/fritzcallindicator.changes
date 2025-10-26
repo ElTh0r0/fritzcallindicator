@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Sun Oct 26 13:58:00 UTC 2025 - elthoro@gmx.de 0.8.0
+
+- Add option to play a notification sound for incoming calls.
+- Add optional build flags.
+
+-------------------------------------------------------------------
 Sun Sep 14 16:55:00 UTC 2025 - elthoro@gmx.de 0.7.0
 
 - Add CardDAV address book support (e.g. Nextcloud)

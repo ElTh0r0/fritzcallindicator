@@ -18,7 +18,7 @@
 
 Name:           fritzcallindicator
 Summary:        Fritz!Box call indicator
-Version:        0.7.0
+Version:        0.8.0
 Release:        1
 License:        GPL-3.0+
 URL:            https://github.com/ElTh0r0/fritzcallindicator

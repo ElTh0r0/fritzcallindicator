@@ -31,23 +31,24 @@ In addition, FritzCallIndicator has the following features:
   * TR-064 communicates over TCP ports 49000 and 49443, which both should be allowed
 
 ## Installation
+* [Build for Windows](https://github.com/ElTh0r0/fritzcallindicator/releases/latest)
+* [Ubuntu PPA](https://launchpad.net/~elthoro/+archive/fritzcallindicator)
 * [Builds for Debian, Fedora, openSUSE](http://software.opensuse.org/download.html?project=home%3AElThoro&package=fritzcallindicator)
 * [Arch AUR](https://aur.archlinux.org/packages/fritzcallindicator/)
-* Ubuntu PPA and Windows builds coming soon!
 
 ## Build instructions
 * FritzCallIndicator can be compiled with Qt >= 6.2
-* Besides the Qt Essential modules, the following Add-On modules are (optionally) required:
+* Besides the Qt Essential modules and Qt **XML**, the following Add-On modules are (optionally) required:
   * If the Thunderbird addressbook integration shall be used, the Qt **SQL** module is required
   * If a notification sound shall be played during an incoming call, the Qt **Multimedia** module is required
 
 ### cmake
 Adjust CMAKE_PREFIX_PATH according to your Qt installation. Optionally the following options can be changed (all are enabled by default):
 
-* FRITZ_USE_ONLINE_RESOLVERS - Enable online resolvers
-* FRITZ_USE_THUNDERBIRD_ADDRESSBOOK - Enable Thunderbird addressbook
-* FRITZ_USE_CARDDAV_ADDRESSBOOK - Enable CardDAV addressbook
-* FRITZ_USE_NOTIFICATION_SOUND - Enable notification sound
+* `FRITZ_USE_ONLINE_RESOLVERS` - Enable online resolvers
+* `FRITZ_USE_THUNDERBIRD_ADDRESSBOOK` - Enable Thunderbird addressbook
+* `FRITZ_USE_CARDDAV_ADDRESSBOOK` - Enable CardDAV addressbook
+* `FRITZ_USE_NOTIFICATION_SOUND` - Enable notification sound
 
 ```
 cmake -B build-cmake -DCMAKE_PREFIX_PATH=/usr/include/qt6

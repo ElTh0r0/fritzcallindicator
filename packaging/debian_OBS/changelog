@@ -1,3 +1,11 @@
+fritzcallindicator (0.8.0-0) unstable; urgency=low
+
+  [ Thorsten Roth ]
+  * Add option to play a notification sound for incoming calls.
+  * Add optional build flags.
+
+ -- Thorsten Roth <elthoro@gmx.de>  Sun, 26 Oct 2025 13:58:00 +0200
+
 fritzcallindicator (0.7.0-0) unstable; urgency=low
 
   [ Thorsten Roth ]

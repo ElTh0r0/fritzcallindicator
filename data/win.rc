@@ -1,8 +1,8 @@
 IDI_ICON1   ICON    DISCARDABLE    "../icons/fritzcallindicator.ico"
 
 1 VERSIONINFO
-    FILEVERSION    0,7,0,0
-    PRODUCTVERSION 0,7,0,0
+    FILEVERSION    0,8,0,0
+    PRODUCTVERSION 0,8,0,0
 {
     BLOCK "StringFileInfo"
     {
@@ -13,8 +13,8 @@ IDI_ICON1   ICON    DISCARDABLE    "../icons/fritzcallindicator.ico"
             VALUE "LegalCopyright",     "(c) 2024-present Thorsten Roth\0"
             VALUE "OriginalFilename",   "FritzCallIndicator.exe\0"
             VALUE "ProductName",        "FritzCallIndicator\0"
-            VALUE "ProductVersion",     "0.7.0.0\0"
-            VALUE "FileVersion",        "0.7.0.0\0"
+            VALUE "ProductVersion",     "0.8.0.0\0"
+            VALUE "FileVersion",        "0.8.0.0\0"
         }
     }
     BLOCK "VarFileInfo"
