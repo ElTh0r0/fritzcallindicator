@@ -48,7 +48,7 @@ class Settings : public QObject {
   void setMaxEntriesCallHistory(const uint nMaxEntries);
   auto getAutostart() const -> bool;
   void setAutostart(const bool bAutostart);
-  auto isAutostartEnabled() -> const bool;
+  auto isAutostartEnabled() const -> bool;
   auto getNotificationSound() const -> QString;
   void setNotificationSound(const QString& sNotificationSound);
 

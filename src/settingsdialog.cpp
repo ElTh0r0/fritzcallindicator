@@ -61,7 +61,7 @@ SettingsDialog::SettingsDialog(const QDir sharePath, QObject *pParent)
       QHeaderView::Stretch);
 
 #ifdef FRITZ_USE_NOTIFICATION_SOUND
-#if QT_VERSION <= QT_VERSION_CHECK(6, 6, 0)
+#if QT_VERSION < QT_VERSION_CHECK(6, 7, 0)
   connect(m_pUi->cbNotificationSound, &QCheckBox::stateChanged, [=](int state) {
     Q_UNUSED(state);
 #else
@@ -385,7 +385,7 @@ void SettingsDialog::readSettings() {
   QMap<QString, QString> ownNumbers = settings.getOwnNumbers();
 
   // Fill table with own numbers
-  int row = 0;
+  uint row = 0;
   m_pUi->tableOwnNumbers->clearContents();
   m_pUi->tableOwnNumbers->model()->removeRows(
       0, m_pUi->tableOwnNumbers->rowCount());

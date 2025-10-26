@@ -185,7 +185,7 @@ void Settings::setAutostart(const bool bAutostart) {
 #endif
 }
 
-auto Settings::isAutostartEnabled() -> const bool {
+auto Settings::isAutostartEnabled() const -> bool {
   bool bEnabled = false;
 
 #if defined(Q_OS_LINUX) || defined(Q_OS_UNIX)
