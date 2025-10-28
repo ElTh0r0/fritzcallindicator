@@ -5,10 +5,16 @@
         <file>icons/dark/png/application-exit.png</file>
         <file>icons/dark/png/configure.png</file>
         <file>icons/dark/png/help-about.png</file>
+        <file>icons/dark/png/list-add.png</file>
+        <file>icons/dark/png/list-remove.png</file>
+        <file>icons/dark/png/view-history.png</file>
         <file>icons/light/index.theme</file>
         <file>icons/light/png/application-exit.png</file>
         <file>icons/light/png/configure.png</file>
         <file>icons/light/png/help-about.png</file>
+        <file>icons/light/png/list-add.png</file>
+        <file>icons/light/png/list-remove.png</file>
+        <file>icons/light/png/view-history.png</file>
         <file>icons/tray/call-start_16_dark.png</file>
         <file>icons/tray/call-start_22_dark.png</file>
         <file>icons/tray/call-start_16_light.png</file>

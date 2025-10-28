@@ -370,9 +370,6 @@
            <property name="text">
             <string notr="true"/>
            </property>
-           <property name="icon">
-            <iconset theme="QIcon::ThemeIcon::ListAdd"/>
-           </property>
           </widget>
          </item>
          <item>
@@ -382,9 +379,6 @@
            </property>
            <property name="text">
             <string notr="true"/>
-           </property>
-           <property name="icon">
-            <iconset theme="QIcon::ThemeIcon::ListRemove"/>
            </property>
           </widget>
          </item>
@@ -454,9 +448,6 @@
            <property name="text">
             <string notr="true"/>
            </property>
-           <property name="icon">
-            <iconset theme="QIcon::ThemeIcon::ListAdd"/>
-           </property>
           </widget>
          </item>
          <item>
@@ -466,9 +457,6 @@
            </property>
            <property name="text">
             <string notr="true"/>
-           </property>
-           <property name="icon">
-            <iconset theme="QIcon::ThemeIcon::ListRemove"/>
            </property>
           </widget>
          </item>

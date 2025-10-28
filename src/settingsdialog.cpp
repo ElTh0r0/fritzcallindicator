@@ -108,6 +108,10 @@ SettingsDialog::SettingsDialog(
 #ifdef FRITZ_USE_THUNDERBIRD_ADDRESSBOOK
   m_sListModel_TbAddressbooks = new QStringListModel(this);
   m_pUi->listView_TbAddressbooks->setModel(m_sListModel_TbAddressbooks);
+  m_pUi->toolButton_AddTbAddressbook->setIcon(
+      QIcon::fromTheme(QStringLiteral("list-add")));
+  m_pUi->toolButton_RemoveTbAddressbook->setIcon(
+      QIcon::fromTheme(QStringLiteral("list-remove")));
 
   connect(m_pUi->toolButton_AddTbAddressbook, &QToolButton::clicked, [=]() {
     QString sFile =
@@ -143,6 +147,11 @@ SettingsDialog::SettingsDialog(
 #ifdef FRITZ_USE_CARDDAV_ADDRESSBOOK
   m_pUi->tableCardDav->horizontalHeader()->setSectionResizeMode(
       QHeaderView::Stretch);
+  m_pUi->toolButton_AddCardDavAddressbook->setIcon(
+      QIcon::fromTheme(QStringLiteral("list-add")));
+  m_pUi->toolButton_RemoveCardDavAddressbook->setIcon(
+      QIcon::fromTheme(QStringLiteral("list-remove")));
+
   connect(m_pUi->toolButton_AddCardDavAddressbook, &QToolButton::clicked,
           [=]() {
             int row = m_pUi->tableCardDav->rowCount();
