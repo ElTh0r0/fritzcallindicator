@@ -6,6 +6,7 @@ FritzCallIndicator displays a notification pop-up in the taskbar for incoming ca
 In addition, FritzCallIndicator has the following features:
 
 * Several options to resolve the number of the incoming call:
+  * Fritz!Box phone book
   * Thunderbird address books
   * CardDAV address books (e.g. from Nextcloud)
   * Online telecommunications directories to reverse lookup the number of the incoming caller

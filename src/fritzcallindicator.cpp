@@ -44,15 +44,16 @@
 FritzCallIndicator::FritzCallIndicator(const QDir &sharePath)
     : m_sSharePath(sharePath.absolutePath()) {
   qDebug() << Q_FUNC_INFO;
-  m_pSettingsDialog = new SettingsDialog(m_sSharePath);
+  m_pNumberResolver =
+      new NumberResolver(m_sSharePath, m_settings.getCountryCode(), this);
+  m_pSettingsDialog =
+      new SettingsDialog(m_pNumberResolver->getAvailableResolvers());
   this->loadTranslation(m_settings.getLanguage());
 
   this->createActions();
   this->createTrayIcon();
   m_pTrayIcon->show();
 
-  m_pNumberResolver =
-      new NumberResolver(m_sSharePath, m_settings.getCountryCode(), this);
   connect(m_pSettingsDialog, &SettingsDialog::changedPhonebooks,
           m_pNumberResolver, &NumberResolver::readPhonebooks);
   m_pNumberResolver->readPhonebooks();

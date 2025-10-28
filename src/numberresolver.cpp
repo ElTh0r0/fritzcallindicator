@@ -233,3 +233,13 @@ auto NumberResolver::resolveNumber(
   return "+" + sCountryCode + " " + sCityCode + " " + sPhoneNumber + " (" +
          sCountryName + ": " + sCityName + ")";
 }
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+auto NumberResolver::getAvailableResolvers() const -> QHash<QString, QString> {
+#ifdef FRITZ_USE_ONLINE_RESOLVERS
+  return m_pOnlineResolvers->getAvailableResolvers();
+#endif
+  return QHash<QString, QString>();
+}

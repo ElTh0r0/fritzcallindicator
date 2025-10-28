@@ -38,12 +38,14 @@ class OnlineResolvers : public QObject {
   explicit OnlineResolvers(QDir sharePath, QObject *pParent = nullptr);
   auto searchOnline(const QString &sNumber, const QString &sCountryCode,
                     const QStringList &sListEnabledResolvers) -> QString;
+  auto getAvailableResolvers() const -> QHash<QString, QString>;
 
  private:
   auto parseReply(const QString &sReply,
                   const QHash<QString, QString> &resolver) -> QString;
 
   QHash<QString, QHash<QString, QString>> m_Resolvers;
+  QHash<QString, QString> m_ResolverList;
   QNetworkAccessManager *m_pNwManager;
 };
 

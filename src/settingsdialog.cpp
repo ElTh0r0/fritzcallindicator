@@ -43,7 +43,8 @@
 #include "settings.h"
 #include "ui_settingsdialog.h"
 
-SettingsDialog::SettingsDialog(const QDir sharePath, QObject *pParent)
+SettingsDialog::SettingsDialog(
+    const QHash<QString, QString> &availableOnlineResolvers, QObject *pParent)
     : m_pUi(new Ui::SettingsDialog()) {
   Q_UNUSED(pParent)
   qDebug() << Q_FUNC_INFO;
@@ -173,7 +174,7 @@ SettingsDialog::SettingsDialog(const QDir sharePath, QObject *pParent)
 #ifdef FRITZ_USE_ONLINE_RESOLVERS
   m_pUi->tableOnlineResolvers->horizontalHeader()->setSectionResizeMode(
       QHeaderView::Stretch);
-  this->initOnlineResolvers(sharePath);  // After readSettings!
+  this->initOnlineResolvers(availableOnlineResolvers);  // After readSettings!
 #else
   m_pUi->lineOnlineResolvers->hide();
   m_pUi->lblOnlineResolvers->hide();
@@ -235,41 +236,36 @@ void SettingsDialog::showEvent(QShowEvent *pEvent) {
 // ----------------------------------------------------------------------------
 
 #ifdef FRITZ_USE_ONLINE_RESOLVERS
-void SettingsDialog::initOnlineResolvers(QDir sharePath) {
+void SettingsDialog::initOnlineResolvers(
+    const QHash<QString, QString> &availableOnlineResolvers) {
   qDebug() << Q_FUNC_INFO;
 
-  if (!sharePath.cd(QStringLiteral("online_resolvers"))) {
-    qWarning() << "Subfolder 'online_resolvers' not found!";
-  }
-  const QStringList resolverFiles =
-      sharePath.entryList(QStringList() << QStringLiteral("*.conf"),
-                          QDir::Files | QDir::NoDotAndDotDot, QDir::Name);
-  for (const auto &confFile : resolverFiles) {
-    QSettings resolver(sharePath.absoluteFilePath(confFile),
-                       QSettings::IniFormat);
+  for (auto it = availableOnlineResolvers.constBegin();
+       it != availableOnlineResolvers.constEnd(); ++it) {
+    QStringList sListValues = it.value().split("||");
+    if (sListValues.size() != 2) {
+      continue;
+    }
 
     int row = m_pUi->tableOnlineResolvers->rowCount();
     m_pUi->tableOnlineResolvers->insertRow(row);
 
     QTableWidgetItem *itemEnabled = new QTableWidgetItem();
     itemEnabled->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
-    if (m_sListEnabledOnlineResolvers.contains(confFile.chopped(5))) {
+    if (m_sListEnabledOnlineResolvers.contains(it.key())) {
       itemEnabled->setCheckState(Qt::Checked);
     } else {
       itemEnabled->setCheckState(Qt::Unchecked);
     }
 
-    QTableWidgetItem *itemService = new QTableWidgetItem(
-        resolver.value(QStringLiteral("Service"), "").toString().trimmed());
-    QTableWidgetItem *itemCountry = new QTableWidgetItem(
-        resolver.value(QStringLiteral("CountryCode"), "").toString().trimmed());
+    QTableWidgetItem *itemService =
+        new QTableWidgetItem(sListValues.at(0).trimmed());
+    QTableWidgetItem *itemCountry =
+        new QTableWidgetItem(sListValues.at(1).trimmed());
     m_pUi->tableOnlineResolvers->setItem(row, 0, itemEnabled);
     m_pUi->tableOnlineResolvers->setItem(row, 1, itemService);
     m_pUi->tableOnlineResolvers->setItem(row, 2, itemCountry);
-    // chopped(5) = "remove" last 5 characters (.conf) and return the result
-    m_OnlineResolvers
-        [resolver.value(QStringLiteral("Service"), "").toString().trimmed()] =
-            confFile.chopped(5);
+    m_OnlineResolvers[sListValues.at(0).trimmed()] = it.key();
   }
 }
 #endif

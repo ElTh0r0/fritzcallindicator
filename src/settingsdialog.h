@@ -45,7 +45,9 @@ class SettingsDialog : public QDialog {
   Q_OBJECT
 
  public:
-  explicit SettingsDialog(const QDir sharePath, QObject *pParent = nullptr);
+  explicit SettingsDialog(
+      const QHash<QString, QString> &availableOnlineResolvers,
+      QObject *pParent = nullptr);
   virtual ~SettingsDialog();
 
   void translateUi();
@@ -68,7 +70,8 @@ class SettingsDialog : public QDialog {
 
  private:
 #ifdef FRITZ_USE_ONLINE_RESOLVERS
-  void initOnlineResolvers(QDir sharePath);
+  void initOnlineResolvers(
+      const QHash<QString, QString> &availableOnlineResolvers);
 #endif
   void initFritzPhonebooks();
   void readSettings();

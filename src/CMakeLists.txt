@@ -44,6 +44,11 @@ target_compile_definitions(fritzcallindicator
         $<$<CONFIG:DEBUG>:QT_DISABLE_DEPRECATED_BEFORE=0x060900>
 )
 
+target_compile_options(fritzcallindicator
+    PRIVATE
+        $<$<CONFIG:DEBUG>:-Wall -Wextra -pedantic>
+)
+
 target_link_libraries(fritzcallindicator PRIVATE
     ${QT_MAIN_VERSION}::Core
     ${QT_MAIN_VERSION}::Gui

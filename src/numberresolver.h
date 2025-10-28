@@ -44,6 +44,7 @@ class NumberResolver : public QObject {
                           QObject *pParent = nullptr);
   auto resolveNumber(const QString &sNumber,
                      const QStringList &sListEnabledResolvers) const -> QString;
+  auto getAvailableResolvers() const -> QHash<QString, QString>;
 
  public slots:
   void readPhonebooks();
