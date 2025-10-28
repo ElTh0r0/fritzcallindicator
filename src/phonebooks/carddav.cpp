@@ -146,7 +146,7 @@ void CardDAV::extractNumber(const QByteArray &xmlData,
       }
 
       QString sPhoneType;
-      for (const QString &lineRaw : telLines) {
+      for (const QString &lineRaw : std::as_const(telLines)) {
         // Example: TEL;TYPE=WORK,CELL:012345678
         QString line = lineRaw.trimmed();
 

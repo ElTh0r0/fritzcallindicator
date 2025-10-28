@@ -48,15 +48,16 @@ class CallMonitor : public QObject {
   void parseAndSignal(const QString &sLine);
 
  signals:
-  void stateChanged(QTcpSocket::SocketState state);
-  void errorOccured(QTcpSocket::SocketError error, const QString &sMessage);
+  void stateChanged(QAbstractSocket::SocketState state);
+  void errorOccured(QAbstractSocket::SocketError error,
+                    const QString &sMessage);
 
   void incomingCall(unsigned connectionId, const QString &sCaller,
                     const QString &sCallee);
 
  private slots:
   void onConnected();
-  void onError(QTcpSocket::SocketError socketError);
+  void onError(QAbstractSocket::SocketError socketError);
   void onReadyRead();
 
  private:

@@ -90,7 +90,7 @@ QString FritzSOAP::sendRequest(const QString &service, const QString &action,
   // greift)
   QObject::connect(
       &nam, &QNetworkAccessManager::authenticationRequired,
-      [this](QNetworkReply * /*reply*/, QAuthenticator *authenticator) {
+      [](QNetworkReply * /*reply*/, QAuthenticator *authenticator) {
         qDebug() << "authenticationRequired() triggered!";
         authenticator->setUser(Settings::instance()->getFritzUser());
         authenticator->setPassword(Settings::instance()->getFritzPassword());

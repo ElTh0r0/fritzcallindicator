@@ -66,7 +66,7 @@ OnlineResolvers::OnlineResolvers(QDir sharePath, QObject *pParent)
       QStringLiteral("URL"), QStringLiteral("NameRegExp"),
       QStringLiteral("CityRegExp")};
 
-  for (const auto &path : resolverPaths) {
+  for (const auto &path : std::as_const(resolverPaths)) {
     const QStringList resolverFiles =
         path.entryList(QStringList() << QStringLiteral("*.conf"),
                        QDir::Files | QDir::NoDotAndDotDot, QDir::Name);

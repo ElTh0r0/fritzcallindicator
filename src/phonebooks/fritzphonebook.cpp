@@ -119,7 +119,7 @@ QStringList FritzPhonebook::getPhonebookList() {
     qWarning() << "XML Parse Error:" << xml.errorString();
   }
 
-  for (const QString &idStr : phonebookIDs) {
+  for (const QString &idStr : std::as_const(phonebookIDs)) {
     bool ok = false;
     int id = idStr.toInt(&ok);
     if (!ok) {

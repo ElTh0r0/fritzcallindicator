@@ -99,7 +99,7 @@ inline bool isRetryableError(QTcpSocket::SocketError socketError) {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-void CallMonitor::onError(QTcpSocket::SocketError socketError) {
+void CallMonitor::onError(QAbstractSocket::SocketError socketError) {
   emit errorOccured(socketError,
                     m_pSocket->errorString() +
                         tr(" (Retry in %1 seconds ...)").arg(m_nRetryInterval));
