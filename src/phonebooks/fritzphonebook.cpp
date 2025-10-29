@@ -65,7 +65,7 @@ FritzPhonebook *FritzPhonebook::instance() {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-auto FritzPhonebook::getContacts() -> QHash<QString, QString> {
+auto FritzPhonebook::getContacts() -> const QHash<QString, QString> {
   QHash<QString, QString> tmpContacts;
   QHash<QString, QString> PhoneNumbers;
 
@@ -91,7 +91,7 @@ auto FritzPhonebook::getContacts() -> QHash<QString, QString> {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-QStringList FritzPhonebook::getPhonebookList() {
+const QStringList FritzPhonebook::getPhonebookList() {
   m_Phonebooks.clear();
 
   const QString body = QStringLiteral(
@@ -336,7 +336,8 @@ QString FritzPhonebook::normalizeNumber(QString number,
   }
 
   // Cleanup number (remove spaces, '-', '(', ')', '/')
-  number.remove(QRegularExpression(QStringLiteral("[\\s\\-\\(\\)/]")));
+  static const QRegularExpression re(QStringLiteral("[\\s\\-\\(\\)/]"));
+  number.remove(re);
 
   return number;
 }

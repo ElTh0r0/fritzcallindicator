@@ -66,7 +66,8 @@ SettingsDialog::SettingsDialog(
   connect(m_pUi->cbNotificationSound, &QCheckBox::stateChanged, [=](int state) {
     Q_UNUSED(state);
 #else
-  connect(m_pUi->cbNotificationSound, &QCheckBox::checkStateChanged, [=]() {
+  connect(m_pUi->cbNotificationSound, &QCheckBox::checkStateChanged, this,
+          [=]() {
 #endif
     if (m_pUi->cbNotificationSound->isChecked()) {
       m_pUi->lineEditNotification->setEnabled(true);
@@ -113,28 +114,31 @@ SettingsDialog::SettingsDialog(
   m_pUi->toolButton_RemoveTbAddressbook->setIcon(
       QIcon::fromTheme(QStringLiteral("list-remove")));
 
-  connect(m_pUi->toolButton_AddTbAddressbook, &QToolButton::clicked, [=]() {
-    QString sFile =
-        QFileDialog::getOpenFileName(this, tr("Select Thunderbird addressbook"),
-                                     this->getThunderbirdProfilePath(),
-                                     tr("SQLite abook files (abook*.sqlite)"));
-    if (!sFile.isEmpty() &&
-        !m_sListModel_TbAddressbooks->stringList().contains(sFile)) {
-      if (m_sListModel_TbAddressbooks->insertRow(
-              m_sListModel_TbAddressbooks->rowCount())) {
-        QModelIndex index = m_sListModel_TbAddressbooks->index(
-            m_sListModel_TbAddressbooks->rowCount() - 1, 0);
-        m_sListModel_TbAddressbooks->setData(index, sFile);
-      }
-    }
-  });
-  connect(m_pUi->toolButton_RemoveTbAddressbook, &QToolButton::clicked, [=]() {
-    QModelIndex index = m_pUi->listView_TbAddressbooks->currentIndex();
-    if (index.isValid() &&
-        index.row() < m_sListModel_TbAddressbooks->stringList().size()) {
-      m_sListModel_TbAddressbooks->removeRows(index.row(), 1);
-    }
-  });
+  connect(m_pUi->toolButton_AddTbAddressbook, &QToolButton::clicked, this,
+          [=]() {
+            QString sFile = QFileDialog::getOpenFileName(
+                this, tr("Select Thunderbird addressbook"),
+                this->getThunderbirdProfilePath(),
+                tr("SQLite abook files (abook*.sqlite)"));
+            if (!sFile.isEmpty() &&
+                !m_sListModel_TbAddressbooks->stringList().contains(sFile)) {
+              if (m_sListModel_TbAddressbooks->insertRow(
+                      m_sListModel_TbAddressbooks->rowCount())) {
+                QModelIndex index = m_sListModel_TbAddressbooks->index(
+                    m_sListModel_TbAddressbooks->rowCount() - 1, 0);
+                m_sListModel_TbAddressbooks->setData(index, sFile);
+              }
+            }
+          });
+  connect(
+      m_pUi->toolButton_RemoveTbAddressbook, &QToolButton::clicked, this,
+      [=]() {
+        QModelIndex index = m_pUi->listView_TbAddressbooks->currentIndex();
+        if (index.isValid() &&
+            index.row() < m_sListModel_TbAddressbooks->stringList().size()) {
+          m_sListModel_TbAddressbooks->removeRows(index.row(), 1);
+        }
+      });
 #else
   m_pUi->lblTbAddressbooks->hide();
   m_pUi->listView_TbAddressbooks->hide();
@@ -152,7 +156,7 @@ SettingsDialog::SettingsDialog(
   m_pUi->toolButton_RemoveCardDavAddressbook->setIcon(
       QIcon::fromTheme(QStringLiteral("list-remove")));
 
-  connect(m_pUi->toolButton_AddCardDavAddressbook, &QToolButton::clicked,
+  connect(m_pUi->toolButton_AddCardDavAddressbook, &QToolButton::clicked, this,
           [=]() {
             int row = m_pUi->tableCardDav->rowCount();
             m_pUi->tableCardDav->insertRow(row);
@@ -162,7 +166,8 @@ SettingsDialog::SettingsDialog(
                 row, 0);  // Focus first cell of new row
           });
   connect(
-      m_pUi->toolButton_RemoveCardDavAddressbook, &QToolButton::clicked, [=]() {
+      m_pUi->toolButton_RemoveCardDavAddressbook, &QToolButton::clicked, this,
+      [=]() {
         QModelIndex index = m_pUi->tableCardDav->currentIndex();
         if (index.isValid() && index.row() < m_pUi->tableCardDav->rowCount()) {
           m_pUi->tableCardDav->removeRow(index.row());

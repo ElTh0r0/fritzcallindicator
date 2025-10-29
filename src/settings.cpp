@@ -342,7 +342,8 @@ void Settings::setTbAddressbooks(const QStringList &sListTbAddressbooks) {
 
 // ----------------------------------------------------------------------------
 
-auto Settings::getCardDavAddressbooks() -> QList<QHash<QString, QString>> {
+auto Settings::getCardDavAddressbooks()
+    -> const QList<QHash<QString, QString>> {
   QList<QHash<QString, QString>> addressbooks;
   int size = m_settings.beginReadArray(QStringLiteral("CardDAV"));
   for (int row = 0; row < size; ++row) {
@@ -414,7 +415,7 @@ void Settings::setMaxOwnNumbers(const uint nMaxOwnNumbers) {
 
 // ----------------------------------------------------------------------------
 
-auto Settings::getOwnNumbers() -> QMap<QString, QString> {
+auto Settings::getOwnNumbers() -> const QMap<QString, QString> {
   m_OwnNumbers.clear();
 
   for (uint i = 1; i < this->getMaxOwnNumbers() + 1; i++) {

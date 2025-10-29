@@ -35,7 +35,7 @@ class CardDAV : public QObject {
 
  public:
   static CardDAV *instance();
-  auto getContacts() -> QHash<QString, QString>;
+  auto getContacts() -> const QHash<QString, QString>;
 
  private:
   explicit CardDAV(QObject *pParent = nullptr);

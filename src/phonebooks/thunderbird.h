@@ -36,7 +36,7 @@ class Thunderbird : public QObject {
 
  public:
   static Thunderbird *instance();
-  auto getContacts() -> QHash<QString, QString>;
+  auto getContacts() -> const QHash<QString, QString>;
 
  private:
   explicit Thunderbird(QObject *pParent = nullptr);

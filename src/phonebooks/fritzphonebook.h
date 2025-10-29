@@ -44,8 +44,8 @@ class FritzPhonebook : public QObject {
  public:
   static FritzPhonebook *instance();
 
-  auto getContacts() -> QHash<QString, QString>;
-  QStringList getPhonebookList();
+  auto getContacts() -> const QHash<QString, QString>;
+  const QStringList getPhonebookList();
 
  private:
   explicit FritzPhonebook(QObject *pParent = nullptr);

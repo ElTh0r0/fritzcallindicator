@@ -237,7 +237,8 @@ auto NumberResolver::resolveNumber(
 #endif
 
   // Resolve city code
-  for (const auto &sCode : m_AreaCodes.value(sCountryCode).keys()) {
+  const auto &keys = m_AreaCodes.value(sCountryCode).keys();
+  for (const auto &sCode : keys) {
     if (sPhoneNumber.startsWith(sCode)) {
       sCityCode = sCode;
       sCityName =

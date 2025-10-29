@@ -71,7 +71,7 @@ class Settings : public QObject {
   // NumberResolvers
   auto getTbAddressbooks() -> const QStringList;
   void setTbAddressbooks(const QStringList& sListTbAddressbooks);
-  auto getCardDavAddressbooks() -> QList<QHash<QString, QString>>;
+  auto getCardDavAddressbooks() -> const QList<QHash<QString, QString>>;
   void setCardDavAddressbooks(
       const QList<QHash<QString, QString>>& addressbooks);
   auto getEnabledOnlineResolvers() const -> QStringList;
@@ -80,7 +80,7 @@ class Settings : public QObject {
   // PhoneNumbers
   auto getMaxOwnNumbers() const -> uint;
   void setMaxOwnNumbers(const uint nMaxOwnNumbers);
-  auto getOwnNumbers() -> QMap<QString, QString>;
+  auto getOwnNumbers() -> const QMap<QString, QString>;
   void setOwnNumbers(const QMap<QString, QString>& ownNumbers);
   auto resolveOwnNumber(const QString& sNumber) const -> QString;
 

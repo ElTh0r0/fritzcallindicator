@@ -47,7 +47,7 @@ Thunderbird *Thunderbird::instance() {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-auto Thunderbird::getContacts() -> QHash<QString, QString> {
+auto Thunderbird::getContacts() -> const QHash<QString, QString> {
   m_PhoneNumbers.clear();
 
   for (const auto &addressbook : Settings().getTbAddressbooks()) {
@@ -189,7 +189,8 @@ void Thunderbird::extractNumber(const QString &sVCard,
             sNumber.replace(0, sLocalCountryCode.length(), QStringLiteral("0"));
       }
       // Cleanup number (remove spaces, '-', '(', ')', '/')
-      sNumber.remove(QRegularExpression(QStringLiteral("[\\s\\-\\(\\)/]")));
+      static const QRegularExpression re(QStringLiteral("[\\s\\-\\(\\)/]"));
+      sNumber.remove(re);
 
       m_PhoneNumbers[sNumber] = sName + sPhoneType;
       sNumber.clear();     // Reset after adding to list!

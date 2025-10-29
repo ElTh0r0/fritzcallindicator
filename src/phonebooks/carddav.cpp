@@ -46,7 +46,7 @@ CardDAV *CardDAV::instance() {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-auto CardDAV::getContacts() -> QHash<QString, QString> {
+auto CardDAV::getContacts() -> const QHash<QString, QString> {
   m_PhoneNumbers.clear();
 
   for (const auto &addressbook : Settings().getCardDavAddressbooks()) {
@@ -198,8 +198,9 @@ void CardDAV::extractNumber(const QByteArray &xmlData,
                                         QStringLiteral("0"));
             }
             // Cleanup number (remove spaces, '-', '(', ')', '/')
-            sNumber.remove(
-                QRegularExpression(QStringLiteral("[\\s\\-\\(\\)/]")));
+            static const QRegularExpression re(
+                QStringLiteral("[\\s\\-\\(\\)/]"));
+            sNumber.remove(re);
 
             m_PhoneNumbers[sNumber] = sName + sPhoneType;
             sPhoneType.clear();
