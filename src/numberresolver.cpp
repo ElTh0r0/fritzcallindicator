@@ -29,6 +29,7 @@
 #include <QDebug>
 #include <QDirIterator>
 #include <QMessageBox>
+#include <QStandardPaths>
 
 #include "phonebooks/fritzphonebook.h"
 #ifdef FRITZ_USE_CARDDAV_ADDRESSBOOK
@@ -95,8 +96,11 @@ void NumberResolver::initCountryCodes(const QDir &sharePath) {
 
 void NumberResolver::initAreaCodes(QDir sharePath) {
   qDebug() << Q_FUNC_INFO;
+  QList<QDir> areaPaths;
 
-  if (!sharePath.cd(QStringLiteral("area_codes"))) {
+  if (sharePath.cd(QStringLiteral("area_codes"))) {
+    areaPaths << sharePath;
+  } else {
     qWarning() << "Area codes folder not found:"
                << sharePath.absolutePath() + "/area_codes";
     QMessageBox::warning(nullptr, tr("Missing area codes"),
@@ -104,35 +108,52 @@ void NumberResolver::initAreaCodes(QDir sharePath) {
     return;
   }
 
-  QDirIterator it(
-      sharePath.absolutePath(), QStringList() << QStringLiteral("*.csv"),
-      QDir::NoDotAndDotDot | QDir::Files, QDirIterator::NoIteratorFlags);
-  while (it.hasNext()) {
-    it.next();
-
-    QString sACode = it.fileName().remove(QStringLiteral(".csv"));
-    if (sACode.contains('_')) {
-      sACode.truncate(sACode.indexOf('_'));
+  // User config directory
+  QStringList sListPaths =
+      QStandardPaths::standardLocations(QStandardPaths::AppConfigLocation);
+  if (sListPaths.isEmpty()) {
+    qWarning() << "Error while getting QStandardPaths::AppConfigLocation.";
+  } else {
+    QDir userConfigPath(sListPaths[0].toLower());
+    if (userConfigPath.cd(QStringLiteral("area_codes"))) {
+      areaPaths << userConfigPath;
+    } else {
+      qDebug() << "No custom 'area_codes' in" << userConfigPath;
     }
+  }
 
-    QFile csv(it.filePath());
-    if (csv.open(QIODevice::ReadOnly)) {
-      QString sLine;
-      QStringList tmpSplit;
-      QHash<QString, QString> tmpCodes;
+  for (const auto &path : std::as_const(areaPaths)) {
+    const QStringList areaFiles =
+        path.entryList(QStringList() << QStringLiteral("*.csv"),
+                       QDir::Files | QDir::NoDotAndDotDot, QDir::Name);
 
-      while (!csv.atEnd()) {
-        sLine = csv.readLine();
-        tmpSplit = sLine.split(CSV_SEPARATOR, Qt::SkipEmptyParts);
-        if (tmpSplit.size() == 2) {
-          tmpCodes[tmpSplit[0].trimmed()] = tmpSplit[1].trimmed();
-        }
+    for (const auto &areaFile : areaFiles) {
+      QString sACode = areaFile.left(areaFile.indexOf(QStringLiteral(".csv")));
+      if (sACode.contains('_')) {
+        sACode.truncate(sACode.indexOf('_'));
       }
 
-      csv.close();
-      m_AreaCodes[sACode] = tmpCodes;
-    } else {
-      qWarning() << "Failed to open area code file:" << it.filePath();
+      QFile csv(path.absoluteFilePath(areaFile));
+      qDebug() << path.absoluteFilePath(areaFile);
+      if (csv.open(QIODevice::ReadOnly)) {
+        QString sLine;
+        QStringList tmpSplit;
+        QHash<QString, QString> tmpCodes;
+
+        while (!csv.atEnd()) {
+          sLine = csv.readLine();
+          tmpSplit = sLine.split(CSV_SEPARATOR, Qt::SkipEmptyParts);
+          if (tmpSplit.size() == 2) {
+            tmpCodes[tmpSplit[0].trimmed()] = tmpSplit[1].trimmed();
+          }
+        }
+
+        csv.close();
+        m_AreaCodes[sACode] = tmpCodes;
+      } else {
+        qWarning() << "Failed to open area code file:"
+                   << path.absoluteFilePath(areaFile);
+      }
     }
   }
 
