@@ -190,6 +190,7 @@ SettingsDialog::SettingsDialog(
       QHeaderView::Stretch);
   this->initOnlineResolvers(availableOnlineResolvers);  // After readSettings!
 #else
+  Q_UNUSED(availableOnlineResolvers)
   m_pUi->lineOnlineResolvers->hide();
   m_pUi->lblOnlineResolvers->hide();
   m_pUi->tableOnlineResolvers->hide();

@@ -117,8 +117,6 @@ void NumberResolver::initAreaCodes(QDir sharePath) {
     QDir userConfigPath(sListPaths[0].toLower());
     if (userConfigPath.cd(QStringLiteral("area_codes"))) {
       areaPaths << userConfigPath;
-    } else {
-      qDebug() << "No custom 'area_codes' in" << userConfigPath;
     }
   }
 
@@ -234,6 +232,8 @@ auto NumberResolver::resolveNumber(
   if (!sKnownCaller.isEmpty()) {
     return sKnownCaller;
   }
+#else
+  Q_UNUSED(sListEnabledResolvers)
 #endif
 
   // Resolve city code

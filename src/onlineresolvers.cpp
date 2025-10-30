@@ -55,8 +55,6 @@ OnlineResolvers::OnlineResolvers(QDir sharePath, QObject *pParent)
     QDir userConfigPath(sListPaths[0].toLower());
     if (userConfigPath.cd(QStringLiteral("online_resolvers"))) {
       resolverPaths << userConfigPath;
-    } else {
-      qDebug() << "No custom 'online_resolvers' in" << userConfigPath;
     }
   }
 

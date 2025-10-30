@@ -99,7 +99,6 @@ FritzCallIndicator::~FritzCallIndicator() {
 // ----------------------------------------------------------------------------
 
 void FritzCallIndicator::createActions() {
-  qDebug() << Q_FUNC_INFO;
   QIcon::setThemeName(m_settings.getIconTheme());
   m_pShowCallHistory =
       new QAction(QIcon::fromTheme(QStringLiteral("view-history")),
@@ -266,8 +265,7 @@ QStringList FritzCallIndicator::getCallHistory() {
   }
 
   sCallListUrl += "&days=" + QString::number(m_settings.getMaxDaysOfOldCalls());
-
-  qDebug() << "Downloading call list from" << sCallListUrl;
+  // qDebug() << "Downloading call list from" << sCallListUrl;
 
   QNetworkAccessManager nam;
   QNetworkRequest request(sCallListUrl);

@@ -129,8 +129,7 @@ const QStringList FritzPhonebook::getPhonebookList() {
 
     QStringList sListInfo = getPhonebookUrlAndName(id);
     if (sListInfo.size() == 2) {
-      qDebug() << "Phonebook ID" << id << "→ Name:" << sListInfo.at(0)
-               << "→ URL:" << sListInfo.at(1);
+      qDebug() << "Phonebook ID" << id << "- Name:" << sListInfo.at(0);
       m_Phonebooks.insert(idStr, sListInfo.at(0));
       downloadPhonebook(id, QUrl(sListInfo.at(1)));
     } else {
@@ -145,7 +144,7 @@ const QStringList FritzPhonebook::getPhonebookList() {
 // ----------------------------------------------------------------------------
 
 bool FritzPhonebook::downloadPhonebook(int id, const QUrl &url) {
-  qDebug() << "Downloading phonebook ID" << id << "from" << url;
+  // qDebug() << "Downloading phonebook ID" << id << "from" << url;
 
   QNetworkAccessManager nam;
   QNetworkRequest request(url);
@@ -319,7 +318,7 @@ QHash<QString, QString> FritzPhonebook::loadFromFile(
     }
   }
 
-  qDebug() << "✅ Phonebook loaded:" << phoneNumbers.size() << "entries.";
+  qDebug() << "Phonebook loaded:" << phoneNumbers.size() << "entries.";
   return phoneNumbers;
 }
 
