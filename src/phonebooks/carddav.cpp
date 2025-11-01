@@ -49,7 +49,8 @@ CardDAV *CardDAV::instance() {
 auto CardDAV::getContacts() -> const QHash<QString, QString> {
   m_PhoneNumbers.clear();
 
-  for (const auto &addressbook : Settings().getCardDavAddressbooks()) {
+  for (const auto &addressbook :
+       Settings::instance()->getCardDavAddressbooks()) {
     QString sUrl = addressbook.value(QStringLiteral("URL"));
     QString sUser = addressbook.value(QStringLiteral("User"));
     QString sPassword = addressbook.value(QStringLiteral("Password"));
@@ -59,7 +60,7 @@ auto CardDAV::getContacts() -> const QHash<QString, QString> {
       QByteArray data = this->sendReportRequest(QUrl(sUrl), sUser, sPassword);
 
       if (!data.isEmpty()) {
-        this->extractNumber(data, Settings().getCountryCode());
+        this->extractNumber(data, Settings::instance()->getCountryCode());
       }
     }
   }

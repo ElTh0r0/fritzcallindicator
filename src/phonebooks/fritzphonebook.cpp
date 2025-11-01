@@ -74,11 +74,12 @@ auto FritzPhonebook::getContacts() -> const QHash<QString, QString> {
     i.next();
     tmpContacts.clear();
 
-    if (Settings().getEnabledFritzPhonebooks().contains(i.value())) {
+    if (Settings::instance()->getEnabledFritzPhonebooks().contains(i.value())) {
       qDebug() << "Reading FritzBox phonebook:" << i.key() << i.value();
       QString path = m_sSavepath + QStringLiteral("/phonebook_") + i.key() +
                      QStringLiteral(".xml");
-      tmpContacts = this->loadFromFile(path, Settings().getCountryCode());
+      tmpContacts =
+          this->loadFromFile(path, Settings::instance()->getCountryCode());
 
       // Merge into contacts list
       PhoneNumbers.insert(tmpContacts);

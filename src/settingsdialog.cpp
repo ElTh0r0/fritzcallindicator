@@ -202,9 +202,9 @@ SettingsDialog::SettingsDialog(
   m_pUi->tabWidget->removeTab(m_pUi->tabWidget->indexOf(m_pUi->tab_resolver));
 #endif
 
-  bool bAutostart = Settings().getAutostart();
-  if (bAutostart != Settings().isAutostartEnabled()) {
-    Settings().setAutostart(bAutostart);
+  bool bAutostart = Settings::instance()->getAutostart();
+  if (bAutostart != Settings::instance()->isAutostartEnabled()) {
+    Settings::instance()->setAutostart(bAutostart);
   }
 }
 
@@ -315,17 +315,17 @@ void SettingsDialog::initFritzPhonebooks() {
 
 void SettingsDialog::readSettings() {
   qDebug() << Q_FUNC_INFO;
-  Settings settings;
+  Settings *pSettings = Settings::instance();
 
   // General
-  m_pUi->cbAutostart->setChecked(settings.getAutostart());
-  m_pUi->lineEditCountryCode->setText(settings.getCountryCode());
+  m_pUi->cbAutostart->setChecked(pSettings->getAutostart());
+  m_pUi->lineEditCountryCode->setText(pSettings->getCountryCode());
   m_pUi->spinBoxMaxEntriesCallHistory->setValue(
-      settings.getMaxEntriesCallHistory());
-  m_pUi->spinBoxMaxDaysOfOldCalls->setValue(settings.getMaxDaysOfOldCalls());
-  m_pUi->spinBoxTimeout->setValue(settings.getPopupTimeout());
+      pSettings->getMaxEntriesCallHistory());
+  m_pUi->spinBoxMaxDaysOfOldCalls->setValue(pSettings->getMaxDaysOfOldCalls());
+  m_pUi->spinBoxTimeout->setValue(pSettings->getPopupTimeout());
 #ifdef FRITZ_USE_NOTIFICATION_SOUND
-  QString sSound(settings.getNotificationSound());
+  QString sSound(pSettings->getNotificationSound());
   if (sSound.isEmpty()) {
     m_pUi->cbNotificationSound->setChecked(false);
     m_pUi->lineEditNotification->clear();
@@ -338,13 +338,13 @@ void SettingsDialog::readSettings() {
 #endif
 
   // FritzBox
-  m_pUi->lineEditHost->setText(settings.getHostName());
-  m_pUi->spinBoxCallMonitorPort->setValue(settings.getCallMonitorPort());
-  m_pUi->spinBoxTR064Port->setValue(settings.getTR064Port());
-  m_pUi->lineEditUserName->setText(settings.getFritzUser());
-  m_pUi->lineEditPassword->setText(settings.getFritzPassword());
-  m_pUi->spinBoxRetryInterval->setValue(settings.getRetryInterval());
-  m_sListEnabledFritzPhoneBooks = settings.getEnabledFritzPhonebooks();
+  m_pUi->lineEditHost->setText(pSettings->getHostName());
+  m_pUi->spinBoxCallMonitorPort->setValue(pSettings->getCallMonitorPort());
+  m_pUi->spinBoxTR064Port->setValue(pSettings->getTR064Port());
+  m_pUi->lineEditUserName->setText(pSettings->getFritzUser());
+  m_pUi->lineEditPassword->setText(pSettings->getFritzPassword());
+  m_pUi->spinBoxRetryInterval->setValue(pSettings->getRetryInterval());
+  m_sListEnabledFritzPhoneBooks = pSettings->getEnabledFritzPhonebooks();
   for (int row = 0; row < m_pUi->tableFritzPhonebooks->rowCount(); ++row) {
     if (m_sListEnabledFritzPhoneBooks.contains(
             m_pUi->tableFritzPhonebooks->item(row, 1)->text())) {
@@ -356,7 +356,7 @@ void SettingsDialog::readSettings() {
 
 // NumberResolvers
 #ifdef FRITZ_USE_THUNDERBIRD_ADDRESSBOOK
-  m_sListModel_TbAddressbooks->setStringList(settings.getTbAddressbooks());
+  m_sListModel_TbAddressbooks->setStringList(pSettings->getTbAddressbooks());
 #endif
 
 #ifdef FRITZ_USE_CARDDAV_ADDRESSBOOK
@@ -364,7 +364,7 @@ void SettingsDialog::readSettings() {
   static const QChar maskChar = static_cast<QChar>(
       style->styleHint(QStyle::SH_LineEdit_PasswordCharacter));
   const QList<QHash<QString, QString>> &carddav =
-      settings.getCardDavAddressbooks();
+      pSettings->getCardDavAddressbooks();
   m_pUi->tableCardDav->setRowCount(0);
   for (int i = 0; i < carddav.size(); ++i) {
     m_pUi->tableCardDav->insertRow(i);
@@ -380,7 +380,7 @@ void SettingsDialog::readSettings() {
 #endif
 
 #ifdef FRITZ_USE_ONLINE_RESOLVERS
-  m_sListEnabledOnlineResolvers = settings.getEnabledOnlineResolvers();
+  m_sListEnabledOnlineResolvers = pSettings->getEnabledOnlineResolvers();
   for (int row = 0; row < m_pUi->tableOnlineResolvers->rowCount(); ++row) {
     if (m_sListEnabledOnlineResolvers.contains(m_OnlineResolvers.value(
             m_pUi->tableOnlineResolvers->item(row, 1)->text()))) {
@@ -392,8 +392,8 @@ void SettingsDialog::readSettings() {
 #endif
 
   // PhoneNumbers
-  uint nMaxOwnNumbers = settings.getMaxOwnNumbers();
-  QMap<QString, QString> ownNumbers = settings.getOwnNumbers();
+  uint nMaxOwnNumbers = pSettings->getMaxOwnNumbers();
+  QMap<QString, QString> ownNumbers = pSettings->getOwnNumbers();
 
   // Fill table with own numbers
   uint row = 0;
@@ -431,41 +431,41 @@ void SettingsDialog::readSettings() {
 
 void SettingsDialog::accept() {
   qDebug() << Q_FUNC_INFO;
-  Settings settings;
+  Settings *pSettings = Settings::instance();
   bool bAddressbookChanged = false;
   bool bFritzUserPasswordChanged = false;
 
   // General
-  settings.setCountryCode(m_pUi->lineEditCountryCode->text().trimmed());
-  settings.setPopupTimeout(m_pUi->spinBoxTimeout->value());
-  settings.setMaxEntriesCallHistory(
+  pSettings->setCountryCode(m_pUi->lineEditCountryCode->text().trimmed());
+  pSettings->setPopupTimeout(m_pUi->spinBoxTimeout->value());
+  pSettings->setMaxEntriesCallHistory(
       m_pUi->spinBoxMaxEntriesCallHistory->value());
-  settings.setMaxDaysOfOldCalls(m_pUi->spinBoxMaxDaysOfOldCalls->value());
-  settings.setAutostart(m_pUi->cbAutostart->isChecked());
+  pSettings->setMaxDaysOfOldCalls(m_pUi->spinBoxMaxDaysOfOldCalls->value());
+  pSettings->setAutostart(m_pUi->cbAutostart->isChecked());
 #ifdef FRITZ_USE_NOTIFICATION_SOUND
   QString sSound(m_pUi->lineEditNotification->text().trimmed());
   if (m_pUi->cbNotificationSound->isChecked() && !sSound.isEmpty()) {
-    settings.setNotificationSound(sSound);
+    pSettings->setNotificationSound(sSound);
   } else {
-    settings.setNotificationSound("");
+    pSettings->setNotificationSound("");
   }
 #endif
 
   // FritzBox
-  settings.setHostName(m_pUi->lineEditHost->text().trimmed());
-  settings.setCallMonitorPort(m_pUi->spinBoxCallMonitorPort->value());
-  settings.setTR064Port(m_pUi->spinBoxTR064Port->value());
+  pSettings->setHostName(m_pUi->lineEditHost->text().trimmed());
+  pSettings->setCallMonitorPort(m_pUi->spinBoxCallMonitorPort->value());
+  pSettings->setTR064Port(m_pUi->spinBoxTR064Port->value());
   QString sTmpUserPw = m_pUi->lineEditUserName->text().trimmed();
-  if (sTmpUserPw != settings.getFritzUser()) {
-    settings.setFritzUser(sTmpUserPw);
+  if (sTmpUserPw != pSettings->getFritzUser()) {
+    pSettings->setFritzUser(sTmpUserPw);
     bFritzUserPasswordChanged = true;
   }
   sTmpUserPw = m_pUi->lineEditPassword->text().trimmed();
-  if (sTmpUserPw != settings.getFritzPassword()) {
-    settings.setFritzPassword(sTmpUserPw);
+  if (sTmpUserPw != pSettings->getFritzPassword()) {
+    pSettings->setFritzPassword(sTmpUserPw);
     bFritzUserPasswordChanged = true;
   }
-  settings.setRetryInterval(m_pUi->spinBoxRetryInterval->value());
+  pSettings->setRetryInterval(m_pUi->spinBoxRetryInterval->value());
   m_sListEnabledFritzPhoneBooks.clear();
   for (int row = 0; row < m_pUi->tableFritzPhonebooks->rowCount(); ++row) {
     if (Qt::Checked ==
@@ -474,16 +474,16 @@ void SettingsDialog::accept() {
           << m_pUi->tableFritzPhonebooks->item(row, 1)->text();
     }
   }
-  if (settings.getEnabledFritzPhonebooks() != m_sListEnabledFritzPhoneBooks) {
-    settings.setEnabledFritzPhonebooks(m_sListEnabledFritzPhoneBooks);
+  if (pSettings->getEnabledFritzPhonebooks() != m_sListEnabledFritzPhoneBooks) {
+    pSettings->setEnabledFritzPhonebooks(m_sListEnabledFritzPhoneBooks);
     bAddressbookChanged = true;
   }
 
 // NumberResolvers
 #ifdef FRITZ_USE_THUNDERBIRD_ADDRESSBOOK
-  if (settings.getTbAddressbooks() !=
+  if (pSettings->getTbAddressbooks() !=
       m_sListModel_TbAddressbooks->stringList()) {
-    settings.setTbAddressbooks(m_sListModel_TbAddressbooks->stringList());
+    pSettings->setTbAddressbooks(m_sListModel_TbAddressbooks->stringList());
     bAddressbookChanged = true;
   }
 #endif
@@ -514,8 +514,8 @@ void SettingsDialog::accept() {
     entry[QStringLiteral("Password")] = sPassword;
     carddav.append(entry);
   }
-  if (carddav != settings.getCardDavAddressbooks()) {
-    settings.setCardDavAddressbooks(carddav);
+  if (carddav != pSettings->getCardDavAddressbooks()) {
+    pSettings->setCardDavAddressbooks(carddav);
     bAddressbookChanged = true;
   }
 #endif
@@ -529,12 +529,12 @@ void SettingsDialog::accept() {
           m_pUi->tableOnlineResolvers->item(row, 1)->text());
     }
   }
-  settings.setEnabledOnlineResolvers(m_sListEnabledOnlineResolvers);
+  pSettings->setEnabledOnlineResolvers(m_sListEnabledOnlineResolvers);
 #endif
 
   // PhoneNumbers
-  settings.setMaxOwnNumbers(
-      settings.getMaxOwnNumbers());  // TODO: Add to dialog
+  pSettings->setMaxOwnNumbers(
+      pSettings->getMaxOwnNumbers());  // TODO: Add to dialog
   QMap<QString, QString> ownNumbers;
   for (int row = 0; row < m_pUi->tableOwnNumbers->rowCount(); ++row) {
     QString sTmpNum = m_pUi->tableOwnNumbers->item(row, 0)->text().trimmed();
@@ -543,7 +543,7 @@ void SettingsDialog::accept() {
           m_pUi->tableOwnNumbers->item(row, 1)->text().trimmed();
     }
   }
-  settings.setOwnNumbers(ownNumbers);
+  pSettings->setOwnNumbers(ownNumbers);
 
   emit changedConnectionSettings(m_pUi->lineEditHost->text().trimmed(),
                                  m_pUi->spinBoxCallMonitorPort->value(),

@@ -57,16 +57,16 @@ FritzSOAP *FritzSOAP::instance() {
 
 QString FritzSOAP::sendRequest(const QString &service, const QString &action,
                                const QString &body, const QString &controlUrl) {
-  Settings settings;
+  Settings *pSettings = Settings::instance();
   const QUrl url =
-      QUrl(QStringLiteral("http://") + settings.getHostName() + ":" +
-           QString::number(settings.getTR064Port()) + controlUrl);
+      QUrl(QStringLiteral("http://") + pSettings->getHostName() + ":" +
+           QString::number(pSettings->getTR064Port()) + controlUrl);
 
   QNetworkRequest request(url);
 
   // 🔐 Authorization
   QString credentials =
-      settings.getFritzUser() + ":" + settings.getFritzPassword();
+      pSettings->getFritzUser() + ":" + pSettings->getFritzPassword();
   QByteArray auth = "Basic " + credentials.toUtf8().toBase64();
 
   request.setRawHeader("Authorization", auth);

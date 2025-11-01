@@ -50,7 +50,7 @@ Thunderbird *Thunderbird::instance() {
 auto Thunderbird::getContacts() -> const QHash<QString, QString> {
   m_PhoneNumbers.clear();
 
-  for (const auto &addressbook : Settings().getTbAddressbooks()) {
+  for (const auto &addressbook : Settings::instance()->getTbAddressbooks()) {
     if (!addressbook.isEmpty()) {
       qDebug() << "Reading Thunderbird addressbook:" << addressbook;
       this->importVCards(QFileInfo(addressbook));
@@ -101,7 +101,7 @@ void Thunderbird::importVCards(const QFileInfo &fiDbFile) {
             // qDebug() << query.value(QStringLiteral("value")).toString() +
             // "\n";
             this->extractNumber(query.value(QStringLiteral("value")).toString(),
-                                Settings().getCountryCode());
+                                Settings::instance()->getCountryCode());
           }
         } else {
           qDebug() << "ERROR while reading database:" << query.lastError();

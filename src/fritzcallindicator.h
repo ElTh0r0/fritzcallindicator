@@ -85,13 +85,13 @@ class FritzCallIndicator : public QObject {
   QMenu *m_pTrayIconMenu;
   QTranslator m_translator;    // App translations
   QTranslator m_translatorQt;  // Qt translations
-  Settings m_settings;
+  const QString m_sSharePath;
+  Settings *m_pSettings;
 
   SettingsDialog *m_pSettingsDialog = nullptr;
   CallMonitor *m_pCallMonitor = nullptr;
   NumberResolver *m_pNumberResolver = nullptr;
 
-  const QString m_sSharePath;
   QStringList m_sListCallHistory;
 #ifdef FRITZ_USE_NOTIFICATION_SOUND
   QMediaPlayer *m_pNotificationSound;

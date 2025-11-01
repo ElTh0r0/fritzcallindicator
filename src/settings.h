@@ -34,7 +34,6 @@ class Settings : public QObject {
   Q_OBJECT
 
  public:
-  explicit Settings(QObject* pParent = nullptr);
   static Settings* instance();
 
   // General
@@ -88,6 +87,7 @@ class Settings : public QObject {
   static auto getIconTheme() -> const QString;
 
  private:
+  explicit Settings(QObject* pParent = nullptr);
   QSettings m_settings;
   QMap<QString, QString> m_OwnNumbers;
 

@@ -42,13 +42,14 @@
 #include "fritzsoap.h"
 
 FritzCallIndicator::FritzCallIndicator(const QDir &sharePath)
-    : m_sSharePath(sharePath.absolutePath()) {
+    : m_sSharePath(sharePath.absolutePath()),
+      m_pSettings(Settings::instance()) {
   qDebug() << Q_FUNC_INFO;
   m_pNumberResolver =
-      new NumberResolver(m_sSharePath, m_settings.getCountryCode(), this);
+      new NumberResolver(m_sSharePath, m_pSettings->getCountryCode(), this);
   m_pSettingsDialog =
       new SettingsDialog(m_pNumberResolver->getAvailableResolvers());
-  this->loadTranslation(m_settings.getLanguage());
+  this->loadTranslation(m_pSettings->getLanguage());
 
   this->createActions();
   this->createTrayIcon();
@@ -68,9 +69,9 @@ FritzCallIndicator::FritzCallIndicator(const QDir &sharePath)
   connect(m_pSettingsDialog, &SettingsDialog::changedConnectionSettings,
           m_pCallMonitor, &CallMonitor::connectTo);
 
-  m_pCallMonitor->connectTo(m_settings.getHostName(),
-                            m_settings.getCallMonitorPort(),
-                            m_settings.getRetryInterval());
+  m_pCallMonitor->connectTo(m_pSettings->getHostName(),
+                            m_pSettings->getCallMonitorPort(),
+                            m_pSettings->getRetryInterval());
 
   m_sListCallHistory = this->getCallHistory();
 
@@ -99,7 +100,7 @@ FritzCallIndicator::~FritzCallIndicator() {
 // ----------------------------------------------------------------------------
 
 void FritzCallIndicator::createActions() {
-  QIcon::setThemeName(m_settings.getIconTheme());
+  QIcon::setThemeName(m_pSettings->getIconTheme());
   m_pShowCallHistory =
       new QAction(QIcon::fromTheme(QStringLiteral("view-history")),
                   tr("Call history"), this);
@@ -137,7 +138,7 @@ void FritzCallIndicator::createTrayIcon() {
   m_pTrayIcon->setContextMenu(m_pTrayIconMenu);
 
   QString sTray(QStringLiteral(":/icons/tray/call-start_22_dark.png"));
-  if (QStringLiteral("light") == m_settings.getIconTheme()) {
+  if (QStringLiteral("light") == m_pSettings->getIconTheme()) {
     sTray = sTray.replace(QStringLiteral("dark"), QStringLiteral("light"));
   }
 #if defined(Q_OS_WIN)
@@ -153,7 +154,7 @@ void FritzCallIndicator::showMessage(const QString &sTitle,
                                      const QString &sMessage, uint nTimeout,
                                      const QSystemTrayIcon::MessageIcon icon) {
   if (0 == nTimeout) {
-    nTimeout = m_settings.getPopupTimeout();
+    nTimeout = m_pSettings->getPopupTimeout();
   }
   m_pTrayIcon->showMessage(sTitle, sMessage, icon, nTimeout * 1000);
 }
@@ -165,15 +166,15 @@ void FritzCallIndicator::onErrorOccured(QTcpSocket::SocketError,
                                         const QString &errorMessage) {
   this->showMessage(QStringLiteral(APP_NAME),
                     tr("Connecting to '%1:%2' failed, because: '%3'")
-                        .arg(m_settings.getHostName())
-                        .arg(m_settings.getCallMonitorPort())
+                        .arg(m_pSettings->getHostName())
+                        .arg(m_pSettings->getCallMonitorPort())
                         .arg(errorMessage),
-                    m_settings.getPopupTimeout(), QSystemTrayIcon::Warning);
+                    m_pSettings->getPopupTimeout(), QSystemTrayIcon::Warning);
   /*
   QMessageBox::critical(nullptr, QString::fromLatin1(APP_NAME),
                         tr("Connecting to '%1:%2' failed, because: '%3'")
-                            .arg(m_settings.getHostName())
-                            .arg(m_settings.getCallMonitorPort())
+                            .arg(m_pSettings->getHostName())
+                            .arg(m_pSettings->getCallMonitorPort())
                             .arg(errorMessage));
   */
 }
@@ -183,8 +184,8 @@ void FritzCallIndicator::onErrorOccured(QTcpSocket::SocketError,
 
 void FritzCallIndicator::onStateChanged(QTcpSocket::SocketState state) {
   if (state == QTcpSocket::SocketState::ConnectedState) {
-    qDebug() << "Connected to" << m_settings.getHostName()
-             << "- Port:" << m_settings.getCallMonitorPort();
+    qDebug() << "Connected to" << m_pSettings->getHostName()
+             << "- Port:" << m_pSettings->getCallMonitorPort();
     /*
     this->showMessage(QStringLiteral(APP_NAME),
                       tr("Connected to '%1:%2'")
@@ -203,12 +204,12 @@ void FritzCallIndicator::onIncomingCall(unsigned /* connectionId */,
                                         const QString &sCallee) {
 #ifdef FRITZ_USE_ONLINE_RESOLVERS
   QString sResolvedCaller = m_pNumberResolver->resolveNumber(
-      sCaller.trimmed(), m_settings.getEnabledOnlineResolvers());
+      sCaller.trimmed(), m_pSettings->getEnabledOnlineResolvers());
 #else
   QString sResolvedCaller =
       m_pNumberResolver->resolveNumber(sCaller.trimmed(), QStringList());
 #endif
-  QString sResolvedCallee = m_settings.resolveOwnNumber(sCallee.trimmed());
+  QString sResolvedCallee = m_pSettings->resolveOwnNumber(sCallee.trimmed());
   QString sTitle(tr("Incoming call"));
   if (!sResolvedCallee.isEmpty()) {
     sTitle = tr("Incoming call to '%1'").arg(sResolvedCallee);
@@ -219,13 +220,13 @@ void FritzCallIndicator::onIncomingCall(unsigned /* connectionId */,
       QDateTime::currentDateTime().toString("dd.MM.yy|hh:mm|") +
       sResolvedCaller);
   // Limit the number of recent calls
-  if (m_sListCallHistory.count() > m_settings.getMaxEntriesCallHistory()) {
+  if (m_sListCallHistory.count() > m_pSettings->getMaxEntriesCallHistory()) {
     m_sListCallHistory =
-        m_sListCallHistory.mid(0, m_settings.getMaxEntriesCallHistory());
+        m_sListCallHistory.mid(0, m_pSettings->getMaxEntriesCallHistory());
   }
 
 #ifdef FRITZ_USE_NOTIFICATION_SOUND
-  QString sSound(m_settings.getNotificationSound());
+  QString sSound(m_pSettings->getNotificationSound());
   if (!sSound.isEmpty()) {
     m_pNotificationSound->setSource(sSound);
     m_pNotificationSound->play();
@@ -264,7 +265,8 @@ QStringList FritzCallIndicator::getCallHistory() {
     return sListCalls;
   }
 
-  sCallListUrl += "&days=" + QString::number(m_settings.getMaxDaysOfOldCalls());
+  sCallListUrl +=
+      "&days=" + QString::number(m_pSettings->getMaxDaysOfOldCalls());
   // qDebug() << "Downloading call list from" << sCallListUrl;
 
   QNetworkAccessManager nam;
@@ -344,11 +346,11 @@ QStringList FritzCallIndicator::getCallHistory() {
           sName = m_pNumberResolver->resolveNumber(sNumber, QStringList());
 #else
           sName = m_pNumberResolver->resolveNumber(
-              sNumber, m_settings.getEnabledOnlineResolvers());
+              sNumber, m_pSettings->getEnabledOnlineResolvers());
 #endif
         }
         sListCalls.push_back(sDate + "|" + sTime + "|" + sName);
-        if (sListCalls.size() >= m_settings.getMaxEntriesCallHistory()) break;
+        if (sListCalls.size() >= m_pSettings->getMaxEntriesCallHistory()) break;
       }
       inCall = false;
       typeIsOne = false;
