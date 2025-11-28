@@ -3,7 +3,7 @@
   !define APPNAME "FritzCallIndicator"
   !define DESCRIPTION "Show taskbar notifications for incoming calls from the Fritz!Box"
   !define VERSIONMAJOR 0
-  !define VERSIONMINOR 8
+  !define VERSIONMINOR 9
   !define VERSIONPATCH 0
   !define APPVERSION "${VERSIONMAJOR}.${VERSIONMINOR}.${VERSIONPATCH}.0"
   !define ABOUTURL "https://github.com/ElTh0r0/fritzcallindicator/"

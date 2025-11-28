@@ -1,3 +1,12 @@
+fritzcallindicator (0.9.0-0) unstable; urgency=low
+
+  [ Thorsten Roth ]
+  * Possibility to add custom online resolvers.
+  * Possibility to add custom area code files.
+  * Fix: Add missing icons.
+
+ -- Thorsten Roth <elthoro@gmx.de>  Fri, 28 Nov 2025 14:56:00 +0200
+
 fritzcallindicator (0.8.0-0) unstable; urgency=low
 
   [ Thorsten Roth ]

@@ -36,14 +36,14 @@ QString FritzSOAP::sendRequest(const QString &service, const QString &action,
 
   QNetworkRequest request(url);
 
-  // 🔐 Authorization
+  // Authorization
   QString credentials =
       pSettings->getFritzUser() + ":" + pSettings->getFritzPassword();
   QByteArray auth = "Basic " + credentials.toUtf8().toBase64();
 
   request.setRawHeader("Authorization", auth);
 
-  // 📄 Content & SOAP
+  // Content & SOAP
   request.setHeader(QNetworkRequest::ContentTypeHeader,
                     QStringLiteral("text/xml; charset=\"utf-8\""));
 
@@ -58,7 +58,7 @@ QString FritzSOAP::sendRequest(const QString &service, const QString &action,
 
   QNetworkAccessManager nam;
 
-  // 🔐 Optional: Auth-Fallback über QAuthenticator (nur wenn RawHeader nicht
+  // Optional: Auth-Fallback über QAuthenticator (nur wenn RawHeader nicht
   // greift)
   QObject::connect(
       &nam, &QNetworkAccessManager::authenticationRequired,

@@ -223,13 +223,13 @@ QHash<QString, QString> FritzPhonebook::loadFromFile(
 
   QFile file(xmlFilePath);
   if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-    qWarning() << "❌ Could not open phonebook XML:" << xmlFilePath;
+    qWarning() << "Could not open phonebook XML:" << xmlFilePath;
     return QHash<QString, QString>();
   }
 
   QDomDocument doc;
   if (!doc.setContent(&file)) {
-    qWarning() << "❌ Invalid XML in phonebook file:" << xmlFilePath;
+    qWarning() << "Invalid XML in phonebook file:" << xmlFilePath;
     return QHash<QString, QString>();
   }
 

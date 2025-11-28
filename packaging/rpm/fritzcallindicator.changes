@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Fri Nov 28 14:56:00 UTC 2025 - elthoro@gmx.de 0.9.0
+
+- Possibility to add custom online resolvers.
+- Possibility to add custom area code files.
+- Fix: Add missing icons.
+
+-------------------------------------------------------------------
 Sun Oct 26 13:58:00 UTC 2025 - elthoro@gmx.de 0.8.0
 
 - Add option to play a notification sound for incoming calls.
