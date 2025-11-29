@@ -13,12 +13,12 @@ jobs:
     runs-on: windows-2022
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
       with:
-        version: '6.9.2'
+        version: '6.10.1'
         cache: 'true'
         cache-key-prefix: install-qt-action
         dir: 'C:\'
