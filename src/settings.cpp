@@ -203,6 +203,21 @@ void Settings::setNotificationSound(const QString &sNotificationSound) {
 }
 
 // ----------------------------------------------------------------------------
+
+auto Settings::getIgnoredCallers() const -> QStringList {
+  return m_settings.value(QStringLiteral("IgnoredCallers"), QStringList())
+      .toStringList();
+}
+
+void Settings::setIgnoredCallers(const QStringList &sListIgnoredCallers) {
+  QStringList sList(sListIgnoredCallers);
+  for (QString &entry : sList) {
+    entry = entry.trimmed();
+  }
+  m_settings.setValue(QStringLiteral("IgnoredCallers"), sList);
+}
+
+// ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 // FritzBox
 

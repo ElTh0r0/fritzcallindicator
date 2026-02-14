@@ -186,6 +186,16 @@ void FritzCallIndicator::onIncomingCall(unsigned /* connectionId */,
   QString sResolvedCaller =
       m_pNumberResolver->resolveNumber(sCaller.trimmed(), QStringList());
 #endif
+
+  // Skip ignored callers
+  for (const QString &sIgnore : m_pSettings->getIgnoredCallers()) {
+    if (!sIgnore.trimmed().isEmpty() &&
+        sResolvedCaller.trimmed().startsWith(sIgnore.trimmed(),
+                                             Qt::CaseInsensitive)) {
+      return;
+    }
+  }
+
   QString sResolvedCallee = m_pSettings->resolveOwnNumber(sCallee.trimmed());
   QString sTitle(tr("Incoming call"));
   if (!sResolvedCallee.isEmpty()) {

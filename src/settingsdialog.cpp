@@ -301,6 +301,8 @@ void SettingsDialog::readSettings() {
       pSettings->getMaxEntriesCallHistory());
   m_pUi->spinBoxMaxDaysOfOldCalls->setValue(pSettings->getMaxDaysOfOldCalls());
   m_pUi->spinBoxTimeout->setValue(pSettings->getPopupTimeout());
+  m_pUi->lineEditIgnoredCallers->setText(
+      pSettings->getIgnoredCallers().join(','));
 #ifdef FRITZ_USE_NOTIFICATION_SOUND
   QString sSound(pSettings->getNotificationSound());
   if (sSound.isEmpty()) {
@@ -419,6 +421,8 @@ void SettingsDialog::accept() {
       m_pUi->spinBoxMaxEntriesCallHistory->value());
   pSettings->setMaxDaysOfOldCalls(m_pUi->spinBoxMaxDaysOfOldCalls->value());
   pSettings->setAutostart(m_pUi->cbAutostart->isChecked());
+  pSettings->setIgnoredCallers(
+      m_pUi->lineEditIgnoredCallers->text().trimmed().split(','));
 #ifdef FRITZ_USE_NOTIFICATION_SOUND
   QString sSound(m_pUi->lineEditNotification->text().trimmed());
   if (m_pUi->cbNotificationSound->isChecked() && !sSound.isEmpty()) {

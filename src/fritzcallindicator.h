@@ -29,7 +29,7 @@ class FritzCallIndicator : public QObject {
   Q_OBJECT
 
  public:
-  FritzCallIndicator(const QDir &sharePath);
+  explicit FritzCallIndicator(const QDir &sharePath);
   ~FritzCallIndicator();
 
  private slots:

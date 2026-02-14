@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>476</height>
+    <height>486</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -185,6 +185,20 @@
          </property>
          <property name="value">
           <number>10</number>
+         </property>
+        </widget>
+       </item>
+       <item row="12" column="0">
+        <widget class="QLabel" name="lblIgnorePopup">
+         <property name="text">
+          <string>No popup for:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="12" column="1">
+        <widget class="QLineEdit" name="lineEditIgnoredCallers">
+         <property name="toolTip">
+          <string>If the caller name starts with the defined string(s), no popup will be shown</string>
          </property>
         </widget>
        </item>

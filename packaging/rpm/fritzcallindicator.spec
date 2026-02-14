@@ -31,7 +31,6 @@ Group:          Applications/Internet
 #--------------------------------------------------------------------
 %if 0%{?fedora}
 BuildRequires:  desktop-file-utils
-BuildRequires:  gettext
 BuildRequires:  libappstream-glib
 BuildRequires:  ninja-build
 # Fedora <= 41
@@ -76,7 +75,7 @@ desktop-file-validate %{buildroot}/%{_datadir}/applications/com.github.elth0r0.f
 appstream-util validate-relax --nonet %{buildroot}%{_datadir}/metainfo/com.github.elth0r0.fritzcallindicator.metainfo.xml || :
 %endif
 #--------------------------------------------------------------------
-# SUSE
+# openSUSE
 #--------------------------------------------------------------------
 %if 0%{?suse_version}
 %build

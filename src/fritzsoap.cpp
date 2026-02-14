@@ -29,7 +29,7 @@ FritzSOAP *FritzSOAP::instance() {
 
 QString FritzSOAP::sendRequest(const QString &service, const QString &action,
                                const QString &body, const QString &controlUrl) {
-  Settings *pSettings = Settings::instance();
+  const Settings *pSettings = Settings::instance();
   const QUrl url =
       QUrl(QStringLiteral("http://") + pSettings->getHostName() + ":" +
            QString::number(pSettings->getTR064Port()) + controlUrl);
