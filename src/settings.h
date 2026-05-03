@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2024-2025 Thorsten Roth
+// SPDX-FileCopyrightText: 2024-2026 Thorsten Roth
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #ifndef SETTINGS_H_
