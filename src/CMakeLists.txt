@@ -93,7 +93,6 @@ set(RESOURCES
 
 set(TRANSLATIONS
     ../lang/fritzcallindicator_de.ts
-    ../lang/fritzcallindicator_en.ts
 )
 
 if (GENERATE_TS)
