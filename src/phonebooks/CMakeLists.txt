@@ -20,10 +20,10 @@ set(SOURCES
     fritzphonebook.cpp
 )
 if(FRITZ_USE_CARDDAV_ADDRESSBOOK)
-    list(APPEND HEADERS carddav.cpp)
+    list(APPEND SOURCES carddav.cpp)
 endif()
 if(FRITZ_USE_THUNDERBIRD_ADDRESSBOOK)
-    list(APPEND HEADERS thunderbird.cpp)
+    list(APPEND SOURCES thunderbird.cpp)
 endif()
 
 target_sources(${target_name} PRIVATE ${HEADERS} ${SOURCES})

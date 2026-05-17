@@ -1,7 +1,7 @@
 # FritzCallIndicator
 FritzCallIndicator displays a notification pop-up in the taskbar for incoming calls from the Fritz!Box.
 
-![Call](https://github.com/user-attachments/assets/6eb39205-a047-4bdb-b7dc-dc7b8fd85126)
+![Call](./data/screenshot.png)
 
 In addition, FritzCallIndicator has the following features:
 
