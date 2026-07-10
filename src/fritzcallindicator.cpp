@@ -204,7 +204,7 @@ void FritzCallIndicator::onIncomingCall(unsigned /* connectionId */,
 
   // TODO: Configurable date format
   m_sListCallHistory.push_front(
-      QDateTime::currentDateTime().toString("dd.MM.yy|hh:mm|") +
+      "1|" + QDateTime::currentDateTime().toString("dd.MM.yy|hh:mm|") +
       sResolvedCaller);
   // Limit the number of recent calls
   if (m_sListCallHistory.count() > m_pSettings->getMaxEntriesCallHistory()) {
@@ -276,8 +276,8 @@ QStringList FritzCallIndicator::getCallHistory() {
   xml.clear();
   xml.addData(data);
 
-  bool inCall = false;
-  bool typeIsOne = false;
+  bool bInCall = false;
+  ushort nType = 0;  // 1 = Incoming call; 2 = Missed call
   QString sName;
   QString sNumber;
   QString sDate;
@@ -287,28 +287,27 @@ QStringList FritzCallIndicator::getCallHistory() {
 
     if (xml.isStartElement()) {
       if (xml.name() == QStringLiteral("Call")) {
-        inCall = true;
-        typeIsOne = false;
+        bInCall = true;
+        nType = 0;
         sName.clear();
         sNumber.clear();
         sDate.clear();
         sTime.clear();
-      } else if (inCall) {
+      } else if (bInCall) {
         if (xml.name() == QStringLiteral("Type")) {
-          QString typeText = xml.readElementText();
-          typeIsOne = (typeText == QStringLiteral("1"));  // 1 = Incoming call
+          nType = xml.readElementText().toUShort();
         } else if (xml.name() == QStringLiteral("Caller")) {
-          if (typeIsOne)
+          if (nType == 1 || nType == 2)
             sNumber = xml.readElementText();
           else
             xml.skipCurrentElement();
         } else if (xml.name() == QStringLiteral("Name")) {
-          if (typeIsOne)
+          if (nType == 1 || nType == 2)
             sName = xml.readElementText();
           else
             xml.skipCurrentElement();
         } else if (xml.name() == QStringLiteral("Date")) {
-          if (typeIsOne) {
+          if (nType == 1 || nType == 2) {
             sDate = xml.readElementText();
             // TODO: Configurable date format
             // Date format from XML: dd.MM.yy HH:mm
@@ -326,7 +325,7 @@ QStringList FritzCallIndicator::getCallHistory() {
         }
       }
     } else if (xml.isEndElement() && xml.name() == QStringLiteral("Call")) {
-      if (typeIsOne) {
+      if (nType == 1 || nType == 2) {
         if (sName.isEmpty()) {
 #if defined(QT_DEBUG) || !defined(FRITZ_USE_ONLINE_RESOLVERS)
           // Don't use online resolvers during debugging to prevent rate limits
@@ -336,11 +335,12 @@ QStringList FritzCallIndicator::getCallHistory() {
               sNumber, m_pSettings->getEnabledOnlineResolvers());
 #endif
         }
-        sListCalls.push_back(sDate + "|" + sTime + "|" + sName);
+        sListCalls.push_back(QString::number(nType) + "|" + sDate + "|" +
+                             sTime + "|" + sName);
         if (sListCalls.size() >= m_pSettings->getMaxEntriesCallHistory()) break;
       }
-      inCall = false;
-      typeIsOne = false;
+      bInCall = false;
+      nType = 0;
     }
   }
 
@@ -356,6 +356,17 @@ QStringList FritzCallIndicator::getCallHistory() {
 // ----------------------------------------------------------------------------
 
 void FritzCallIndicator::showCallHistory() {
+  QString sIconIncomming(
+      QStringLiteral(":/icons/dark/png/call-incoming-symbolic.png"));
+  QString sIconMissed(
+      QStringLiteral(":/icons/dark/png/call-missed-symbolic.png"));
+  if (QStringLiteral("light") == m_pSettings->getIconTheme()) {
+    sIconIncomming =
+        sIconIncomming.replace(QStringLiteral("dark"), QStringLiteral("light"));
+    sIconMissed =
+        sIconMissed.replace(QStringLiteral("dark"), QStringLiteral("light"));
+  }
+
   Qt::AlignmentFlag Align;
   QDialog dialog;
   dialog.setWindowTitle(tr("Call history"));
@@ -366,24 +377,34 @@ void FritzCallIndicator::showCallHistory() {
   layout->setContentsMargins(10, 10, 10, 10);
   layout->setSpacing(10);
 
-  layout->addWidget(new QLabel("<b>" + tr("Date") + "</b>", &dialog), 0, 0,
+  layout->addWidget(new QLabel("<b>" + tr("Date") + "</b>", &dialog), 0, 1,
                     Qt::AlignCenter | Qt::AlignVCenter);
-  layout->addWidget(new QLabel("<b>" + tr("Time") + "</b>", &dialog), 0, 1,
+  layout->addWidget(new QLabel("<b>" + tr("Time") + "</b>", &dialog), 0, 2,
                     Qt::AlignCenter | Qt::AlignVCenter);
-  layout->addWidget(new QLabel("<b>" + tr("Caller") + "</b>", &dialog), 0, 2,
+  layout->addWidget(new QLabel("<b>" + tr("Caller") + "</b>", &dialog), 0, 3,
                     Qt::AlignCenter | Qt::AlignVCenter);
 
   for (int nRow = 0; nRow < m_sListCallHistory.count(); nRow++) {
     QStringList sCall(m_sListCallHistory.at(nRow).split('|'));
     if (sCall.count() > 2) {
-      for (int nCol = 0; nCol < 3; nCol++) {
-        if (2 == nCol) {
+      for (int nCol = 0; nCol < 4; nCol++) {
+        if (3 == nCol) {
           Align = Qt::AlignLeft;
         } else {
           Align = Qt::AlignCenter;
         }
-        layout->addWidget(new QLabel(sCall.at(nCol), &dialog), nRow + 1, nCol,
-                          Align | Qt::AlignVCenter);
+        if (0 != nCol) {
+          layout->addWidget(new QLabel(sCall.at(nCol), &dialog), nRow + 1, nCol,
+                            Align | Qt::AlignVCenter);
+        } else {
+          QLabel *iconLabel = new QLabel(&dialog);
+          if (sCall.at(nCol) == "1")
+            iconLabel->setPixmap(QPixmap(sIconIncomming));
+          else if (sCall.at(nCol) == "2")
+            iconLabel->setPixmap(QPixmap(sIconMissed));
+          layout->addWidget(iconLabel, nRow + 1, nCol,
+                            Align | Qt::AlignVCenter);
+        }
       }
     }
   }
@@ -391,7 +412,7 @@ void FritzCallIndicator::showCallHistory() {
   auto *button =
       new QDialogButtonBox(QDialogButtonBox::Close, Qt::Horizontal, &dialog);
   connect(button, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
-  layout->addWidget(button, m_sListCallHistory.count() + 1, 0, 1, 3,
+  layout->addWidget(button, m_sListCallHistory.count() + 1, 0, 1, 4,
                     Qt::AlignCenter);
 
   dialog.exec();
@@ -456,13 +477,15 @@ void FritzCallIndicator::showInfoBox() {
                           "</center><br />"
                           "%8")
           .arg(APP_NAME, APP_VERSION, APP_DESC, APP_COPY,
-               "URL: <a href=\"https://github.com/ElTh0r0/fritzcallindicator\">"
+               "URL: <a "
+               "href=\"https://github.com/ElTh0r0/fritzcallindicator\">"
                "https://github.com/ElTh0r0/fritzcallindicator</a>",
                tr("License") +
                    ": <a href=\"https://www.gnu.org/licenses/gpl-3.0.html\">"
                    "GNU General Public License Version 3</a>",
                tr("This application uses "
-                  "<a href=\"https://invent.kde.org/frameworks/breeze-icons\">"
+                  "<a "
+                  "href=\"https://invent.kde.org/frameworks/breeze-icons\">"
                   "Breeze icons from KDE</a>."),
                "<i>" + tr("Translations") +
                    "</i><br />"
