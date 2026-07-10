@@ -29,21 +29,16 @@ FritzSOAP *FritzSOAP::instance() {
 
 QString FritzSOAP::sendRequest(const QString &service, const QString &action,
                                const QString &body, const QString &controlUrl) {
-  const Settings *pSettings = Settings::instance();
-  const QUrl url =
-      QUrl(QStringLiteral("http://") + pSettings->getHostName() + ":" +
-           QString::number(pSettings->getTR064Port()) + controlUrl);
+  const QUrl url = QUrl(
+      QStringLiteral("http://") + Settings::instance()->getHostName() + ":" +
+      QString::number(Settings::instance()->getTR064Port()) + controlUrl);
 
   QNetworkRequest request(url);
 
-  // Authorization
-  QString credentials =
-      pSettings->getFritzUser() + ":" + pSettings->getFritzPassword();
-  QByteArray auth = "Basic " + credentials.toUtf8().toBase64();
-
-  request.setRawHeader("Authorization", auth);
-
   // Content & SOAP
+  // No preemptive Authorization header: FRITZ!Box's TR-064 endpoint expects
+  // HTTP Digest, and setting the header manually would stop Qt from running
+  // its own challenge-response negotiation (authenticationRequired below).
   request.setHeader(QNetworkRequest::ContentTypeHeader,
                     QStringLiteral("text/xml; charset=\"utf-8\""));
 
@@ -58,12 +53,9 @@ QString FritzSOAP::sendRequest(const QString &service, const QString &action,
 
   QNetworkAccessManager nam;
 
-  // Optional: Auth-Fallback über QAuthenticator (nur wenn RawHeader nicht
-  // greift)
   QObject::connect(
       &nam, &QNetworkAccessManager::authenticationRequired,
       [](QNetworkReply * /*reply*/, QAuthenticator *authenticator) {
-        qDebug() << "authenticationRequired() triggered!";
         authenticator->setUser(Settings::instance()->getFritzUser());
         authenticator->setPassword(Settings::instance()->getFritzPassword());
       });
