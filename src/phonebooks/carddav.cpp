@@ -57,6 +57,7 @@ auto CardDAV::sendReportRequest(const QUrl &url, const QString &sUsername,
 
   QNetworkAccessManager nam;
   QNetworkRequest request(url);
+  request.setTransferTimeout(Settings::instance()->getRequestTimeout());
   request.setHeader(QNetworkRequest::ContentTypeHeader, "application/xml");
   request.setRawHeader("Authorization", authHeader);
   request.setRawHeader("Depth", "1");  // Important!

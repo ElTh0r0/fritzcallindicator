@@ -12,7 +12,7 @@
 #include <QStandardPaths>
 
 OnlineResolvers::OnlineResolvers(QDir sharePath, QObject *pParent)
-    : QObject{pParent} {
+    : QObject{pParent}, TIMEOUT(500) {
   qDebug() << Q_FUNC_INFO;
   QList<QDir> resolverPaths;
 
@@ -86,7 +86,7 @@ OnlineResolvers::OnlineResolvers(QDir sharePath, QObject *pParent)
   // qDebug() << m_Resolvers;
 
   m_pNwManager = new QNetworkAccessManager(this);
-  m_pNwManager->setTransferTimeout(500);
+  m_pNwManager->setTransferTimeout(TIMEOUT);
 }
 
 // ----------------------------------------------------------------------------
@@ -118,6 +118,7 @@ auto OnlineResolvers::searchOnline(const QString &sNumber,
       sUrl = sUrl.replace(QStringLiteral("%NUMBER%"), sNumber);
 
       QEventLoop loop;
+      // Request timeout set by TIMEOUT for m_pNwManager at initialization
       QNetworkReply *pReply = m_pNwManager->get(QNetworkRequest(QUrl(sUrl)));
       connect(pReply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
       loop.exec();

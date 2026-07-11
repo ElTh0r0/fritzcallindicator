@@ -24,6 +24,7 @@ class OnlineResolvers : public QObject {
   QHash<QString, QHash<QString, QString>> m_Resolvers;
   QHash<QString, QString> m_ResolverList;
   QNetworkAccessManager *m_pNwManager;
+  const quint16 TIMEOUT;
 };
 
 #endif  // ONLINERESOLVERS_H_
