@@ -14,6 +14,7 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QNetworkReply>
+#include <QTimer>
 #include <QXmlStreamReader>
 
 #include "fritzsoap.h"
@@ -50,7 +51,9 @@ FritzCallIndicator::FritzCallIndicator(const QDir &sharePath)
                             m_pSettings->getCallMonitorPort(),
                             m_pSettings->getRetryInterval());
 
-  m_sListCallHistory = this->getCallHistory();
+  // Delay getCallHistory to allow the network to initialise.
+  QTimer::singleShot(5000,
+                     [this]() { m_sListCallHistory = this->getCallHistory(); });
 
 #ifdef FRITZ_USE_NOTIFICATION_SOUND
   m_pNotificationSound = new QMediaPlayer;

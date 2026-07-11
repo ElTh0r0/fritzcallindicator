@@ -12,6 +12,7 @@
 #include <QSettings>
 #include <QStandardPaths>
 #include <QStringListModel>
+#include <QTimer>
 #ifdef FRITZ_USE_NOTIFICATION_SOUND
 #include <QMediaFormat>
 #endif
@@ -161,7 +162,10 @@ SettingsDialog::SettingsDialog(
 #endif
 
   this->readSettings();
-  this->initFritzPhonebooks();  // After readSettings!
+
+  // Delay initFritzPhonebooks to allow the network to initialise.
+  QTimer::singleShot(
+      5000, this, &SettingsDialog::initFritzPhonebooks);  // After readSettings!
 #ifdef FRITZ_USE_ONLINE_RESOLVERS
   m_pUi->tableOnlineResolvers->horizontalHeader()->setSectionResizeMode(
       QHeaderView::Stretch);
