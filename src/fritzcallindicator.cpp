@@ -258,6 +258,7 @@ QStringList FritzCallIndicator::getCallHistory() {
 
   QNetworkAccessManager nam;
   QNetworkRequest request(sCallListUrl);
+  request.setTransferTimeout(5000);
   QNetworkReply *reply = nam.get(request);
 
   QEventLoop loop;
