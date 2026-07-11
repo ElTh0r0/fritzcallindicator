@@ -121,7 +121,7 @@ bool FritzPhonebook::downloadPhonebook(int id, const QUrl &url) {
 
   QNetworkAccessManager nam;
   QNetworkRequest request(url);
-  request.setTransferTimeout(5000);
+  request.setTransferTimeout(Settings::instance()->getRequestTimeout());
   QNetworkReply *reply = nam.get(request);
 
   QEventLoop loop;

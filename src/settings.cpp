@@ -22,6 +22,7 @@ const uint Settings::DEFAULT_POPUP_TIMEOUT_SEC = 10;
 const uint Settings::DEFAULT_MAX_DAYS_OLD_CALLS = 7;
 const uint Settings::DEFAULT_MAX_CALL_HISTORY = 10;
 const bool Settings::DEFAULT_AUTOSTART = false;
+const uint Settings::DEFAULT_REQUEST_TIMEOUT_MSEC = 5000;
 // FritzBox
 const QString Settings::DEFAULT_HOST_NAME = QStringLiteral("fritz.box");
 const uint Settings::DEFAULT_CALL_MONITOR_PORT = 1012;
@@ -215,6 +216,14 @@ void Settings::setIgnoredCallers(const QStringList &sListIgnoredCallers) {
     entry = entry.trimmed();
   }
   m_settings.setValue(QStringLiteral("IgnoredCallers"), sList);
+}
+
+// ----------------------------------------------------------------------------
+
+auto Settings::getRequestTimeout() const -> uint {
+  return m_settings
+      .value(QStringLiteral("RequestTimeout"), DEFAULT_REQUEST_TIMEOUT_MSEC)
+      .toUInt();
 }
 
 // ----------------------------------------------------------------------------

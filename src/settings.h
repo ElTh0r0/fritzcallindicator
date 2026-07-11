@@ -29,6 +29,7 @@ class Settings : public QObject {
   void setNotificationSound(const QString& sNotificationSound);
   auto getIgnoredCallers() const -> QStringList;
   void setIgnoredCallers(const QStringList& sListIgnoredCallers);
+  auto getRequestTimeout() const -> uint;
 
   // FritzBox
   auto getHostName() const -> QString;
@@ -80,6 +81,7 @@ class Settings : public QObject {
   static const uint DEFAULT_MAX_DAYS_OLD_CALLS;
   static const uint DEFAULT_MAX_CALL_HISTORY;
   static const bool DEFAULT_AUTOSTART;
+  static const uint DEFAULT_REQUEST_TIMEOUT_MSEC;
   // FritzBox
   static const QString DEFAULT_HOST_NAME;
   static const uint DEFAULT_CALL_MONITOR_PORT;
