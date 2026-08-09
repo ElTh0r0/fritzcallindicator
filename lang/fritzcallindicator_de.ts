@@ -67,7 +67,7 @@
     </message>
     <message>
         <location filename="../src/fritzcallindicator.cpp" line="93"/>
-        <location filename="../src/fritzcallindicator.cpp" line="446"/>
+        <location filename="../src/fritzcallindicator.cpp" line="448"/>
         <source>About</source>
         <translation>Über</translation>
     </message>
@@ -112,17 +112,17 @@
         <translation>Anrufer</translation>
     </message>
     <message>
-        <location filename="../src/fritzcallindicator.cpp" line="459"/>
+        <location filename="../src/fritzcallindicator.cpp" line="461"/>
         <source>License</source>
         <translation>Lizenz</translation>
     </message>
     <message>
-        <location filename="../src/fritzcallindicator.cpp" line="462"/>
+        <location filename="../src/fritzcallindicator.cpp" line="464"/>
         <source>This application uses &lt;a href=&quot;https://invent.kde.org/frameworks/breeze-icons&quot;&gt;Breeze icons from KDE&lt;/a&gt;.</source>
         <translation>Diese Anwendung verwendet &lt;a href=&quot;https://invent.kde.org/frameworks/breeze-icons&quot;&gt;Breeze Symbole von KDE&lt;/a&gt;.</translation>
     </message>
     <message>
-        <location filename="../src/fritzcallindicator.cpp" line="465"/>
+        <location filename="../src/fritzcallindicator.cpp" line="467"/>
         <source>Translations</source>
         <translation>Übersetzungen</translation>
     </message>

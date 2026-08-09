@@ -103,15 +103,15 @@ auto OnlineResolvers::searchOnline(const QString &sNumber,
                                    const QString &sCountryCode,
                                    const QStringList &sListEnabledResolvers)
     -> QString {
-  QHashIterator<QString, QHash<QString, QString>> resolver(m_Resolvers);
-  while (resolver.hasNext()) {
-    resolver.next();
-    if (sCountryCode ==
-            resolver.value().value(QStringLiteral("CountryCode"), "") &&
-        sListEnabledResolvers.contains(resolver.key())) {
+  for (auto it = m_Resolvers.constBegin(); it != m_Resolvers.constEnd(); ++it) {
+    const QString &sKey = it.key();
+    const QHash<QString, QString> &resolver = it.value();
+
+    if (sCountryCode == resolver.value(QStringLiteral("CountryCode"), "") &&
+        sListEnabledResolvers.contains(sKey)) {
       qDebug() << "Searching online:"
-               << resolver.value().value(QStringLiteral("Service"), "");
-      QString sUrl = resolver.value().value(QStringLiteral("URL"), "");
+               << resolver.value(QStringLiteral("Service"), "");
+      QString sUrl = resolver.value(QStringLiteral("URL"), "");
       if (sUrl.isEmpty()) {
         continue;
       }
@@ -137,7 +137,7 @@ auto OnlineResolvers::searchOnline(const QString &sNumber,
       QString sReplyData = QString::fromUtf8(pData->readAll());
       // qDebug() << parseResult(sReplyData, m_Resolvers["das_oertliche"]);
       pReply->deleteLater();
-      QString sResult = parseReply(sReplyData, resolver.value());
+      QString sResult = parseReply(sReplyData, resolver);
       if (!sResult.isEmpty()) {
         return sResult;
       }

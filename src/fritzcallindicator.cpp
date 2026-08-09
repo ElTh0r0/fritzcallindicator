@@ -218,7 +218,7 @@ void FritzCallIndicator::onIncomingCall(unsigned /* connectionId */,
 #ifdef FRITZ_USE_NOTIFICATION_SOUND
   QString sSound(m_pSettings->getNotificationSound());
   if (!sSound.isEmpty()) {
-    m_pNotificationSound->setSource(sSound);
+    m_pNotificationSound->setSource(QUrl::fromLocalFile(sSound));
     m_pNotificationSound->play();
   }
 #endif
@@ -260,7 +260,8 @@ QStringList FritzCallIndicator::getCallHistory() {
   // qDebug() << "Downloading call list from" << sCallListUrl;
 
   QNetworkAccessManager nam;
-  QNetworkRequest request(sCallListUrl);
+  QUrl url(sCallListUrl);
+  QNetworkRequest request(url);
   request.setTransferTimeout(m_pSettings->getRequestTimeout());
   QNetworkReply *reply = nam.get(request);
 

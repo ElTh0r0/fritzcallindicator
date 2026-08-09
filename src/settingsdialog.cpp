@@ -383,15 +383,13 @@ void SettingsDialog::readSettings() {
   m_pUi->tableOwnNumbers->clearContents();
   m_pUi->tableOwnNumbers->model()->removeRows(
       0, m_pUi->tableOwnNumbers->rowCount());
-  QMapIterator<QString, QString> i(ownNumbers);
-  while (i.hasNext()) {
-    i.next();
+  for (auto it = ownNumbers.constBegin(); it != ownNumbers.constEnd(); ++it) {
     if (row + 1 > nMaxOwnNumbers) break;
 
-    if (!i.key().isEmpty()) {
+    if (!it.key().isEmpty()) {
       m_pUi->tableOwnNumbers->insertRow(row);
-      QTableWidgetItem *itemNum = new QTableWidgetItem(i.key());
-      QTableWidgetItem *itemDesc = new QTableWidgetItem(i.value());
+      QTableWidgetItem *itemNum = new QTableWidgetItem(it.key());
+      QTableWidgetItem *itemDesc = new QTableWidgetItem(it.value());
       m_pUi->tableOwnNumbers->setItem(row, 0, itemNum);
       m_pUi->tableOwnNumbers->setItem(row, 1, itemDesc);
       row++;

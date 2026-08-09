@@ -7,7 +7,6 @@
 
 #include <QAuthenticator>
 #include <QEventLoop>
-#include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QUrl>
@@ -55,16 +54,14 @@ QString FritzSOAP::sendRequest(const QString &service, const QString &action,
             s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
   <s:Body>)") + body + QStringLiteral("</s:Body></s:Envelope>");
 
-  QNetworkAccessManager nam;
-
   QObject::connect(
-      &nam, &QNetworkAccessManager::authenticationRequired,
+      &m_nam, &QNetworkAccessManager::authenticationRequired, this,
       [](QNetworkReply * /*reply*/, QAuthenticator *authenticator) {
         authenticator->setUser(Settings::instance()->getFritzUser());
         authenticator->setPassword(Settings::instance()->getFritzPassword());
       });
 
-  QNetworkReply *reply = nam.post(request, envelope.toUtf8());
+  QNetworkReply *reply = m_nam.post(request, envelope.toUtf8());
 
   QEventLoop loop;
   QObject::connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);

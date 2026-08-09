@@ -41,14 +41,14 @@ auto FritzPhonebook::getContacts() -> const QHash<QString, QString> {
   QHash<QString, QString> tmpContacts;
   QHash<QString, QString> PhoneNumbers;
 
-  QHashIterator<QString, QString> i(m_Phonebooks);
-  while (i.hasNext()) {
-    i.next();
+  for (auto it = m_Phonebooks.constBegin(); it != m_Phonebooks.constEnd();
+       ++it) {
     tmpContacts.clear();
 
-    if (Settings::instance()->getEnabledFritzPhonebooks().contains(i.value())) {
-      qDebug() << "Reading FritzBox phonebook:" << i.key() << i.value();
-      QString path = m_sSavepath + QStringLiteral("/phonebook_") + i.key() +
+    if (Settings::instance()->getEnabledFritzPhonebooks().contains(
+            it.value())) {
+      qDebug() << "Reading FritzBox phonebook:" << it.key() << it.value();
+      QString path = m_sSavepath + QStringLiteral("/phonebook_") + it.key() +
                      QStringLiteral(".xml");
       tmpContacts =
           this->loadFromFile(path, Settings::instance()->getCountryCode());

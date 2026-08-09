@@ -184,7 +184,7 @@ auto NumberResolver::resolveNumber(
 
   // Resolve country code
   if (sPhoneNumber.startsWith(QStringLiteral("00"))) {
-    for (auto i = m_CountryCodes.cbegin(), end = m_CountryCodes.cend();
+    for (auto i = m_CountryCodes.constBegin(), end = m_CountryCodes.constEnd();
          i != end; ++i) {
       if (sPhoneNumber.startsWith("00" + i.key())) {
         sCountryCode = "00" + i.key();

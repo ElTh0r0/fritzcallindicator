@@ -6,6 +6,7 @@
 #ifndef FRITZSOAP_H_
 #define FRITZSOAP_H_
 
+#include <QNetworkAccessManager>
 #include <QObject>
 
 class FritzSOAP : public QObject {
@@ -19,6 +20,7 @@ class FritzSOAP : public QObject {
 
  private:
   explicit FritzSOAP(QObject *pParent = nullptr);
+  QNetworkAccessManager m_nam;
 };
 
 #endif  // FRITZSOAP_H_
