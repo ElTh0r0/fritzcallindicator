@@ -25,7 +25,13 @@
     <binary>fritzcallindicator</binary>
   </provides>
   
-  <content_rating type="oars-1.0" />
+  <content_rating type="oars-1.1" />
+  
+  <requires>
+    <display_length compare="ge">768</display_length>
+    <control>keyboard</control>
+    <control>pointing</control>
+  </requires>
   
   <languages>
       <lang percentage="100">de</lang>
@@ -33,6 +39,19 @@
   </languages>
   
   <releases>
+    <release version="0.10.0" date="2026-11-08">
+      <description>
+        <p>Main changes:</p>
+        <ul>
+          <li>Show call history on click on tray</li>
+          <li>Option to ignore notification for certain callers.</li>
+          <li>Distinguish incoming and missed calls in call list.</li>
+          <li>Configurable request timeouts.</li>
+          <li>Delay FritzBox calls at startup due to network initialisation</li>
+          <li>Use Qt strict mode</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.9.0" date="2025-11-28">
       <description>
         <p>Main changes:</p>

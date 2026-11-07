@@ -1,9 +1,9 @@
-# SPDX-FileCopyrightText: 2025 Thorsten Roth
+# SPDX-FileCopyrightText: 2026 Thorsten Roth
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 cmake_minimum_required(VERSION 3.16)
 project(FritzCallIndicator
-    VERSION 0.9.0
+    VERSION 0.10.0
     DESCRIPTION "Fritz!Box call indicator"
     LANGUAGES C CXX
 )

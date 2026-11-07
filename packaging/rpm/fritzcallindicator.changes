@@ -1,4 +1,14 @@
 -------------------------------------------------------------------
+Sun Nov 08 16:22:00 UTC 2026 - elthoro@gmx.de 0.10.0
+
+- Show call history on click on tray
+- Option to ignore notification for certain callers.
+- Distinguish incoming and missed calls in call list.
+- Configurable request timeouts.
+- Delay FritzBox calls at startup due to network initialisation
+- Use Qt strict mode
+
+-------------------------------------------------------------------
 Fri Nov 28 14:56:00 UTC 2025 - elthoro@gmx.de 0.9.0
 
 - Possibility to add custom online resolvers.
