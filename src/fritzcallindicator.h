@@ -34,6 +34,7 @@ class FritzCallIndicator : public QObject {
 
  private slots:
   void showCallHistory();
+  void onTrayIconActivated(QSystemTrayIcon::ActivationReason reason);
 
  private:
   void createActions();

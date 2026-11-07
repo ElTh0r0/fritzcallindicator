@@ -8,6 +8,7 @@
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QGridLayout>
+#include <QGuiApplication>
 #include <QIcon>
 #include <QLabel>
 #include <QLibraryInfo>
@@ -115,7 +116,8 @@ void FritzCallIndicator::createTrayIcon() {
   m_pTrayIconMenu->addAction(m_pQuit);
 
   m_pTrayIcon = new QSystemTrayIcon(this);
-  m_pTrayIcon->setContextMenu(m_pTrayIconMenu);
+  m_pTrayIcon->setToolTip(APP_NAME);
+  m_pTrayIcon->setContextMenu(m_pTrayIconMenu);  // Right click on tray
 
   QString sTray(QStringLiteral(":/icons/tray/call-start_22_dark.png"));
   if (QStringLiteral("light") == m_pSettings->getIconTheme()) {
@@ -125,6 +127,29 @@ void FritzCallIndicator::createTrayIcon() {
   sTray = sTray.replace(QStringLiteral("22"), QStringLiteral("16"));
 #endif
   m_pTrayIcon->setIcon(QIcon(sTray));
+
+  connect(m_pTrayIcon, &QSystemTrayIcon::activated, this,
+          &FritzCallIndicator::onTrayIconActivated);
+}
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+void FritzCallIndicator::onTrayIconActivated(
+    QSystemTrayIcon::ActivationReason reason) {
+  if (reason != QSystemTrayIcon::Trigger) {
+    return;  // Right click -> Context menu
+  }
+
+  const bool isWayland =
+      QGuiApplication::platformName() == QLatin1String("wayland");
+
+  if (isWayland) {
+    m_pShowCallHistory->trigger();
+  } else {
+    // X11: Open context menu popup
+    m_pTrayIconMenu->popup(QCursor::pos());
+  }
 }
 
 // ----------------------------------------------------------------------------
