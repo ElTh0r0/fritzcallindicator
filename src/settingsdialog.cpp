@@ -163,7 +163,7 @@ SettingsDialog::SettingsDialog(
 
   this->readSettings();
 
-  // Delay initFritzPhonebooks to allow the network to initialise.
+  // Delay initFritzPhonebooks to allow the network to initialize.
   QTimer::singleShot(
       5000, this, &SettingsDialog::initFritzPhonebooks);  // After readSettings!
 #ifdef FRITZ_USE_ONLINE_RESOLVERS

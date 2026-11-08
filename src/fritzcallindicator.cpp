@@ -35,7 +35,6 @@ FritzCallIndicator::FritzCallIndicator(const QDir &sharePath)
 
   connect(m_pSettingsDialog, &SettingsDialog::changedPhonebooks,
           m_pNumberResolver, &NumberResolver::readPhonebooks);
-  m_pNumberResolver->readPhonebooks();
 
   m_pCallMonitor = new CallMonitor(this);
   connect(m_pCallMonitor, &CallMonitor::errorOccured, this,
@@ -47,13 +46,14 @@ FritzCallIndicator::FritzCallIndicator(const QDir &sharePath)
   connect(m_pSettingsDialog, &SettingsDialog::changedConnectionSettings,
           m_pCallMonitor, &CallMonitor::connectTo);
 
-  m_pCallMonitor->connectTo(m_pSettings->getHostName(),
-                            m_pSettings->getCallMonitorPort(),
-                            m_pSettings->getRetryInterval());
-
-  // Delay getCallHistory to allow the network to initialise.
-  QTimer::singleShot(5000,
-                     [this]() { m_sListCallHistory = this->getCallHistory(); });
+  // Delay connections to allow the network to initialize
+  QTimer::singleShot(5000, [this]() {
+    m_pCallMonitor->connectTo(m_pSettings->getHostName(),
+                              m_pSettings->getCallMonitorPort(),
+                              m_pSettings->getRetryInterval());
+    m_sListCallHistory = this->getCallHistory();
+    m_pNumberResolver->readPhonebooks();
+  });
 
 #ifdef FRITZ_USE_NOTIFICATION_SOUND
   m_pNotificationSound = new QMediaPlayer;
