@@ -8,7 +8,6 @@
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QGridLayout>
-#include <QGuiApplication>
 #include <QIcon>
 #include <QLabel>
 #include <QLibraryInfo>
@@ -137,19 +136,12 @@ void FritzCallIndicator::createTrayIcon() {
 
 void FritzCallIndicator::onTrayIconActivated(
     QSystemTrayIcon::ActivationReason reason) {
+  // Filter any action apart trigger (single mouse click)
+  // Single mouse click will open the call history
   if (reason != QSystemTrayIcon::Trigger) {
-    return;  // Right click -> Context menu
+    return;
   }
-
-  const bool isWayland =
-      QGuiApplication::platformName() == QLatin1String("wayland");
-
-  if (isWayland) {
-    m_pShowCallHistory->trigger();
-  } else {
-    // X11: Open context menu popup
-    m_pTrayIconMenu->popup(QCursor::pos());
-  }
+  m_pShowCallHistory->trigger();
 }
 
 // ----------------------------------------------------------------------------
