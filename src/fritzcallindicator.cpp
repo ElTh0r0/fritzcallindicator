@@ -47,7 +47,7 @@ FritzCallIndicator::FritzCallIndicator(const QDir &sharePath)
           m_pCallMonitor, &CallMonitor::connectTo);
 
   // Delay connections to allow the network to initialize
-  QTimer::singleShot(5000, [this]() {
+  QTimer::singleShot(5000, this, [this]() {
     m_pCallMonitor->connectTo(m_pSettings->getHostName(),
                               m_pSettings->getCallMonitorPort(),
                               m_pSettings->getRetryInterval());
@@ -200,18 +200,22 @@ void FritzCallIndicator::onIncomingCall(unsigned /* connectionId */,
                                         const QString &sCaller,
                                         const QString &sCallee) {
 #ifdef FRITZ_USE_ONLINE_RESOLVERS
-  QString sResolvedCaller = m_pNumberResolver->resolveNumber(
-      sCaller.trimmed(), m_pSettings->getEnabledOnlineResolvers());
+  QString sResolvedCaller =
+      m_pNumberResolver
+          ->resolveNumber(sCaller.trimmed(),
+                          m_pSettings->getEnabledOnlineResolvers())
+          .trimmed();
 #else
   QString sResolvedCaller =
-      m_pNumberResolver->resolveNumber(sCaller.trimmed(), QStringList());
+      m_pNumberResolver->resolveNumber(sCaller.trimmed(), QStringList())
+          .trimmed();
 #endif
 
   // Skip ignored callers
   for (const QString &sIgnore : m_pSettings->getIgnoredCallers()) {
-    if (!sIgnore.trimmed().isEmpty() &&
-        sResolvedCaller.trimmed().startsWith(sIgnore.trimmed(),
-                                             Qt::CaseInsensitive)) {
+    const QString sIgnoredCaller = sIgnore.trimmed();
+    if (!sIgnoredCaller.isEmpty() &&
+        sResolvedCaller.startsWith(sIgnoredCaller, Qt::CaseInsensitive)) {
       return;
     }
   }
