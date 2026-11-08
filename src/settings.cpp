@@ -114,13 +114,16 @@ auto Settings::getAutostart() const -> bool {
 void Settings::setAutostart(const bool bAutostart) {
   m_settings.setValue(QStringLiteral("Autostart"), bAutostart);
 
-#if defined(Q_OS_LINUX) || defined(Q_OS_UNIX)
+#if defined(Q_OS_UNIX)
   QString sAutostartPath =
       QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) +
       "/autostart/";
   QDir dAutostart(sAutostartPath);
   if (!dAutostart.exists()) {
-    dAutostart.mkpath(".");
+    if (!dAutostart.mkpath(".")) {
+      qWarning() << "Error while creating autostart folder!";
+      return;
+    }
   }
 
   QFile fDesktop(sAutostartPath + QString(APP_NAME).toLower() +
@@ -134,6 +137,9 @@ void Settings::setAutostart(const bool bAutostart) {
           "\nTerminal=false\nType=Application"
           "\nX-GNOME-Autostart-enabled=true\n");
       fDesktop.write(content);
+    } else {
+      qWarning() << "Error while creating autostart desktop file!";
+      return;
     }
   } else {
     fDesktop.remove();
@@ -166,7 +172,7 @@ void Settings::setAutostart(const bool bAutostart) {
 auto Settings::isAutostartEnabled() const -> bool {
   bool bEnabled = false;
 
-#if defined(Q_OS_LINUX) || defined(Q_OS_UNIX)
+#if defined(Q_OS_UNIX)
   QString sAutostartPath =
       QStandardPaths::locate(QStandardPaths::GenericConfigLocation,
                              "autostart/", QStandardPaths::LocateDirectory) +
