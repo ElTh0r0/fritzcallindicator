@@ -4,6 +4,7 @@
 #ifndef FRITZCALLINDICATOR_H_
 #define FRITZCALLINDICATOR_H_
 
+#include <QPointer>
 #include <QSystemTrayIcon>
 #include <QTranslator>
 #ifdef FRITZ_USE_NOTIFICATION_SOUND
@@ -65,6 +66,7 @@ class FritzCallIndicator : public QObject {
   QTranslator m_translatorQt;  // Qt translations
   const QString m_sSharePath;
   Settings *m_pSettings;
+  QPointer<QDialog> m_pCallHistoryDialog;
 
   SettingsDialog *m_pSettingsDialog = nullptr;
   CallMonitor *m_pCallMonitor = nullptr;

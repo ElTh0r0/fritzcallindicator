@@ -382,66 +382,77 @@ QStringList FritzCallIndicator::getCallHistory() {
 // ----------------------------------------------------------------------------
 
 void FritzCallIndicator::showCallHistory() {
-  QString sIconIncomming(
-      QStringLiteral(":/icons/dark/png/call-incoming-symbolic.png"));
-  QString sIconMissed(
-      QStringLiteral(":/icons/dark/png/call-missed-symbolic.png"));
-  if (QStringLiteral("light") == m_pSettings->getIconTheme()) {
-    sIconIncomming =
-        sIconIncomming.replace(QStringLiteral("dark"), QStringLiteral("light"));
-    sIconMissed =
-        sIconMissed.replace(QStringLiteral("dark"), QStringLiteral("light"));
-  }
+  if (!m_pCallHistoryDialog) {
+    QString sIconIncomming(
+        QStringLiteral(":/icons/dark/png/call-incoming-symbolic.png"));
+    QString sIconMissed(
+        QStringLiteral(":/icons/dark/png/call-missed-symbolic.png"));
+    if (QStringLiteral("light") == m_pSettings->getIconTheme()) {
+      sIconIncomming = sIconIncomming.replace(QStringLiteral("dark"),
+                                              QStringLiteral("light"));
+      sIconMissed =
+          sIconMissed.replace(QStringLiteral("dark"), QStringLiteral("light"));
+    }
 
-  Qt::AlignmentFlag Align;
-  QDialog dialog;
-  dialog.setWindowTitle(tr("Call history"));
-  dialog.setWindowFlags(dialog.window()->windowFlags() &
-                        ~Qt::WindowContextHelpButtonHint);
+    Qt::AlignmentFlag Align;
 
-  auto *layout = new QGridLayout(&dialog);
-  layout->setContentsMargins(10, 10, 10, 10);
-  layout->setSpacing(10);
+    m_pCallHistoryDialog = new QDialog;
+    m_pCallHistoryDialog->setAttribute(Qt::WA_DeleteOnClose);
+    m_pCallHistoryDialog->setWindowTitle(tr("Call history"));
+    m_pCallHistoryDialog->setWindowFlags(
+        m_pCallHistoryDialog->window()->windowFlags() &
+        ~Qt::WindowContextHelpButtonHint);
 
-  layout->addWidget(new QLabel("<b>" + tr("Date") + "</b>", &dialog), 0, 1,
-                    Qt::AlignCenter | Qt::AlignVCenter);
-  layout->addWidget(new QLabel("<b>" + tr("Time") + "</b>", &dialog), 0, 2,
-                    Qt::AlignCenter | Qt::AlignVCenter);
-  layout->addWidget(new QLabel("<b>" + tr("Caller") + "</b>", &dialog), 0, 3,
-                    Qt::AlignCenter | Qt::AlignVCenter);
+    auto *layout = new QGridLayout(m_pCallHistoryDialog);
+    layout->setContentsMargins(10, 10, 10, 10);
+    layout->setSpacing(10);
 
-  for (int nRow = 0; nRow < m_sListCallHistory.count(); nRow++) {
-    QStringList sCall(m_sListCallHistory.at(nRow).split('|'));
-    if (sCall.count() > 2) {
-      for (int nCol = 0; nCol < 4; nCol++) {
-        if (3 == nCol) {
-          Align = Qt::AlignLeft;
-        } else {
-          Align = Qt::AlignCenter;
-        }
-        if (0 != nCol) {
-          layout->addWidget(new QLabel(sCall.at(nCol), &dialog), nRow + 1, nCol,
-                            Align | Qt::AlignVCenter);
-        } else {
-          QLabel *iconLabel = new QLabel(&dialog);
-          if (sCall.at(nCol) == "1")
-            iconLabel->setPixmap(QPixmap(sIconIncomming));
-          else if (sCall.at(nCol) == "2")
-            iconLabel->setPixmap(QPixmap(sIconMissed));
-          layout->addWidget(iconLabel, nRow + 1, nCol,
-                            Align | Qt::AlignVCenter);
+    layout->addWidget(
+        new QLabel("<b>" + tr("Date") + "</b>", m_pCallHistoryDialog), 0, 1,
+        Qt::AlignCenter | Qt::AlignVCenter);
+    layout->addWidget(
+        new QLabel("<b>" + tr("Time") + "</b>", m_pCallHistoryDialog), 0, 2,
+        Qt::AlignCenter | Qt::AlignVCenter);
+    layout->addWidget(
+        new QLabel("<b>" + tr("Caller") + "</b>", m_pCallHistoryDialog), 0, 3,
+        Qt::AlignCenter | Qt::AlignVCenter);
+
+    for (int nRow = 0; nRow < m_sListCallHistory.count(); nRow++) {
+      QStringList sCall(m_sListCallHistory.at(nRow).split('|'));
+      if (sCall.count() > 2) {
+        for (int nCol = 0; nCol < 4; nCol++) {
+          if (3 == nCol) {
+            Align = Qt::AlignLeft;
+          } else {
+            Align = Qt::AlignCenter;
+          }
+          if (0 != nCol) {
+            layout->addWidget(new QLabel(sCall.at(nCol), m_pCallHistoryDialog),
+                              nRow + 1, nCol, Align | Qt::AlignVCenter);
+          } else {
+            QLabel *iconLabel = new QLabel(m_pCallHistoryDialog);
+            if (sCall.at(nCol) == "1")
+              iconLabel->setPixmap(QPixmap(sIconIncomming));
+            else if (sCall.at(nCol) == "2")
+              iconLabel->setPixmap(QPixmap(sIconMissed));
+            layout->addWidget(iconLabel, nRow + 1, nCol,
+                              Align | Qt::AlignVCenter);
+          }
         }
       }
     }
+
+    auto *button = new QDialogButtonBox(QDialogButtonBox::Close, Qt::Horizontal,
+                                        m_pCallHistoryDialog);
+    connect(button, &QDialogButtonBox::rejected, m_pCallHistoryDialog,
+            &QDialog::reject);
+    layout->addWidget(button, m_sListCallHistory.count() + 1, 0, 1, 4,
+                      Qt::AlignCenter);
   }
 
-  auto *button =
-      new QDialogButtonBox(QDialogButtonBox::Close, Qt::Horizontal, &dialog);
-  connect(button, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
-  layout->addWidget(button, m_sListCallHistory.count() + 1, 0, 1, 4,
-                    Qt::AlignCenter);
-
-  dialog.exec();
+  m_pCallHistoryDialog->show();
+  m_pCallHistoryDialog->raise();
+  m_pCallHistoryDialog->activateWindow();
 }
 
 // ----------------------------------------------------------------------------
