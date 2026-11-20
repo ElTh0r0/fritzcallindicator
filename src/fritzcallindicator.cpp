@@ -51,8 +51,6 @@ FritzCallIndicator::FritzCallIndicator(const QDir &sharePath)
     m_pCallMonitor->connectTo(m_pSettings->getHostName(),
                               m_pSettings->getCallMonitorPort(),
                               m_pSettings->getRetryInterval());
-    m_sListCallHistory = this->getCallHistory();
-    m_pNumberResolver->readPhonebooks();
   });
 
 #ifdef FRITZ_USE_NOTIFICATION_SOUND
@@ -183,6 +181,10 @@ void FritzCallIndicator::onStateChanged(QTcpSocket::SocketState state) {
   if (state == QTcpSocket::SocketState::ConnectedState) {
     qDebug() << "Connected to" << m_pSettings->getHostName()
              << "- Port:" << m_pSettings->getCallMonitorPort();
+
+    m_sListCallHistory = this->getCallHistory();
+    m_pNumberResolver->readPhonebooks();
+
     /*
     this->showMessage(QStringLiteral(APP_NAME),
                       tr("Connected to '%1:%2'")
