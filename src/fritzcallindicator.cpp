@@ -43,10 +43,12 @@ FritzCallIndicator::FritzCallIndicator(const QDir &sharePath)
           &FritzCallIndicator::onStateChanged);
   connect(m_pCallMonitor, &CallMonitor::incomingCall, this,
           &FritzCallIndicator::onIncomingCall);
+  connect(m_pCallMonitor, &CallMonitor::outgoingCall, this,
+          &FritzCallIndicator::onOutgoingCall);
   connect(m_pSettingsDialog, &SettingsDialog::changedConnectionSettings,
           m_pCallMonitor, &CallMonitor::connectTo);
 
-  // Delay connections to allow the network to initialize
+  // Delay connection to allow the network to initialize
   QTimer::singleShot(5000, this, [this]() {
     m_pCallMonitor->connectTo(m_pSettings->getHostName(),
                               m_pSettings->getCallMonitorPort(),
@@ -66,6 +68,13 @@ FritzCallIndicator::FritzCallIndicator(const QDir &sharePath)
   // Number suppressed: 03.11.16 13:17:08;RING;0;;06990009111;SIP0;
   // m_pCallMonitor->parseAndSignal("03.11.16
   // 13:17:08;RING;0;;06990009111;SIP0;");
+  // Outgoing
+  /*
+  QTimer::singleShot(7000, this, [this]() {
+    m_pCallMonitor->parseAndSignal(
+        "21.11.26 14:32:10;CALL;0;SIP0;03023125222;SIP1");
+  });
+  */
 }
 
 FritzCallIndicator::~FritzCallIndicator() {
@@ -182,6 +191,7 @@ void FritzCallIndicator::onStateChanged(QTcpSocket::SocketState state) {
     qDebug() << "Connected to" << m_pSettings->getHostName()
              << "- Port:" << m_pSettings->getCallMonitorPort();
 
+    // Read call history and phone books after connection was re-/established
     m_sListCallHistory = this->getCallHistory();
     m_pNumberResolver->readPhonebooks();
 
@@ -251,6 +261,44 @@ void FritzCallIndicator::onIncomingCall(unsigned /* connectionId */,
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
+void FritzCallIndicator::onOutgoingCall(unsigned /* connectionId */,
+                                        const QString &sCaller,
+                                        const QString &sCallee) {
+  Q_UNUSED(sCallee)
+  if (m_pSettings->getShowOutgoingCallsInHistory()) {
+#ifdef FRITZ_USE_ONLINE_RESOLVERS
+    QString sResolvedCaller =
+        m_pNumberResolver
+            ->resolveNumber(sCaller.trimmed(),
+                            m_pSettings->getEnabledOnlineResolvers())
+            .trimmed();
+#else
+    QString sResolvedCaller =
+        m_pNumberResolver->resolveNumber(sCaller.trimmed(), QStringList())
+            .trimmed();
+#endif
+
+    /*
+    this->showMessage(
+        tr("Outgoing call"),
+        tr("Caller: '%1', Callee: '%2'.").arg(sResolvedCaller, sCallee));
+    */
+
+    // TODO: Configurable date format
+    m_sListCallHistory.push_front(
+        "3|" + QDateTime::currentDateTime().toString("dd.MM.yy|hh:mm|") +
+        sResolvedCaller);
+    // Limit the number of recent calls
+    if (m_sListCallHistory.count() > m_pSettings->getMaxEntriesCallHistory()) {
+      m_sListCallHistory =
+          m_sListCallHistory.mid(0, m_pSettings->getMaxEntriesCallHistory());
+    }
+  }
+}
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
 QStringList FritzCallIndicator::getCallHistory() {
   qDebug() << Q_FUNC_INFO;
   QStringList sListCalls;
@@ -305,11 +353,12 @@ QStringList FritzCallIndicator::getCallHistory() {
   xml.addData(data);
 
   bool bInCall = false;
-  ushort nType = 0;  // 1 = Incoming call; 2 = Missed call
+  ushort nType = 0;  // 1 = Incoming call; 2 = Missed call; 3 = Outgoing call
   QString sName;
   QString sNumber;
   QString sDate;
   QString sTime;
+  const bool bListOutgoing = m_pSettings->getShowOutgoingCallsInHistory();
   while (!xml.atEnd() && !xml.hasError()) {
     xml.readNext();
 
@@ -329,13 +378,18 @@ QStringList FritzCallIndicator::getCallHistory() {
             sNumber = xml.readElementText();
           else
             xml.skipCurrentElement();
+        } else if (xml.name() == QStringLiteral("Called")) {
+          if (nType == 3 && bListOutgoing)
+            sNumber = xml.readElementText();
+          else
+            xml.skipCurrentElement();
         } else if (xml.name() == QStringLiteral("Name")) {
-          if (nType == 1 || nType == 2)
+          if (nType == 1 || nType == 2 || (nType == 3 && bListOutgoing))
             sName = xml.readElementText();
           else
             xml.skipCurrentElement();
         } else if (xml.name() == QStringLiteral("Date")) {
-          if (nType == 1 || nType == 2) {
+          if (nType == 1 || nType == 2 || (nType == 3 && bListOutgoing)) {
             sDate = xml.readElementText();
             // TODO: Configurable date format
             // Date format from XML: dd.MM.yy HH:mm
@@ -353,7 +407,7 @@ QStringList FritzCallIndicator::getCallHistory() {
         }
       }
     } else if (xml.isEndElement() && xml.name() == QStringLiteral("Call")) {
-      if (nType == 1 || nType == 2) {
+      if (nType == 1 || nType == 2 || (nType == 3 && bListOutgoing)) {
         if (sName.isEmpty()) {
 #if defined(QT_DEBUG) || !defined(FRITZ_USE_ONLINE_RESOLVERS)
           // Don't use online resolvers during debugging to prevent rate limits
@@ -389,11 +443,15 @@ void FritzCallIndicator::showCallHistory() {
         QStringLiteral(":/icons/dark/png/call-incoming-symbolic.png"));
     QString sIconMissed(
         QStringLiteral(":/icons/dark/png/call-missed-symbolic.png"));
+    QString sIconOutgoing(
+        QStringLiteral(":/icons/dark/png/call-outgoing-symbolic.png"));
     if (QStringLiteral("light") == m_pSettings->getIconTheme()) {
       sIconIncomming = sIconIncomming.replace(QStringLiteral("dark"),
                                               QStringLiteral("light"));
       sIconMissed =
           sIconMissed.replace(QStringLiteral("dark"), QStringLiteral("light"));
+      sIconOutgoing = sIconOutgoing.replace(QStringLiteral("dark"),
+                                            QStringLiteral("light"));
     }
 
     Qt::AlignmentFlag Align;
@@ -415,9 +473,9 @@ void FritzCallIndicator::showCallHistory() {
     layout->addWidget(
         new QLabel("<b>" + tr("Time") + "</b>", m_pCallHistoryDialog), 0, 2,
         Qt::AlignCenter | Qt::AlignVCenter);
-    layout->addWidget(
-        new QLabel("<b>" + tr("Caller") + "</b>", m_pCallHistoryDialog), 0, 3,
-        Qt::AlignCenter | Qt::AlignVCenter);
+    layout->addWidget(new QLabel("<b>" + tr("Name / Phone number") + "</b>",
+                                 m_pCallHistoryDialog),
+                      0, 3, Qt::AlignCenter | Qt::AlignVCenter);
 
     for (int nRow = 0; nRow < m_sListCallHistory.count(); nRow++) {
       QStringList sCall(m_sListCallHistory.at(nRow).split('|'));
@@ -437,6 +495,8 @@ void FritzCallIndicator::showCallHistory() {
               iconLabel->setPixmap(QPixmap(sIconIncomming));
             else if (sCall.at(nCol) == "2")
               iconLabel->setPixmap(QPixmap(sIconMissed));
+            else if (sCall.at(nCol) == "3")
+              iconLabel->setPixmap(QPixmap(sIconOutgoing));
             layout->addWidget(iconLabel, nRow + 1, nCol,
                               Align | Qt::AlignVCenter);
           }

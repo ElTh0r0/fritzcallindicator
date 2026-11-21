@@ -9,7 +9,7 @@
         <translation> (erneuter Versuch in %1 Sekunden ...)</translation>
     </message>
     <message>
-        <location filename="../src/callmonitor.cpp" line="107"/>
+        <location filename="../src/callmonitor.cpp" line="111"/>
         <source>Unknown command &apos;%1&apos;!</source>
         <translation>Unbekannter Befehl &apos;%1&apos;!</translation>
     </message>
@@ -17,37 +17,37 @@
 <context>
     <name>CardDAV</name>
     <message>
-        <location filename="../src/phonebooks/carddav.cpp" line="145"/>
+        <location filename="../src/phonebooks/carddav.cpp" line="146"/>
         <source>Home</source>
         <translation>Zuhause</translation>
     </message>
     <message>
-        <location filename="../src/phonebooks/carddav.cpp" line="148"/>
+        <location filename="../src/phonebooks/carddav.cpp" line="149"/>
         <source>Work</source>
         <translation>Arbeit</translation>
     </message>
     <message>
-        <location filename="../src/phonebooks/carddav.cpp" line="151"/>
+        <location filename="../src/phonebooks/carddav.cpp" line="152"/>
         <source>Cell</source>
         <translation>Mobil</translation>
     </message>
     <message>
-        <location filename="../src/phonebooks/carddav.cpp" line="154"/>
+        <location filename="../src/phonebooks/carddav.cpp" line="155"/>
         <source>Fax</source>
         <translation>Fax</translation>
     </message>
     <message>
-        <location filename="../src/phonebooks/carddav.cpp" line="157"/>
+        <location filename="../src/phonebooks/carddav.cpp" line="158"/>
         <source>Pager</source>
         <translation>Pager</translation>
     </message>
     <message>
-        <location filename="../src/phonebooks/carddav.cpp" line="160"/>
+        <location filename="../src/phonebooks/carddav.cpp" line="161"/>
         <source>Car</source>
         <translation>Auto</translation>
     </message>
     <message>
-        <location filename="../src/phonebooks/carddav.cpp" line="163"/>
+        <location filename="../src/phonebooks/carddav.cpp" line="164"/>
         <source>Voice</source>
         <translation>Voice</translation>
     </message>
@@ -55,74 +55,74 @@
 <context>
     <name>FritzCallIndicator</name>
     <message>
-        <location filename="../src/fritzcallindicator.cpp" line="83"/>
-        <location filename="../src/fritzcallindicator.cpp" line="361"/>
+        <location filename="../src/fritzcallindicator.cpp" line="93"/>
+        <location filename="../src/fritzcallindicator.cpp" line="461"/>
         <source>Call history</source>
         <translation>Anrufliste</translation>
     </message>
     <message>
-        <location filename="../src/fritzcallindicator.cpp" line="88"/>
+        <location filename="../src/fritzcallindicator.cpp" line="98"/>
         <source>Settings</source>
         <translation>Einstellungen</translation>
     </message>
     <message>
-        <location filename="../src/fritzcallindicator.cpp" line="93"/>
-        <location filename="../src/fritzcallindicator.cpp" line="448"/>
+        <location filename="../src/fritzcallindicator.cpp" line="103"/>
+        <location filename="../src/fritzcallindicator.cpp" line="568"/>
         <source>About</source>
         <translation>Über</translation>
     </message>
     <message>
-        <location filename="../src/fritzcallindicator.cpp" line="98"/>
+        <location filename="../src/fritzcallindicator.cpp" line="108"/>
         <source>Quit</source>
         <translation>Beenden</translation>
     </message>
     <message>
-        <location filename="../src/fritzcallindicator.cpp" line="145"/>
+        <location filename="../src/fritzcallindicator.cpp" line="172"/>
         <source>Connecting to &apos;%1:%2&apos; failed, because: &apos;%3&apos;</source>
         <translation>Verbindung zu &apos;%1:%2&apos; fehlgeschlagen, Fehler: &apos;%3&apos;</translation>
     </message>
     <message>
-        <location filename="../src/fritzcallindicator.cpp" line="200"/>
+        <location filename="../src/fritzcallindicator.cpp" line="236"/>
         <source>Incoming call</source>
         <translation>Eingehender Anruf</translation>
     </message>
     <message>
-        <location filename="../src/fritzcallindicator.cpp" line="202"/>
+        <location filename="../src/fritzcallindicator.cpp" line="238"/>
         <source>Incoming call to &apos;%1&apos;</source>
         <translation>Eingehender Anruf an &apos;%1&apos;</translation>
     </message>
     <message>
-        <location filename="../src/fritzcallindicator.cpp" line="222"/>
+        <location filename="../src/fritzcallindicator.cpp" line="258"/>
         <source>Caller: &apos;%1&apos;</source>
         <translation>Anrufer: &apos;%1&apos;</translation>
     </message>
     <message>
-        <location filename="../src/fritzcallindicator.cpp" line="369"/>
+        <location filename="../src/fritzcallindicator.cpp" line="471"/>
         <source>Date</source>
         <translation>Datum</translation>
     </message>
     <message>
-        <location filename="../src/fritzcallindicator.cpp" line="371"/>
+        <location filename="../src/fritzcallindicator.cpp" line="474"/>
         <source>Time</source>
         <translation>Uhrzeit</translation>
     </message>
     <message>
-        <location filename="../src/fritzcallindicator.cpp" line="373"/>
-        <source>Caller</source>
-        <translation>Anrufer</translation>
+        <location filename="../src/fritzcallindicator.cpp" line="476"/>
+        <source>Name / Phone number</source>
+        <translation>Name / Rufnummer</translation>
     </message>
     <message>
-        <location filename="../src/fritzcallindicator.cpp" line="461"/>
+        <location filename="../src/fritzcallindicator.cpp" line="582"/>
         <source>License</source>
         <translation>Lizenz</translation>
     </message>
     <message>
-        <location filename="../src/fritzcallindicator.cpp" line="464"/>
+        <location filename="../src/fritzcallindicator.cpp" line="585"/>
         <source>This application uses &lt;a href=&quot;https://invent.kde.org/frameworks/breeze-icons&quot;&gt;Breeze icons from KDE&lt;/a&gt;.</source>
         <translation>Diese Anwendung verwendet &lt;a href=&quot;https://invent.kde.org/frameworks/breeze-icons&quot;&gt;Breeze Symbole von KDE&lt;/a&gt;.</translation>
     </message>
     <message>
-        <location filename="../src/fritzcallindicator.cpp" line="467"/>
+        <location filename="../src/fritzcallindicator.cpp" line="589"/>
         <source>Translations</source>
         <translation>Übersetzungen</translation>
     </message>
@@ -130,38 +130,38 @@
 <context>
     <name>FritzPhonebook</name>
     <message>
-        <location filename="../src/phonebooks/fritzphonebook.cpp" line="262"/>
+        <location filename="../src/phonebooks/fritzphonebook.cpp" line="263"/>
         <source>SPAM CALL</source>
         <translation>SPAM-ANRUF</translation>
     </message>
     <message>
-        <location filename="../src/phonebooks/fritzphonebook.cpp" line="266"/>
+        <location filename="../src/phonebooks/fritzphonebook.cpp" line="267"/>
         <source>Home</source>
         <translation>Zuhause</translation>
     </message>
     <message>
-        <location filename="../src/phonebooks/fritzphonebook.cpp" line="269"/>
+        <location filename="../src/phonebooks/fritzphonebook.cpp" line="270"/>
         <source>Work</source>
         <translation>Arbeit</translation>
     </message>
     <message>
-        <location filename="../src/phonebooks/fritzphonebook.cpp" line="272"/>
+        <location filename="../src/phonebooks/fritzphonebook.cpp" line="273"/>
         <source>Cell</source>
         <translation>Mobil</translation>
     </message>
     <message>
-        <location filename="../src/phonebooks/fritzphonebook.cpp" line="275"/>
-        <location filename="../src/phonebooks/fritzphonebook.cpp" line="278"/>
+        <location filename="../src/phonebooks/fritzphonebook.cpp" line="276"/>
+        <location filename="../src/phonebooks/fritzphonebook.cpp" line="279"/>
         <source>Fax</source>
         <translation>Fax</translation>
     </message>
     <message>
-        <location filename="../src/phonebooks/fritzphonebook.cpp" line="281"/>
+        <location filename="../src/phonebooks/fritzphonebook.cpp" line="282"/>
         <source>Other</source>
         <translation>Andere</translation>
     </message>
     <message>
-        <location filename="../src/phonebooks/fritzphonebook.cpp" line="284"/>
+        <location filename="../src/phonebooks/fritzphonebook.cpp" line="285"/>
         <source>Intern</source>
         <translation>Intern</translation>
     </message>
@@ -218,307 +218,275 @@
     <name>SettingsDialog</name>
     <message>
         <location filename="../src/settingsdialog.ui" line="14"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="476"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="470"/>
+        <location filename="../build/Qt_6_Clang_Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="476"/>
         <source>Settings</source>
         <translation>Einstellungen</translation>
     </message>
     <message>
         <location filename="../src/settingsdialog.ui" line="32"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="495"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="485"/>
+        <location filename="../build/Qt_6_Clang_Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="495"/>
         <source>General</source>
         <translation>Allgemein</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.ui" line="215"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="496"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="486"/>
+        <location filename="../src/settingsdialog.ui" line="229"/>
+        <location filename="../build/Qt_6_Clang_Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="496"/>
         <source>Host name:</source>
         <translation>Host-Name:</translation>
     </message>
     <message>
         <location filename="../src/settingsdialog.ui" line="174"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="490"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="484"/>
+        <location filename="../build/Qt_6_Clang_Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="490"/>
         <source>Popup timeout (sec):</source>
         <translation>Anzeigezeit für Popups (sek):</translation>
     </message>
     <message>
         <location filename="../src/settingsdialog.ui" line="38"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="477"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="471"/>
+        <location filename="../build/Qt_6_Clang_Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="477"/>
         <source>Start with system:</source>
         <translation>Mit dem System starten:</translation>
     </message>
     <message>
         <location filename="../src/settingsdialog.ui" line="45"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="478"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="472"/>
+        <location filename="../build/Qt_6_Clang_Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="478"/>
         <source>Autostart</source>
         <translation>Autostart</translation>
     </message>
     <message>
         <location filename="../src/settingsdialog.ui" line="52"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="479"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="473"/>
+        <location filename="../build/Qt_6_Clang_Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="479"/>
         <source>Country code:</source>
         <translation>Ländercode:</translation>
     </message>
     <message>
         <location filename="../src/settingsdialog.ui" line="109"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="486"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="480"/>
+        <location filename="../build/Qt_6_Clang_Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="486"/>
         <source>Call history:</source>
         <translation>Anrufliste:</translation>
     </message>
     <message>
         <location filename="../src/settingsdialog.ui" line="116"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="487"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="481"/>
+        <location filename="../build/Qt_6_Clang_Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="487"/>
         <source>Max. number of calls:</source>
         <translation>Max. Anzahl der Anrufe:</translation>
     </message>
     <message>
         <location filename="../src/settingsdialog.ui" line="133"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="488"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="482"/>
+        <location filename="../build/Qt_6_Clang_Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="488"/>
         <source>Show max. last X days:</source>
         <translation>Zeige nur die letzten X Tage:</translation>
     </message>
     <message>
         <location filename="../src/settingsdialog.ui" line="157"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="489"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="483"/>
+        <location filename="../build/Qt_6_Clang_Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="489"/>
         <source>Notification sound:</source>
         <translation>Benachrichtigungston:</translation>
     </message>
     <message>
         <location filename="../src/settingsdialog.ui" line="194"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="491"/>
+        <location filename="../build/Qt_6_Clang_Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="491"/>
         <source>No popup for:</source>
         <translation>Keine Anrufbenachrichtigung für:</translation>
     </message>
     <message>
         <location filename="../src/settingsdialog.ui" line="201"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="493"/>
+        <location filename="../build/Qt_6_Clang_Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="493"/>
         <source>If the caller name starts with the defined string(s), no popup will be shown</source>
         <translation>Wenn der Name des Anrufers mit einer der Zeichenfolgen beginnt, wird kein Popup angezeigt</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.ui" line="209"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="512"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="502"/>
+        <location filename="../src/settingsdialog.ui" line="223"/>
+        <location filename="../build/Qt_6_Clang_Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="512"/>
         <source>Fritz!Box</source>
         <translation>Fritz!Box</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.ui" line="232"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="498"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="488"/>
+        <location filename="../src/settingsdialog.ui" line="246"/>
+        <location filename="../build/Qt_6_Clang_Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="498"/>
         <source>Call monitor port:</source>
         <translation>Anrufmonitor Port:</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.ui" line="249"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="499"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="489"/>
+        <location filename="../src/settingsdialog.ui" line="263"/>
+        <location filename="../build/Qt_6_Clang_Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="499"/>
         <source>TR064 port:</source>
         <translation>TR064 Port:</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.ui" line="263"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="500"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="490"/>
+        <location filename="../src/settingsdialog.ui" line="277"/>
+        <location filename="../build/Qt_6_Clang_Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="500"/>
         <source>User name:</source>
         <translation>Benutzername:</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.ui" line="270"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="502"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="492"/>
+        <location filename="../src/settingsdialog.ui" line="284"/>
+        <location filename="../build/Qt_6_Clang_Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="502"/>
         <source>FRITZ!Box user with call list and phonebook access</source>
         <translation>Fritz!Box Benutzer mit Anruflisten- und Telefonbuchzugriff</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.ui" line="277"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="504"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="494"/>
+        <location filename="../src/settingsdialog.ui" line="291"/>
+        <location filename="../build/Qt_6_Clang_Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="504"/>
         <source>Password:</source>
         <translation>Passwort:</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.ui" line="284"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="506"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="496"/>
+        <location filename="../src/settingsdialog.ui" line="298"/>
+        <location filename="../build/Qt_6_Clang_Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="506"/>
         <source>Attention: Password is not encrypted!</source>
         <translation>Achtung: Passwort wird nicht verschlüsselt!</translation>
     </message>
     <message>
         <location filename="../src/settingsdialog.ui" line="66"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="481"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="475"/>
+        <location filename="../build/Qt_6_Clang_Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="481"/>
         <source>Own phone numbers:</source>
         <translation>Eigene Rufnummern:</translation>
     </message>
     <message>
         <location filename="../src/settingsdialog.ui" line="89"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="483"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="477"/>
+        <location filename="../build/Qt_6_Clang_Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="483"/>
         <source>Phone number</source>
         <translation>Telefonnummer</translation>
     </message>
     <message>
         <location filename="../src/settingsdialog.ui" line="94"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="485"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="479"/>
+        <location filename="../build/Qt_6_Clang_Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="485"/>
         <source>Description</source>
         <translation>Beschreibung</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.ui" line="370"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="513"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="503"/>
+        <location filename="../src/settingsdialog.ui" line="384"/>
+        <location filename="../build/Qt_6_Clang_Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="513"/>
         <source>Thunderbird address books:</source>
         <translation>Thunderbird Adressbücher:</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.ui" line="321"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="509"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="499"/>
+        <location filename="../src/settingsdialog.ui" line="335"/>
+        <location filename="../build/Qt_6_Clang_Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="509"/>
         <source>Fritz!Box phone books:</source>
         <translation>Fritz!Box Telefonbücher:</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.ui" line="355"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="511"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="501"/>
+        <location filename="../src/settingsdialog.ui" line="369"/>
+        <location filename="../build/Qt_6_Clang_Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="511"/>
         <source>Phone book</source>
         <translation>Telefonbuch</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.ui" line="489"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="533"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="523"/>
+        <location filename="../src/settingsdialog.ui" line="503"/>
+        <location filename="../build/Qt_6_Clang_Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="533"/>
         <source>Online number resolution:</source>
         <translation>Online-Rufnummernauflösung:</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.ui" line="382"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="515"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="505"/>
+        <location filename="../src/settingsdialog.ui" line="396"/>
+        <location filename="../build/Qt_6_Clang_Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="515"/>
         <source>Add Thunderbird address book</source>
         <translation>Thunderbird Adressbuch hinzufügen</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.ui" line="294"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="508"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="498"/>
+        <location filename="../src/settingsdialog.ui" line="208"/>
+        <source>Show outgoing calls:</source>
+        <translation>Ausgehende Anrufe anzeigen:</translation>
+    </message>
+    <message>
+        <location filename="../src/settingsdialog.ui" line="308"/>
+        <location filename="../build/Qt_6_Clang_Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="508"/>
         <source>Connection retry (sec):</source>
         <translation>Erneuter Verbindungsversuch (sek):</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.ui" line="364"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="538"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="528"/>
+        <location filename="../src/settingsdialog.ui" line="378"/>
+        <location filename="../build/Qt_6_Clang_Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="538"/>
         <source>Additional number resolution</source>
         <translation>Zusätzliche Rufnummernauflösung</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.ui" line="392"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="518"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="508"/>
+        <location filename="../src/settingsdialog.ui" line="406"/>
+        <location filename="../build/Qt_6_Clang_Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="518"/>
         <source>Remove selected Thunderbird address book</source>
         <translation>Ausgewähltes Thunderbird Adressbuch entfernen</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.ui" line="411"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="520"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="510"/>
+        <location filename="../src/settingsdialog.ui" line="425"/>
+        <location filename="../build/Qt_6_Clang_Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="520"/>
         <source>CardDAV address book (e.g. Nextcloud):</source>
         <translation>CardDAV Adressbuch (z.B. Nextcloud):</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.ui" line="440"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="522"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="512"/>
+        <location filename="../src/settingsdialog.ui" line="454"/>
+        <location filename="../build/Qt_6_Clang_Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="522"/>
         <source>CardDAV URL</source>
         <translation>CardDAV URL</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.ui" line="445"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="524"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="514"/>
+        <location filename="../src/settingsdialog.ui" line="459"/>
+        <location filename="../build/Qt_6_Clang_Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="524"/>
         <source>User</source>
         <translation>Benutzer</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.ui" line="450"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="526"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="516"/>
+        <location filename="../src/settingsdialog.ui" line="464"/>
+        <location filename="../build/Qt_6_Clang_Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="526"/>
         <source>Password</source>
         <translation>Passwort</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.ui" line="460"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="528"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="518"/>
+        <location filename="../src/settingsdialog.ui" line="474"/>
+        <location filename="../build/Qt_6_Clang_Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="528"/>
         <source>Add CardDAV address book</source>
         <translation>CardDAV Adressbuch hinzufügen</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.ui" line="470"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="531"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="521"/>
+        <location filename="../src/settingsdialog.ui" line="484"/>
+        <location filename="../build/Qt_6_Clang_Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="531"/>
         <source>Remove selected CardDAV address book</source>
         <translation>Ausgewähltes CardDAV Adressbuch entfernen</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.ui" line="523"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="535"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="525"/>
+        <location filename="../src/settingsdialog.ui" line="537"/>
+        <location filename="../build/Qt_6_Clang_Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="535"/>
         <source>Online Service</source>
         <translation>Online-Dienst</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.ui" line="528"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="537"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="527"/>
+        <location filename="../src/settingsdialog.ui" line="542"/>
+        <location filename="../build/Qt_6_Clang_Release/src/fritzcallindicator_autogen/include/ui_settingsdialog.h" line="537"/>
         <source>Country</source>
         <translation>Land</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.cpp" line="97"/>
+        <location filename="../src/settingsdialog.cpp" line="98"/>
         <source>Select Thunderbird addressbook</source>
         <translation>Thunderbird-Adressbuch auswählen</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.cpp" line="99"/>
+        <location filename="../src/settingsdialog.cpp" line="100"/>
         <source>SQLite abook files (abook*.sqlite)</source>
         <translation>SQLite abook Dateien (abook*.sqlite)</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.cpp" line="206"/>
+        <location filename="../src/settingsdialog.cpp" line="210"/>
         <source>Select notification sound for incoming calls</source>
         <translation>Benachrichtigungston für eingehende Anrufe auswählen</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.cpp" line="207"/>
+        <location filename="../src/settingsdialog.cpp" line="211"/>
         <source>Supported audio formats</source>
         <translation>Unterstützte Audioformate</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.cpp" line="209"/>
+        <location filename="../src/settingsdialog.cpp" line="213"/>
         <source>All files</source>
         <translation>Alle Dateien</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.cpp" line="540"/>
+        <location filename="../src/settingsdialog.cpp" line="544"/>
         <source>Please restart the application to apply the changes.</source>
         <translation>Die Anwendung muss neu gestartet werden, um die Änderungen zu übernehmen.</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.cpp" line="598"/>
+        <location filename="../src/settingsdialog.cpp" line="602"/>
         <source>The program will keep running in the system tray. To terminate the program, choose &lt;b&gt;Quit&lt;/b&gt; in the context menu of the system tray entry.</source>
         <translation>Das Programm wird weiterhin in der Taskleiste ausgeführt. Um das Programm zu beenden, wählen Sie &lt;b&gt;Beenden&lt;/b&gt; im Kontextmenü des Systemtray-Eintrags.</translation>
     </message>

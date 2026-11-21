@@ -26,6 +26,8 @@ class CallMonitor : public QObject {
 
   void incomingCall(unsigned connectionId, const QString &sCaller,
                     const QString &sCallee);
+  void outgoingCall(unsigned connectionId, const QString &sCaller,
+                    const QString &sCallee);
 
  private slots:
   void onConnected();

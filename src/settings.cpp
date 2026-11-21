@@ -21,6 +21,7 @@ const QString Settings::DEFAULT_COUNTRY_CODE = QStringLiteral("0049");
 const uint Settings::DEFAULT_POPUP_TIMEOUT_SEC = 10;
 const uint Settings::DEFAULT_MAX_DAYS_OLD_CALLS = 7;
 const uint Settings::DEFAULT_MAX_CALL_HISTORY = 10;
+const bool Settings::DEFAULT_SHOW_OUTGOING_IN_HISTORY = false;
 const bool Settings::DEFAULT_AUTOSTART = false;
 const uint Settings::DEFAULT_REQUEST_TIMEOUT_MSEC = 5000;
 // FritzBox
@@ -102,6 +103,20 @@ auto Settings::getMaxEntriesCallHistory() const -> uint {
 
 void Settings::setMaxEntriesCallHistory(const uint nMaxEntries) {
   m_settings.setValue(QStringLiteral("MaxEntriesCallHistory"), nMaxEntries);
+}
+
+// ----------------------------------------------------------------------------
+
+auto Settings::getShowOutgoingCallsInHistory() const -> bool {
+  return m_settings
+      .value(QStringLiteral("ShowOutgoingCallsInHistory"),
+             DEFAULT_SHOW_OUTGOING_IN_HISTORY)
+      .toBool();
+}
+
+void Settings::setShowOutgoingCallsInHistory(const bool bShowOutgoing) {
+  m_settings.setValue(QStringLiteral("ShowOutgoingCallsInHistory"),
+                      bShowOutgoing);
 }
 
 // ----------------------------------------------------------------------------

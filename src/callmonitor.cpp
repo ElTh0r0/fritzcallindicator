@@ -98,9 +98,13 @@ void CallMonitor::parseAndSignal(const QString &sLine) {
     QString callee = parts[4];
     qDebug() << "Received string:" << sLine;
     emit incomingCall(connectionId, caller, callee);
+  } else if (command == QStringLiteral("CALL")) {
+    // QString extension = parts[3];
+    QString caller = parts[4];
+    QString callee = parts[5];
+    emit outgoingCall(connectionId, caller, callee);
   } else if (command == QStringLiteral("CONNECT") ||
-             command == QStringLiteral("DISCONNECT") ||
-             command == QStringLiteral("CALL")) {
+             command == QStringLiteral("DISCONNECT")) {
     // Features not used by FritzCallIndicator
   } else {
     emit errorOccured(QTcpSocket::SocketError::UnknownSocketError,

@@ -22,6 +22,8 @@ class Settings : public QObject {
   void setMaxDaysOfOldCalls(const uint nMaxDays);
   auto getMaxEntriesCallHistory() const -> uint;
   void setMaxEntriesCallHistory(const uint nMaxEntries);
+  auto getShowOutgoingCallsInHistory() const -> bool;
+  void setShowOutgoingCallsInHistory(const bool bShowOutgoing);
   auto getAutostart() const -> bool;
   void setAutostart(const bool bAutostart);
   auto isAutostartEnabled() const -> bool;
@@ -80,6 +82,7 @@ class Settings : public QObject {
   static const uint DEFAULT_POPUP_TIMEOUT_SEC;
   static const uint DEFAULT_MAX_DAYS_OLD_CALLS;
   static const uint DEFAULT_MAX_CALL_HISTORY;
+  static const bool DEFAULT_SHOW_OUTGOING_IN_HISTORY;
   static const bool DEFAULT_AUTOSTART;
   static const uint DEFAULT_REQUEST_TIMEOUT_MSEC;
   // FritzBox

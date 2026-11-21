@@ -5,6 +5,7 @@
         <file>icons/dark/png/application-exit.png</file>
         <file>icons/dark/png/call-incoming-symbolic.png</file>
         <file>icons/dark/png/call-missed-symbolic.png</file>
+        <file>icons/dark/png/call-outgoing-symbolic.png</file>
         <file>icons/dark/png/configure.png</file>
         <file>icons/dark/png/help-about.png</file>
         <file>icons/dark/png/list-add.png</file>
@@ -14,6 +15,7 @@
         <file>icons/light/png/application-exit.png</file>
         <file>icons/light/png/call-incoming-symbolic.png</file>
         <file>icons/light/png/call-missed-symbolic.png</file>
+        <file>icons/light/png/call-outgoing-symbolic.png</file>
         <file>icons/light/png/configure.png</file>
         <file>icons/light/png/help-about.png</file>
         <file>icons/light/png/list-add.png</file>
