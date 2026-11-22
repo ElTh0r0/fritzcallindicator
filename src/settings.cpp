@@ -22,6 +22,7 @@ const uint Settings::DEFAULT_POPUP_TIMEOUT_SEC = 10;
 const uint Settings::DEFAULT_MAX_DAYS_OLD_CALLS = 7;
 const uint Settings::DEFAULT_MAX_CALL_HISTORY = 10;
 const bool Settings::DEFAULT_SHOW_OUTGOING_IN_HISTORY = false;
+const bool Settings::DEFAULT_SHOW_REJECTED_IN_HISTORY = false;
 const bool Settings::DEFAULT_AUTOSTART = false;
 const uint Settings::DEFAULT_REQUEST_TIMEOUT_MSEC = 5000;
 // FritzBox
@@ -117,6 +118,20 @@ auto Settings::getShowOutgoingCallsInHistory() const -> bool {
 void Settings::setShowOutgoingCallsInHistory(const bool bShowOutgoing) {
   m_settings.setValue(QStringLiteral("ShowOutgoingCallsInHistory"),
                       bShowOutgoing);
+}
+
+// ----------------------------------------------------------------------------
+
+auto Settings::getShowRejectedCallsInHistory() const -> bool {
+  return m_settings
+      .value(QStringLiteral("ShowRejectedCallsInHistory"),
+             DEFAULT_SHOW_REJECTED_IN_HISTORY)
+      .toBool();
+}
+
+void Settings::setShowRejectedCallsInHistory(const bool bShowRejected) {
+  m_settings.setValue(QStringLiteral("ShowRejectedCallsInHistory"),
+                      bShowRejected);
 }
 
 // ----------------------------------------------------------------------------

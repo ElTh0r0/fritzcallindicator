@@ -305,6 +305,7 @@ void SettingsDialog::readSettings() {
       pSettings->getMaxEntriesCallHistory());
   m_pUi->spinBoxMaxDaysOfOldCalls->setValue(pSettings->getMaxDaysOfOldCalls());
   m_pUi->cbShowOutgoing->setChecked(pSettings->getShowOutgoingCallsInHistory());
+  m_pUi->cbShowRejected->setChecked(pSettings->getShowRejectedCallsInHistory());
   m_pUi->spinBoxTimeout->setValue(pSettings->getPopupTimeout());
   m_pUi->lineEditIgnoredCallers->setText(
       pSettings->getIgnoredCallers().join(','));
@@ -424,6 +425,7 @@ void SettingsDialog::accept() {
       m_pUi->spinBoxMaxEntriesCallHistory->value());
   pSettings->setMaxDaysOfOldCalls(m_pUi->spinBoxMaxDaysOfOldCalls->value());
   pSettings->setShowOutgoingCallsInHistory(m_pUi->cbShowOutgoing->isChecked());
+  pSettings->setShowRejectedCallsInHistory(m_pUi->cbShowRejected->isChecked());
   pSettings->setAutostart(m_pUi->cbAutostart->isChecked());
   pSettings->setIgnoredCallers(
       m_pUi->lineEditIgnoredCallers->text().trimmed().split(','));

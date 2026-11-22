@@ -353,12 +353,14 @@ QStringList FritzCallIndicator::getCallHistory() {
   xml.addData(data);
 
   bool bInCall = false;
-  ushort nType = 0;  // 1 = Incoming call; 2 = Missed call; 3 = Outgoing call
+  // 1 = Incoming call; 2 = Missed call; 3 = Outgoing call; 10 = Rejected call
+  ushort nType = 0;
   QString sName;
   QString sNumber;
   QString sDate;
   QString sTime;
   const bool bListOutgoing = m_pSettings->getShowOutgoingCallsInHistory();
+  const bool bListRejected = m_pSettings->getShowRejectedCallsInHistory();
   while (!xml.atEnd() && !xml.hasError()) {
     xml.readNext();
 
@@ -374,7 +376,7 @@ QStringList FritzCallIndicator::getCallHistory() {
         if (xml.name() == QStringLiteral("Type")) {
           nType = xml.readElementText().toUShort();
         } else if (xml.name() == QStringLiteral("Caller")) {
-          if (nType == 1 || nType == 2)
+          if (nType == 1 || nType == 2 || (nType == 10 && bListRejected))
             sNumber = xml.readElementText();
           else
             xml.skipCurrentElement();
@@ -384,12 +386,14 @@ QStringList FritzCallIndicator::getCallHistory() {
           else
             xml.skipCurrentElement();
         } else if (xml.name() == QStringLiteral("Name")) {
-          if (nType == 1 || nType == 2 || (nType == 3 && bListOutgoing))
+          if (nType == 1 || nType == 2 || (nType == 3 && bListOutgoing) ||
+              (nType == 10 && bListRejected))
             sName = xml.readElementText();
           else
             xml.skipCurrentElement();
         } else if (xml.name() == QStringLiteral("Date")) {
-          if (nType == 1 || nType == 2 || (nType == 3 && bListOutgoing)) {
+          if (nType == 1 || nType == 2 || (nType == 3 && bListOutgoing) ||
+              (nType == 10 && bListRejected)) {
             sDate = xml.readElementText();
             // TODO: Configurable date format
             // Date format from XML: dd.MM.yy HH:mm
@@ -407,7 +411,8 @@ QStringList FritzCallIndicator::getCallHistory() {
         }
       }
     } else if (xml.isEndElement() && xml.name() == QStringLiteral("Call")) {
-      if (nType == 1 || nType == 2 || (nType == 3 && bListOutgoing)) {
+      if (nType == 1 || nType == 2 || (nType == 3 && bListOutgoing) ||
+          (nType == 10 && bListRejected)) {
         if (sName.isEmpty()) {
 #if defined(QT_DEBUG) || !defined(FRITZ_USE_ONLINE_RESOLVERS)
           // Don't use online resolvers during debugging to prevent rate limits
@@ -445,12 +450,16 @@ void FritzCallIndicator::showCallHistory() {
         QStringLiteral(":/icons/dark/png/call-missed-symbolic.png"));
     QString sIconOutgoing(
         QStringLiteral(":/icons/dark/png/call-outgoing-symbolic.png"));
+    QString sIconRejected(
+        QStringLiteral(":/icons/dark/png/call-rejected-symbolic.png"));
     if (QStringLiteral("light") == m_pSettings->getIconTheme()) {
       sIconIncomming = sIconIncomming.replace(QStringLiteral("dark"),
                                               QStringLiteral("light"));
       sIconMissed =
           sIconMissed.replace(QStringLiteral("dark"), QStringLiteral("light"));
       sIconOutgoing = sIconOutgoing.replace(QStringLiteral("dark"),
+                                            QStringLiteral("light"));
+      sIconRejected = sIconRejected.replace(QStringLiteral("dark"),
                                             QStringLiteral("light"));
     }
 
@@ -497,6 +506,8 @@ void FritzCallIndicator::showCallHistory() {
               iconLabel->setPixmap(QPixmap(sIconMissed));
             else if (sCall.at(nCol) == "3")
               iconLabel->setPixmap(QPixmap(sIconOutgoing));
+            else if (sCall.at(nCol) == "10")
+              iconLabel->setPixmap(QPixmap(sIconRejected));
             layout->addWidget(iconLabel, nRow + 1, nCol,
                               Align | Qt::AlignVCenter);
           }
