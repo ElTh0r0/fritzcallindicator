@@ -417,6 +417,7 @@ void SettingsDialog::accept() {
   Settings *pSettings = Settings::instance();
   bool bAddressbookChanged = false;
   bool bFritzUserPasswordChanged = false;
+  bool bCallHistoryFilterChanged = false;
 
   // General
   pSettings->setCountryCode(m_pUi->lineEditCountryCode->text().trimmed());
@@ -424,8 +425,16 @@ void SettingsDialog::accept() {
   pSettings->setMaxEntriesCallHistory(
       m_pUi->spinBoxMaxEntriesCallHistory->value());
   pSettings->setMaxDaysOfOldCalls(m_pUi->spinBoxMaxDaysOfOldCalls->value());
-  pSettings->setShowOutgoingCallsInHistory(m_pUi->cbShowOutgoing->isChecked());
-  pSettings->setShowRejectedCallsInHistory(m_pUi->cbShowRejected->isChecked());
+  bool bTmpCallHistoryFilter = m_pUi->cbShowOutgoing->isChecked();
+  if (bTmpCallHistoryFilter != pSettings->getShowOutgoingCallsInHistory()) {
+    pSettings->setShowOutgoingCallsInHistory(bTmpCallHistoryFilter);
+    bCallHistoryFilterChanged = true;
+  }
+  bTmpCallHistoryFilter = m_pUi->cbShowRejected->isChecked();
+  if (bTmpCallHistoryFilter != pSettings->getShowRejectedCallsInHistory()) {
+    pSettings->setShowRejectedCallsInHistory(bTmpCallHistoryFilter);
+    bCallHistoryFilterChanged = true;
+  }
   pSettings->setAutostart(m_pUi->cbAutostart->isChecked());
   pSettings->setIgnoredCallers(
       m_pUi->lineEditIgnoredCallers->text().trimmed().split(','));
@@ -538,6 +547,10 @@ void SettingsDialog::accept() {
 
   if (bAddressbookChanged) {
     emit changedPhonebooks();
+  }
+
+  if (bCallHistoryFilterChanged) {
+    emit changedCallHistoryFilter();
   }
 
   if (bFritzUserPasswordChanged) {

@@ -35,6 +35,8 @@ FritzCallIndicator::FritzCallIndicator(const QDir &sharePath)
 
   connect(m_pSettingsDialog, &SettingsDialog::changedPhonebooks,
           m_pNumberResolver, &NumberResolver::readPhonebooks);
+  connect(m_pSettingsDialog, &SettingsDialog::changedCallHistoryFilter, this,
+          [this]() { m_sListCallHistory = this->getCallHistory(); });
 
   m_pCallMonitor = new CallMonitor(this);
   connect(m_pCallMonitor, &CallMonitor::errorOccured, this,

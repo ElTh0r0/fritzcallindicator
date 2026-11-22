@@ -37,6 +37,7 @@ class SettingsDialog : public QDialog {
                                  const uint nMonitorPort,
                                  const uint nRetryInterval);
   void changedPhonebooks();
+  void changedCallHistoryFilter();
 
  protected:
 #ifdef FRITZ_USE_NOTIFICATION_SOUND
